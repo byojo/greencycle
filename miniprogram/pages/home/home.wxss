@@ -233,52 +233,44 @@
 
 /* 环保承诺 */
 .commit {
-  margin: 32rpx;
-  padding: 32rpx;
+  margin: 24rpx;
+  padding: 28rpx 32rpx;
   background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
   border: 2rpx solid #A7F3D0;
-  border-radius: 28rpx;
+  border-radius: 24rpx;
   display: flex;
   align-items: center;
-  gap: 24rpx;
+  gap: 20rpx;
 }
 .commit-icon {
   font-size: 56rpx;
+  flex-shrink: 0;
 }
-.commit-text { flex: 1; }
+.commit-text {
+  flex: 1;
+  min-width: 0;
+}
 .commit-title {
   font-size: 28rpx;
   font-weight: 600;
   color: #1F2937;
+  line-height: 1.4;
 }
 .commit-sub {
   font-size: 22rpx;
   color: #6B7280;
   margin-top: 4rpx;
 }
-.share-btn {
-  font-size: 24rpx;
-  color: #07C160;
-  font-weight: 600;
-  background: transparent;
-  border: none;
-  padding: 0;
-  margin: 0;
-  line-height: 1;
-}
-.share-btn::after {
-  border: none;
-}
 
 /* 加入我们 */
 .join-us {
-  margin: 0 32rpx 200rpx;
+  margin: 0 24rpx 200rpx;
   padding: 28rpx 32rpx;
   background: #FFFFFF;
   border-radius: 24rpx;
   display: flex;
   align-items: center;
-  gap: 24rpx;
+  gap: 20rpx;
   box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
 }
 .join-icon {

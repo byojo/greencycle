@@ -47,7 +47,6 @@
       <view class="commit-title">你已为地球减少 {{carbonKg}}kg 碳排放</view>
       <view class="commit-sub">相当于种下 {{treeCount}} 棵树</view>
     </view>
-    <button class="share-btn" open-type="share">分享 ›</button>
   </view>
 
   <!-- 加入我们 -->
