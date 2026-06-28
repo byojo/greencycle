@@ -65,7 +65,7 @@ Page({
         url: `https://apis.map.qq.com/ws/geocoder/v1/`,
         data: {
           location: `${latitude},${longitude}`,
-          key: 'OB4BZ-D4W3U-B7YOV-3EMHN-GM2D6-J6BZ7' // 腾讯地图 WebService API key（请替换为你的）
+          key: 'SVSBZ-RGUCB-ZQTUS-NZRUU-4U6WZ-CQFQD'
         }
       });
       const city = res.data?.result?.ad_info?.city || '未定位';
