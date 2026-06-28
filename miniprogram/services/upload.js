@@ -16,20 +16,22 @@ function uploadImage(tempFilePath) {
     }).then(signRes => {
       const { url, key } = signRes.data;
 
-      // 2. 上传到 COS（预签名 URL 已在 query string 包含凭证）
+      // 2. 上传到 COS（预签名 URL 已在 query string 包含凭证，不传 Content-Type 让微信自动生成 multipart）
       wx.uploadFile({
         url: url,
         filePath: tempFilePath,
         name: 'file',
         success: (res) => {
+          console.log('上传响应:', res.statusCode, res.data);
           if (res.statusCode === 200 || res.statusCode === 204) {
             resolve(key);  // 返回图片 key，由业务层拼接 CDN 域名
           } else {
-            reject(new Error('上传失败'));
+            reject(new Error('上传失败: ' + (res.data || '')));
           }
         },
         fail: (err) => {
-          reject(err);
+          console.error('上传失败详情:', err);
+          reject(new Error('上传请求失败: ' + (err.errMsg || '')));
         }
       });
     }).catch(reject);
