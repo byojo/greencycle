@@ -364,14 +364,13 @@
 /* ============ 底部按钮 ============ */
 .bottom-action {
   position: fixed;
-  bottom: 0;
+  bottom: calc(100rpx + env(safe-area-inset-bottom));
   left: 0;
   right: 0;
   background: #FFFFFF;
   padding: 24rpx 32rpx;
   border-top: 1rpx solid #E5E7EB;
   z-index: 1000;
-  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
 }
 .submit-btn {
   width: 100%;
