@@ -9,8 +9,7 @@
 
 /* ============ 顶部导航（白条 · sticky） ============ */
 .nav {
-  padding-top: env(safe-area-inset-top);
-  height: 88rpx;
+  min-height: calc(88rpx + env(safe-area-inset-top));
   background: #FFFFFF;
   display: flex;
   align-items: center;
@@ -21,7 +20,7 @@
 }
 .nav-back {
   width: 80rpx;
-  height: 88rpx;
+  min-height: 88rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,10 +33,12 @@
 }
 .nav-title {
   flex: 1;
+  min-height: 88rpx;
   text-align: center;
   font-size: 34rpx;
   font-weight: 600;
   color: #1F2937;
+  line-height: 88rpx;
 }
 .nav-action {
   width: 80rpx;
