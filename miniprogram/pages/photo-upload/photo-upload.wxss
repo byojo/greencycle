@@ -371,7 +371,7 @@
   justify-content: space-between;
   align-items: center;
   background: #FFFFFF;
-  padding: 20rpx 24rpx calc(20rpx + env(safe-area-inset-bottom));
+  padding: 12rpx 24rpx;
   border-radius: 24rpx;
   box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.05);
   z-index: 1000;
