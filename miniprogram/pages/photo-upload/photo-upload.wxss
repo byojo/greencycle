@@ -6,18 +6,19 @@
   background: #F7F8FA;
   padding-top: calc(88rpx + env(safe-area-inset-top));
   padding-bottom: calc(200rpx + env(safe-area-inset-bottom) + 40rpx);
+  position: relative;
 }
 
 /* ============ 顶部导航（白条 · fixed） ============ */
 .nav {
   position: fixed;
-  top: 0;
+  top: env(safe-area-inset-top);
   left: 0;
   right: 0;
-  height: calc(88rpx + env(safe-area-inset-top));
+  height: 88rpx;
   background: #FFFFFF;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   z-index: 100;
   border-bottom: 1rpx solid #F3F4F6;
 }
