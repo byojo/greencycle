@@ -7,11 +7,10 @@ ENV GO111MODULE=on     GOPROXY=https://goproxy.cn,direct     CGO_ENABLED=0     G
 WORKDIR /build
 
 COPY server/go.mod server/go.sum* ./
-RUN go mod download
 
 COPY server/ .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /build/server ./cmd/api
+RUN go mod tidy && CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /build/server ./cmd/api
 
 FROM alpine:3.18
 
