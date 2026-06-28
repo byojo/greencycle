@@ -4,19 +4,21 @@
 .page {
   min-height: 100vh;
   background: #F7F8FA;
+  padding-top: calc(88rpx + env(safe-area-inset-top));
   padding-bottom: calc(200rpx + env(safe-area-inset-bottom) + 40rpx);
 }
 
-/* ============ 顶部导航（白条 · sticky） ============ */
+/* ============ 顶部导航（白条 · fixed） ============ */
 .nav {
-  height: 88rpx;
-  padding-top: env(safe-area-inset-top);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(88rpx + env(safe-area-inset-top));
   background: #FFFFFF;
   display: flex;
   align-items: flex-end;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  z-index: 100;
   border-bottom: 1rpx solid #F3F4F6;
 }
 .nav-back {
