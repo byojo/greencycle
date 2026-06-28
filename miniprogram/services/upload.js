@@ -1,40 +1,42 @@
 // services/upload.js
-// 图片上传服务
+// 图片上传服务（后端直传模式）
 
 /**
- * 上传图片到腾讯云 COS（通过临时签名直传）
+ * 上传单张图片到 COS（后端中转）
  * @param {string} tempFilePath - 微信临时文件路径
  * @returns {Promise<string>} 上传后的 CDN URL
  */
 function uploadImage(tempFilePath) {
   return new Promise((resolve, reject) => {
-    const api = require('./api.js');
+    // 1. 先读取文件为 base64
+    wx.getFileSystemManager().readFile({
+      filePath: tempFilePath,
+      encoding: 'base64',
+      success: (res) => {
+        const ext = tempFilePath.split('.').pop() || 'jpg';
+        const mimeMap = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', gif: 'image/gif', webp: 'image/webp' };
+        const mime = mimeMap[ext] || 'image/jpeg';
+        const base64Content = `data:${mime};base64,${res.data}`;
 
-    // 1. 获取上传签名
-    api.getUploadSign({
-      ext: tempFilePath.split('.').pop() || 'jpg'
-    }).then(signRes => {
-      const { url, key } = signRes.data;
-
-      // 2. 上传到 COS（预签名 URL 已在 query string 包含凭证，不传 Content-Type 让微信自动生成 multipart）
-      wx.uploadFile({
-        url: url,
-        filePath: tempFilePath,
-        name: 'file',
-        success: (res) => {
-          console.log('上传响应:', res.statusCode, res.data);
-          if (res.statusCode === 200 || res.statusCode === 204) {
-            resolve(key);  // 返回图片 key，由业务层拼接 CDN 域名
+        // 2. 发给后端，后端上传到 COS
+        const api = require('./api.js');
+        api.getUploadSign({
+          ext: ext,
+          content: base64Content
+        }).then(signRes => {
+          if (signRes.code === 0) {
+            resolve(signRes.data.fullUrl || signRes.data.key);
           } else {
-            reject(new Error('上传失败: ' + (res.data || '')));
+            reject(new Error(signRes.message || '上传失败'));
           }
-        },
-        fail: (err) => {
-          console.error('上传失败详情:', err);
-          reject(new Error('上传请求失败: ' + (err.errMsg || '')));
-        }
-      });
-    }).catch(reject);
+        }).catch(err => {
+          reject(new Error(err.message || '上传请求失败'));
+        });
+      },
+      fail: (err) => {
+        reject(new Error('读取图片文件失败: ' + (err.errMsg || '')));
+      }
+    });
   });
 }
 
