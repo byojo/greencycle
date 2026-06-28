@@ -33,14 +33,15 @@ Page({
 
     this.setData({ submitting: true });
     try {
-      wx.showLoading({ title: '提交中...', mask: true });
-      // TODO: 调用后端接口提交报名信息
-      // await api.submitJoinUs({ ... })
-      wx.hideLoading();
+      await api.submitPartnerApply({
+        name: this.data.name.trim(),
+        phone: this.data.phone.trim(),
+        district: this.data.district.trim(),
+        remark: this.data.remark.trim()
+      });
       wx.showToast({ title: '提交成功，我们会尽快联系您', icon: 'none', duration: 3000 });
       setTimeout(() => wx.navigateBack(), 1500);
     } catch (err) {
-      wx.hideLoading();
       wx.showToast({ title: err.message || '提交失败', icon: 'none' });
     } finally {
       this.setData({ submitting: false });

@@ -35,6 +35,7 @@ func Register(h *handler.Handler) *gin.Engine {
 	api.GET("/categories/:code", h.CategoryDetail)
 	api.GET("/categories/:code/fields", h.CategoryFields)
 	api.GET("/stories", h.StoryList)
+	api.POST("/partner-apply", h.Partner.Apply)
 
 	// ========== 需要鉴权 ==========
 	auth := api.Group("/")

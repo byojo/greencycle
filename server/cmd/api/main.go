@@ -13,6 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/greencycle/server/internal/handler"
+	"github.com/greencycle/server/internal/model"
 	"github.com/greencycle/server/internal/repository"
 	"github.com/greencycle/server/internal/router"
 	"github.com/greencycle/server/internal/service"
@@ -30,6 +31,11 @@ func main() {
 	gin.SetMode(cfg.Server.Mode)
 
 	db := database.InitMySQL(cfg.MySQL)
+
+	// 自动建表
+	db.AutoMigrate(
+		&model.PartnerApplication{},
+	)
 
 	repo := repository.New(db)
 	wechatCli := wechat.NewClient()

@@ -19,6 +19,7 @@ type Service struct {
 	Address  *AddressService
 	Story    *StoryService
 	Upload   *UploadService
+	Partner  *PartnerService
 }
 
 func New(repo *repository.Repository, wc *wechat.Client, cosCli *cos.Client) *Service {
@@ -34,5 +35,6 @@ func New(repo *repository.Repository, wc *wechat.Client, cosCli *cos.Client) *Se
 	s.Address = NewAddressService(repo)
 	s.Story = NewStoryService(repo)
 	s.Upload = NewUploadService(cosCli)
+	s.Partner = NewPartnerService(repo)
 	return s
 }

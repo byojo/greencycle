@@ -16,6 +16,7 @@ type Repository struct {
 	Point    *PointRepository
 	Address  *AddressRepository
 	Story    *StoryRepository
+	Partner  *PartnerRepository
 }
 
 func New(db *gorm.DB) *Repository {
@@ -27,6 +28,7 @@ func New(db *gorm.DB) *Repository {
 		Point:    NewPointRepository(db),
 		Address:  NewAddressRepository(db),
 		Story:    NewStoryRepository(db),
+		Partner:  NewPartnerRepository(db),
 	}
 }
 

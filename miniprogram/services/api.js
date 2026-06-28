@@ -87,5 +87,9 @@ module.exports = {
   getConfig: () => get('/config'),
 
   // 反馈意见
-  submitFeedback: (data) => post('/feedback', data, { showLoading: true, loadingText: '提交中...' })
+  submitFeedback: (data) => post('/feedback', data, { showLoading: true, loadingText: '提交中...' }),
+
+  // ========== 合作加盟 ==========
+  // 提交加盟申请
+  submitPartnerApply: (data) => post('/partner-apply', data, { showLoading: true, loadingText: '提交中...' })
 };
