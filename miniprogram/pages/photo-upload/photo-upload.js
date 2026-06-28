@@ -84,10 +84,30 @@ Page({
   async loadFields(code) {
     try {
       const res = await api.getCategoryFields(code);
-      this.setData({ fields: this.decorateFields(res.data.fields || []) });
+      this.setData({ fields: this.decorateFields(this.normalizeFields(res.data.fields || [])) });
     } catch (err) {
       this.setData({ fields: this.decorateFields(this.getDefaultFields(code)) });
     }
+  },
+
+  // 将 API 返回的 snake_case 字段映射为小程序用的 camelCase
+  normalizeFields(fields) {
+    return fields.map(f => {
+      let options = [];
+      if (f.optionsJSON) {
+        try { options = JSON.parse(f.optionsJSON); } catch (e) {}
+      }
+      return {
+        key:      f.fieldKey,
+        label:    f.fieldLabel,
+        type:     f.fieldType,
+        required: !!f.required,
+        options,
+        placeholder: f.placeholder || '',
+        icon:     f.fieldIcon || '',
+        sort:     f.sort || 0
+      };
+    });
   },
 
   decorateFields(fields) {
