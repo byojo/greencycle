@@ -61,7 +61,7 @@
       <view class="card-title">邀请记录</view>
       <view class="card-more">已邀请 {{inviteCount}} 人</view>
     </view>
-    <view wx:if="{{inviteList.length > 0}}" class="record-list">
+    <view wx:if="{{inviteList && inviteList.length > 0}}" class="record-list">
       <view class="record-item" wx:for="{{inviteList}}" wx:key="id">
         <view class="record-avatar">{{item.avatarText}}</view>
         <view class="record-info">

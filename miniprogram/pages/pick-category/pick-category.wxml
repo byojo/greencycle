@@ -47,7 +47,7 @@
   </view>
 
   <!-- 上次回收（横滑 chips） -->
-  <view wx:if="{{recentItems.length > 0}}" class="recent">
+  <view wx:if="{{recentItems && recentItems.length > 0}}" class="recent">
     <view class="recent-title">🕐 上次回收过</view>
     <scroll-view class="recent-items" scroll-x enable-flex>
       <view

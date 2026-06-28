@@ -54,7 +54,7 @@
         <view class="item-desc" wx:if="{{info}}">{{info.desc}}</view>
       </view>
     </view>
-    <scroll-view scroll-x class="photo-scroll" wx:if="{{photos.length > 0}}">
+    <scroll-view scroll-x class="photo-scroll" wx:if="{{photos && photos.length > 0}}">
       <view class="thumb-wrap" wx:for="{{photos}}" wx:key="*this">
         <image src="{{item.url}}" class="thumb" mode="aspectFill" />
       </view>

@@ -25,7 +25,7 @@
   <view class="card">
     <view class="card-title">📦 回收物品</view>
     <view class="item-row">
-      <view class="item-thumb" wx:if="{{photos.length > 0}}">
+      <view class="item-thumb" wx:if="{{photos && photos.length > 0}}">
         <image src="{{photos[0]}}" class="thumb-img" mode="aspectFill" />
       </view>
       <view class="item-icon-fallback" wx:elif="{{info}}" style="background:{{info.bg}}">{{info.icon}}</view>

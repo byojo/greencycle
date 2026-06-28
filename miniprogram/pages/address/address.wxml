@@ -8,7 +8,7 @@
   </view>
 
   <!-- 地址列表 -->
-  <view wx:if="{{list.length > 0}}" class="addr-list">
+  <view wx:if="{{list && list.length > 0}}" class="addr-list">
     <view
       wx:for="{{list}}"
       wx:key="id"
@@ -53,7 +53,7 @@
   </view>
 
   <!-- 底部固定按钮 -->
-  <view wx:if="{{list.length > 0}}" class="add-bar">
+  <view wx:if="{{list && list.length > 0}}" class="add-bar">
     <view class="add-btn" bindtap="onAdd">
       <text class="plus">+</text>
       <text>新增地址</text>
