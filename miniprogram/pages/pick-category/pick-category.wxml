@@ -2,9 +2,10 @@
 <view class="page">
   <!-- 顶部导航（小白条 · 居中标题） -->
   <view class="nav">
-    <view class="nav-title">选择回收品类</view>
+    <view class="nav-inner">
+      <view class="nav-title">选择回收品类</view>
+    </view>
   </view>
-
   <!-- 顶部提示：绿色渐变 + 边框 A7F3D0 -->
   <view class="tips">
     <view class="tips-icon">♻️</view>

@@ -2,11 +2,12 @@
 <view class="page">
   <!-- 顶部导航 -->
   <view class="nav">
-    <view class="nav-back" bindtap="onBack">‹</view>
-    <view class="nav-title">订单详情</view>
-    <view class="nav-action" bindtap="onContact">客服</view>
+    <view class="nav-inner">
+      <view class="nav-back" bindtap="onBack">‹</view>
+      <view class="nav-title">订单详情</view>
+      <view class="nav-action" bindtap="onContact">客服</view>
+    </view>
   </view>
-
   <!-- 状态条（按 status 显示不同色） -->
   <view class="status-bar" style="background:{{statusBarBg}}">
     <view class="status-icon-row">

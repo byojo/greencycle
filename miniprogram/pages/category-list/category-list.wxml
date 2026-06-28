@@ -2,13 +2,14 @@
 <view class="page">
   <!-- 顶部导航（白条） -->
   <view class="nav">
-    <view class="nav-back" bindtap="onBack">
-      <text class="back-icon">‹</text>
+    <view class="nav-inner">
+      <view class="nav-back" bindtap="onBack">
+        <text class="back-icon">‹</text>
+      </view>
+      <view class="nav-title">{{name}}</view>
+      <view class="nav-action" bindtap="onRecords">回收记录</view>
     </view>
-    <view class="nav-title">{{name}}</view>
-    <view class="nav-action" bindtap="onRecords">回收记录</view>
   </view>
-
   <!-- 品类 banner：左侧大图标 + 右侧多行文字 -->
   <view class="banner" style="background:{{bannerBg}}">
     <view class="banner-left">

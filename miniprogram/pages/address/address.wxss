@@ -7,14 +7,20 @@
 
 /* === Nav === */
 .nav {
-  height: 88rpx;
+  
   display: flex;
   align-items: center;
   background: #FFFFFF;
-  position: sticky;
-  top: 0;
-  z-index: 20;
+  
+  
+  
   border-bottom: 1rpx solid #F3F4F6;
+  padding-top: env(safe-area-inset-top);
+}
+.nav-inner {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
 }
 .nav-back {
   width: 80rpx;

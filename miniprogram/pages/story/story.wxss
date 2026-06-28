@@ -7,15 +7,21 @@
 
 /* === Nav === */
 .nav {
-  height: 88rpx;
+  
   display: flex;
   align-items: center;
   justify-content: center;
   background: #FFFFFF;
-  position: sticky;
-  top: 0;
-  z-index: 20;
+  
+  
+  
   border-bottom: 1rpx solid #F3F4F6;
+  padding-top: env(safe-area-inset-top);
+}
+.nav-inner {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
 }
 .nav-title {
   font-size: 34rpx;
@@ -36,7 +42,7 @@
   background: #FFFFFF;
   padding: 24rpx 32rpx;
   position: sticky;
-  top: 88rpx;
+  top: calc(88rpx + env(safe-area-inset-top));
   z-index: 19;
   border-bottom: 1rpx solid #F3F4F6;
 }

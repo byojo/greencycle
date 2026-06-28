@@ -2,11 +2,13 @@
 <view class="page">
   <!-- 顶部导航 -->
   <view class="nav">
-    <view class="nav-back" bindtap="onBack">
-      <text class="back-icon">‹</text>
+    <view class="nav-inner">
+      <view class="nav-back" bindtap="onBack">
+        <text class="back-icon">‹</text>
+      </view>
+      <view class="nav-title">{{isEdit ? '编辑地址' : '新增地址'}}</view>
+      <view class="nav-action" bindtap="onSave">保存</view>
     </view>
-    <view class="nav-title">{{isEdit ? '编辑地址' : '新增地址'}}</view>
-    <view class="nav-action" bindtap="onSave">保存</view>
   </view>
 
   <!-- 表单 -->

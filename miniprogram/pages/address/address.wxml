@@ -1,12 +1,13 @@
 <!--pages/address/address.wxml-->
 <view class="page">
   <view class="nav">
-    <view class="nav-back" bindtap="goBack">‹</view>
-    <view class="nav-title">{{selectMode ? '选择地址' : '地址管理'}}</view>
-    <view wx:if="{{!selectMode}}" class="nav-manage" bindtap="onManage">{{manageText}}</view>
-    <view wx:else class="nav-manage"></view>
+    <view class="nav-inner">
+      <view class="nav-back" bindtap="goBack">‹</view>
+      <view class="nav-title">{{selectMode ? '选择地址' : '地址管理'}}</view>
+      <view wx:if="{{!selectMode}}" class="nav-manage" bindtap="onManage">{{manageText}}</view>
+      <view wx:else class="nav-manage"></view>
+    </view>
   </view>
-
   <!-- 地址列表 -->
   <view wx:if="{{list && list.length > 0}}" class="addr-list">
     <view

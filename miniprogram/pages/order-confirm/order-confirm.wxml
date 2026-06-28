@@ -2,11 +2,12 @@
 <view class="page">
   <!-- 顶部导航 -->
   <view class="nav">
-    <view class="nav-back" bindtap="onBack">‹</view>
-    <view class="nav-title">确认订单</view>
-    <view class="nav-action"></view>
+    <view class="nav-inner">
+      <view class="nav-back" bindtap="onBack">‹</view>
+      <view class="nav-title">确认订单</view>
+      <view class="nav-action"></view>
+    </view>
   </view>
-
   <!-- 4 步进度条 -->
   <view class="progress">
     <view class="step done">

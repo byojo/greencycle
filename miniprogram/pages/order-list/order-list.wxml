@@ -2,10 +2,11 @@
 <view class="page">
   <!-- 顶部导航 -->
   <view class="nav">
-    <view class="nav-title">我的订单</view>
-    <view class="nav-action" bindtap="onFilter">筛选</view>
+    <view class="nav-inner">
+      <view class="nav-title">我的订单</view>
+      <view class="nav-action" bindtap="onFilter">筛选</view>
+    </view>
   </view>
-
   <!-- 状态筛选 chips -->
   <view class="filter-bar">
     <view

@@ -2,10 +2,11 @@
 <view class="page">
   <!-- 顶部标题栏 -->
   <view class="nav">
-    <view class="nav-title">改造故事</view>
-    <view class="nav-action" bindtap="onPublish">发布</view>
+    <view class="nav-inner">
+      <view class="nav-title">改造故事</view>
+      <view class="nav-action" bindtap="onPublish">发布</view>
+    </view>
   </view>
-
   <!-- 横滑 Tabs -->
   <scroll-view scroll-x class="tabs" enable-flex enhanced show-scrollbar="{{false}}">
     <view

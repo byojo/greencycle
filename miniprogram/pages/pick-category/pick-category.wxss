@@ -9,12 +9,18 @@
 
 /* ============ 顶部导航 ============ */
 .nav {
-  height: 88rpx;
+  
   display: flex;
   align-items: center;
   justify-content: center;
   background: #FFFFFF;
   margin: 0 -32rpx; /* 让导航条横到边缘 */
+  padding-top: env(safe-area-inset-top);
+}
+.nav-inner {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
 }
 .nav-title {
   font-size: 34rpx;

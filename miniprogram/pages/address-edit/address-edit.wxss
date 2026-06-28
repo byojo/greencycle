@@ -7,14 +7,20 @@
 
 /* ============ 顶部导航 ============ */
 .nav {
-  height: 88rpx;
+  
   background: #FFFFFF;
   display: flex;
   align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  
+  
+  
   border-bottom: 1rpx solid #F3F4F6;
+  padding-top: env(safe-area-inset-top);
+}
+.nav-inner {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
 }
 .nav-back {
   width: 80rpx;
