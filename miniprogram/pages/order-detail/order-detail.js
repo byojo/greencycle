@@ -147,7 +147,7 @@ Page({
       carbonKg: carbon.kg,
       carbonPoints: carbon.points,
       treeCount: carbon.trees,
-      againText: order.status === 5 ? '重新下单' : '再次回收',
+      againText: '再次回收',
       loading: false
     });
   },
@@ -181,7 +181,7 @@ Page({
       carbonKg: carbon.kg,
       carbonPoints: carbon.points,
       treeCount: carbon.trees,
-      againText: data.status === 5 ? '重新下单' : '再次回收',
+      againText: '再次回收',
       loading: false
     });
   },
