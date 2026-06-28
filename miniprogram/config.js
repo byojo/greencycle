@@ -3,7 +3,7 @@
 module.exports = {
   // ====== 基础配置 ======
   // 后端 API 地址（微信云托管）
-  apiBase: 'https://golang-ox8i-275614-7-1448098353.sh.run.tcloudbase.com/v1',
+  apiBase: 'https://golang-ox8i-275614-7-1448098353.sh.run.tcloudbase.com/api/v1',
 
   // ====== 业务配置 ======
   appName: '纸飞机',
@@ -30,6 +30,6 @@ module.exports = {
   },
 
   // ====== 开关 ======
-  useMock: true,        // 开发时开启 mock，无后端也能跑
+  useMock: false,        // 关闭 mock，调真实后端
   enableConsole: true   // 是否打印调试日志
 };

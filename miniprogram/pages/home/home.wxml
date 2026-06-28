@@ -59,4 +59,14 @@
     </view>
     <button class="share-btn" open-type="share">分享 ›</button>
   </view>
+
+  <!-- 加入我们 -->
+  <view class="join-us" bindtap="onJoinUs">
+    <view class="join-icon">🤝</view>
+    <view class="join-text">
+      <view class="join-title">加入我们</view>
+      <view class="join-sub">成为回收专员 · 轻松兼职</view>
+    </view>
+    <view class="join-arrow">›</view>
+  </view>
 </view>

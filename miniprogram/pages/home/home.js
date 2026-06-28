@@ -135,6 +135,11 @@ Page({
     wx.switchTab({ url: '/pages/points/points' });
   },
 
+  // 加入我们
+  onJoinUs() {
+    wx.navigateTo({ url: '/pages/join-us/join-us' });
+  },
+
   // 跳到故事页
   goStories() {
     wx.switchTab({ url: '/pages/story/story' });

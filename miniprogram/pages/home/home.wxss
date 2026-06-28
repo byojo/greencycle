@@ -269,3 +269,36 @@
 .share-btn::after {
   border: none;
 }
+
+/* 加入我们 */
+.join-us {
+  margin: 0 32rpx 200rpx;
+  padding: 28rpx 32rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+}
+.join-icon {
+  font-size: 48rpx;
+}
+.join-text {
+  flex: 1;
+}
+.join-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+.join-sub {
+  font-size: 22rpx;
+  color: #6B7280;
+  margin-top: 4rpx;
+}
+.join-arrow {
+  font-size: 40rpx;
+  color: #D1D5DB;
+  font-weight: 300;
+}

@@ -1,0 +1,134 @@
+/* pages/join-us/join-us.wxss */
+.page {
+  min-height: 100vh;
+  background: #F7F8FA;
+  padding-bottom: 200rpx;
+}
+
+/* 顶部区域 */
+.hero {
+  background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+  padding: 60rpx 40rpx 48rpx;
+  text-align: center;
+}
+.hero-icon {
+  font-size: 80rpx;
+  margin-bottom: 16rpx;
+}
+.hero-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1F2937;
+  margin-bottom: 12rpx;
+}
+.hero-sub {
+  font-size: 26rpx;
+  color: #6B7280;
+  line-height: 1.5;
+}
+
+/* 兼职优势 */
+.perks {
+  display: flex;
+  justify-content: space-around;
+  padding: 40rpx 32rpx;
+  background: #FFFFFF;
+  border-bottom: 1rpx solid #F3F4F6;
+}
+.perk-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+.perk-icon {
+  font-size: 44rpx;
+}
+.perk-text {
+  font-size: 22rpx;
+  color: #6B7280;
+}
+
+/* 表单 */
+.form {
+  background: #FFFFFF;
+  margin: 24rpx;
+  border-radius: 24rpx;
+  padding: 32rpx;
+}
+.form-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 32rpx;
+}
+.form-item {
+  margin-bottom: 32rpx;
+}
+.form-item:last-child {
+  margin-bottom: 0;
+}
+.form-label {
+  font-size: 26rpx;
+  color: #374151;
+  font-weight: 500;
+  margin-bottom: 12rpx;
+}
+.form-input {
+  width: 100%;
+  background: #F9FAFB;
+  border-radius: 16rpx;
+  padding: 20rpx 28rpx;
+  font-size: 28rpx;
+  color: #1F2937;
+  border: 2rpx solid transparent;
+  box-sizing: border-box;
+  height: 88rpx;
+  line-height: 88rpx;
+}
+.form-input:focus {
+  border-color: #07C160;
+  background: #FFFFFF;
+}
+.form-textarea {
+  width: 100%;
+  min-height: 160rpx;
+  background: #F9FAFB;
+  border-radius: 16rpx;
+  padding: 20rpx 28rpx;
+  font-size: 28rpx;
+  color: #1F2937;
+  border: 2rpx solid transparent;
+  box-sizing: border-box;
+}
+
+/* 底部按钮 */
+.bottom-action {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #FFFFFF;
+  padding: 24rpx 32rpx calc(24rpx + env(safe-area-inset-bottom));
+  border-top: 1rpx solid #E5E7EB;
+  z-index: 100;
+}
+.submit-btn {
+  width: 100%;
+  height: 88rpx;
+  background: #07C160;
+  color: #FFFFFF;
+  border-radius: 44rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 6rpx 24rpx rgba(7, 193, 96, 0.3);
+  border: none;
+  line-height: 88rpx;
+}
+.submit-btn::after {
+  border: none;
+}
+.submit-btn[disabled] {
+  opacity: 0.6;
+}

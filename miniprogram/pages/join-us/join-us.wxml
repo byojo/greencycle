@@ -1,0 +1,86 @@
+<view class="page">
+  <!-- 顶部说明 -->
+  <view class="hero">
+    <view class="hero-icon">🤝</view>
+    <view class="hero-title">成为绿循环回收专员</view>
+    <view class="hero-sub">利用碎片时间，上门回收废品，轻松赚取佣金</view>
+  </view>
+
+  <!-- 兼职优势 -->
+  <view class="perks">
+    <view class="perk-item">
+      <view class="perk-icon">⏰</view>
+      <view class="perk-text">时间自由</view>
+    </view>
+    <view class="perk-item">
+      <view class="perk-icon">💰</view>
+      <view class="perk-text">多劳多得</view>
+    </view>
+    <view class="perk-item">
+      <view class="perk-icon">🛡️</view>
+      <view class="perk-text">安全保障</view>
+    </view>
+  </view>
+
+  <!-- 表单 -->
+  <view class="form">
+    <view class="form-title">填写报名信息</view>
+
+    <view class="form-item">
+      <view class="form-label">姓名</view>
+      <input
+        class="form-input"
+        placeholder="请输入您的姓名"
+        value="{{name}}"
+        data-key="name"
+        bindinput="onInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <view class="form-label">联系方式</view>
+      <input
+        class="form-input"
+        type="number"
+        placeholder="请输入手机号"
+        maxlength="11"
+        value="{{phone}}"
+        data-key="phone"
+        bindinput="onInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <view class="form-label">所在区域</view>
+      <input
+        class="form-input"
+        placeholder="如：上海市浦东新区"
+        value="{{district}}"
+        data-key="district"
+        bindinput="onInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <view class="form-label">补充说明（选填）</view>
+      <textarea
+        class="form-textarea"
+        placeholder="介绍一下自己或相关经验..."
+        value="{{remark}}"
+        data-key="remark"
+        bindinput="onInput"
+        maxlength="200"
+      ></textarea>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="bottom-action">
+    <button
+      class="submit-btn"
+      bindtap="onSubmit"
+      loading="{{submitting}}"
+      disabled="{{submitting}}"
+    >立即报名</button>
+  </view>
+</view>

@@ -283,7 +283,9 @@ Page({
 
     try {
       const tempPaths = this.data.photos.map(p => p.tempPath);
+      console.log('准备上传图片，数量:', tempPaths.length);
       const photoKeys = await uploadImages(tempPaths);
+      console.log('图片上传完成，keys:', photoKeys);
 
       app.globalData.pendingOrder = {
         category: this.data.category,

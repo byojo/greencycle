@@ -16,7 +16,8 @@
     "pages/address-edit/address-edit",
     "pages/invite/invite",
     "pages/settings/settings",
-    "pages/login/login"
+    "pages/login/login",
+    "pages/join-us/join-us"
   ],
   "window": {
     "navigationBarBackgroundColor": "#07C160",
