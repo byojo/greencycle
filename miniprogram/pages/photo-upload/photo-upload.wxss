@@ -379,13 +379,13 @@
   right: 32rpx;
   top: 0;
   height: 88rpx;
-  background: linear-gradient(135deg, #07C160 0%, #06A050 100%);
+  background: #07C160;
   color: #FFFFFF;
   border-radius: 44rpx;
-  font-size: 30rpx;
+  font-size: 28rpx;
   font-weight: 600;
   text-align: center;
-  box-shadow: 0 6rpx 20rpx rgba(7, 193, 96, 0.3);
+  box-shadow: 0 0 40rpx rgba(7, 193, 96, 0.35);
   border: none;
   line-height: 88rpx;
 }
