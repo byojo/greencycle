@@ -4,7 +4,7 @@
 .page {
   min-height: 100vh;
   background: #F7F8FA;
-  padding-bottom: 200rpx;
+  padding-bottom: calc(200rpx + env(safe-area-inset-bottom) + 120rpx);
 }
 
 /* ============ 顶部导航（白条 · sticky） ============ */
@@ -364,7 +364,7 @@
 /* ============ 底部按钮 ============ */
 .bottom-action {
   position: fixed;
-  bottom: calc(100rpx + env(safe-area-inset-bottom));
+  bottom: calc(120rpx + env(safe-area-inset-bottom));
   left: 0;
   right: 0;
   background: #FFFFFF;
