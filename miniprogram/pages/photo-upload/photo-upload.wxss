@@ -9,6 +9,7 @@
 
 /* ============ 顶部导航（白条 · sticky） ============ */
 .nav {
+  padding-top: env(safe-area-inset-top);
   height: 88rpx;
   background: #FFFFFF;
   display: flex;

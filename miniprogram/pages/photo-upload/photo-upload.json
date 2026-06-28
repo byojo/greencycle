@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "上传物品照片",
+  "navigationStyle": "custom",
   "navigationBarBackgroundColor": "#FFFFFF",
   "navigationBarTextStyle": "black"
 }
