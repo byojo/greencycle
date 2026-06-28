@@ -47,14 +47,8 @@ type UploadSign struct {
 func (c *Client) SignUpload(ext string) (*UploadSign, error) {
 	key := fmt.Sprintf("%s%s.%s", c.cfg.UploadPrefix, uuid.New().String(), ext)
 
-	// 临时凭证（生产环境应使用 STS）
-	cred := &cos.Credential{
-		SecretID:  c.cfg.SecretID,
-		SecretKey: c.cfg.SecretKey,
-	}
-
 	// 简单签名（生产环境推荐 STS + 临时密钥）
-	signedURL := c.client.Object.GetPresignedURL(
+	signedURL, err := c.client.Object.GetPresignedURL(
 		context.Background(),
 		http.MethodPut,
 		key,
@@ -63,6 +57,9 @@ func (c *Client) SignUpload(ext string) (*UploadSign, error) {
 		time.Hour,
 		nil,
 	)
+	if err != nil {
+		return nil, fmt.Errorf("生成上传签名失败: %w", err)
+	}
 
 	return &UploadSign{
 		URL:    signedURL.String(),
