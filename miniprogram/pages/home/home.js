@@ -57,17 +57,39 @@ Page({
     this.setData({ greeting });
   },
 
+  // 获取微信定位并解析城市名
+  async loadLocation() {
+    try {
+      const { latitude, longitude } = await wx.getLocation({ type: 'gcj02' });
+      const res = await wx.request({
+        url: `https://apis.map.qq.com/ws/geocoder/v1/`,
+        data: {
+          location: `${latitude},${longitude}`,
+          key: 'OB4BZ-D4W3U-B7YOV-3EMHN-GM2D6-J6BZ7' // 腾讯地图 WebService API key（请替换为你的）
+        }
+      });
+      const city = res.data?.result?.ad_info?.city || '未定位';
+      this.setData({ location: city });
+    } catch (err) {
+      console.warn('定位失败', err);
+      this.setData({ location: '定位失败' });
+    }
+  },
+
   async loadUserInfo() {
     try {
       const res = await api.getUserInfo();
       this.setData({
         userInfo: res.data,
-        location: res.data.city || '未定位'
+        location: res.data.city || '定位中...'
       });
       app.globalData.userInfo = res.data;
       wx.setStorageSync('userInfo', res.data);
+      // 异步获取微信定位覆盖城市
+      this.loadLocation();
     } catch (err) {
       console.warn('加载用户信息失败', err);
+      this.loadLocation();
     }
   },
 
