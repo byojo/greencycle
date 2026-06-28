@@ -15,7 +15,9 @@
   
   
   border-bottom: 1rpx solid #F3F4F6;
-  padding-top: env(safe-area-inset-top);.nav-inner {
+  padding-top: env(safe-area-inset-top);
+}
+.nav-inner {
   height: 88rpx;
   display: flex;
   align-items: center;
