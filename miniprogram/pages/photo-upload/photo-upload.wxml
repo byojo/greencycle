@@ -1,12 +1,14 @@
 <!--pages/photo-upload/photo-upload.wxml-->
 <view class="page">
-  <!-- 顶部导航（白条 · sticky） -->
+  <!-- 顶部导航（白条） -->
   <view class="nav">
-    <view class="nav-back" bindtap="onBack">
-      <text class="back-icon">‹</text>
+    <view class="nav-inner">
+      <view class="nav-back" bindtap="onBack">
+        <text class="back-icon">‹</text>
+      </view>
+      <view class="nav-title">上传物品照片</view>
+      <view class="nav-action" bindtap="onShowExamples">示例</view>
     </view>
-    <view class="nav-title">上传物品照片</view>
-    <view class="nav-action" bindtap="onShowExamples">示例</view>
   </view>
 
   <!-- 4 步进度条（绿色渐变背景） -->
