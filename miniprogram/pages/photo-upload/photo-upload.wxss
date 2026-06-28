@@ -9,10 +9,11 @@
 
 /* ============ 顶部导航（白条 · sticky） ============ */
 .nav {
-  min-height: calc(88rpx + env(safe-area-inset-top));
+  height: 88rpx;
+  padding-top: env(safe-area-inset-top);
   background: #FFFFFF;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -20,7 +21,7 @@
 }
 .nav-back {
   width: 80rpx;
-  min-height: 88rpx;
+  height: 88rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -33,7 +34,7 @@
 }
 .nav-title {
   flex: 1;
-  min-height: 88rpx;
+  height: 88rpx;
   text-align: center;
   font-size: 34rpx;
   font-weight: 600;
