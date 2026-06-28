@@ -198,7 +198,7 @@ Page({
     if (typeof wx.openCustomerServiceChat === 'function') {
       wx.openCustomerServiceChat();
     } else {
-      wx.showToast({ title: '客服功能开发中', icon: 'none' });
+      wx.showToast({ title: '联系客服开发中', icon: 'none' });
     }
   },
 
@@ -220,7 +220,7 @@ Page({
 
   onAgain() {
     app.globalData.currentCategory = this.data.category;
-    wx.switchTab({ url: '/pages/home/home' });
+    wx.navigateTo({ url: '/pages/photo-upload/photo-upload' });
   },
 
   onTrack() {
