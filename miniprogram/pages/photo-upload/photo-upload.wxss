@@ -274,6 +274,7 @@
   color: #1F2937;
   border: 2rpx solid transparent;
   box-sizing: border-box;
+  line-height: 1.5;
 }
 .form-input:focus {
   border-color: #07C160;
