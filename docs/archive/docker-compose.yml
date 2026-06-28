@@ -1,0 +1,159 @@
+# Docker Compose 编排
+# 一键启动整个开发/生产环境
+
+version: '3.8'
+
+services:
+  # ===========================================
+  # 1. MySQL 数据库
+  # ===========================================
+  mysql:
+    image: mysql:8.0
+    container_name: greencycle-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-greencycle}
+      MYSQL_USER: ${MYSQL_USER:-greencycle}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-greencycle123}
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./sql/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+      - --max_connections=500
+      - --innodb_buffer_pool_size=512M
+    networks:
+      - greencycle-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-rootpass}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ===========================================
+  # 2. Redis 缓存
+  # ===========================================
+  redis:
+    image: redis:7-alpine
+    container_name: greencycle-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command:
+      - redis-server
+      - --appendonly yes
+      - --maxmemory 256mb
+      - --maxmemory-policy allkeys-lru
+    networks:
+      - greencycle-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # ===========================================
+  # 3. Go API 服务（可水平扩展）
+  # ===========================================
+  api:
+    build:
+      context: ../server
+      dockerfile: Dockerfile
+    image: greencycle/server:latest
+    container_name: greencycle-api
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      # 服务配置
+      GREENCYCLE_SERVER_ADDR: ":8080"
+      GREENCYCLE_SERVER_MODE: release
+
+      # MySQL
+      GREENCYCLE_MYSQL_HOST: mysql
+      GREENCYCLE_MYSQL_PORT: 3306
+      GREENCYCLE_MYSQL_USER: ${MYSQL_USER:-greencycle}
+      GREENCYCLE_MYSQL_PASSWORD: ${MYSQL_PASSWORD:-greencycle123}
+      GREENCYCLE_MYSQL_DBNAME: ${MYSQL_DATABASE:-greencycle}
+
+      # Redis
+      GREENCYCLE_REDIS_HOST: redis
+      GREENCYCLE_REDIS_PORT: 6379
+      GREENCYCLE_REDIS_PASSWORD: ""
+
+      # JWT
+      GREENCYCLE_JWT_SECRET: ${JWT_SECRET:-please-change-me-in-production}
+      GREENCYCLE_JWT_EXPIREHOURS: "720"
+
+      # 微信（生产环境从 .env 文件注入）
+      GREENCYCLE_WECHAT_APPID: ${WECHAT_APPID:-your-appid}
+      GREENCYCLE_WECHAT_APPSECRET: ${WECHAT_APPSECRET:-your-appsecret}
+
+      # COS
+      GREENCYCLE_COS_SECRETID: ${COS_SECRETID:-your-secret-id}
+      GREENCYCLE_COS_SECRETKEY: ${COS_SECRETKEY:-your-secret-key}
+      GREENCYCLE_COS_REGION: ${COS_REGION:-ap-shanghai}
+      GREENCYCLE_COS_BUCKET: ${COS_BUCKET:-greencycle-1250000000}
+      GREENCYCLE_COS_CDNDOMAIN: ${COS_CDN:-https://cdn.greencycle.com}
+
+      # 日志
+      GREENCYCLE_LOG_LEVEL: info
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - greencycle-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # ===========================================
+  # 4. Nginx 反向代理
+  # ===========================================
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: greencycle-nginx
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./nginx/logs:/var/log/nginx
+    networks:
+      - greencycle-net
+
+# ===========================================
+# 数据卷
+# ===========================================
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+
+# ===========================================
+# 网络
+# ===========================================
+networks:
+  greencycle-net:
+    driver: bridge

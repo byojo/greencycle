@@ -1,0 +1,96 @@
+<!--pages/points/points.wxml-->
+<view class="page">
+  <!-- 顶部 Hero：渐变绿 + 大数字 + 已种下N棵 -->
+  <view class="hero">
+    <view class="hero-nav">
+      <view class="back" bindtap="goBack">‹</view>
+      <view class="title">碳积分</view>
+      <view class="action" bindtap="onRule">规则</view>
+    </view>
+
+    <view class="hero-body">
+      <view class="balance-label">💰 当前积分余额</view>
+      <view class="balance">
+        <text class="icon">🌳</text>
+        <text class="num">{{balanceText}}</text>
+      </view>
+      <view class="hero-sub">已种下 {{treeCount}} 棵真树</view>
+    </view>
+  </view>
+
+  <!-- 统计卡片 2 列：碳积分 / 减碳 kg -->
+  <view class="stats">
+    <view class="stat-card">
+      <view class="stat-icon carbon">🌱</view>
+      <view class="stat-info">
+        <view class="stat-num">{{balanceText}}</view>
+        <view class="stat-label">碳积分</view>
+      </view>
+    </view>
+    <view class="stat-card">
+      <view class="stat-icon tree">🌳</view>
+      <view class="stat-info">
+        <view class="stat-num">{{carbonKgText}}</view>
+        <view class="stat-label">减碳 (kg)</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能入口 3 个横排：签到 / 兑换 / 提现 -->
+  <view class="actions">
+    <view class="action-item" bindtap="onSignIn">
+      <view class="action-icon" style="background:#FEF3C7;color:#D97706">📅</view>
+      <view class="action-label">每日签到</view>
+    </view>
+    <view class="action-item" bindtap="onExchange">
+      <view class="action-icon" style="background:#E8F8EE;color:#07C160">🎁</view>
+      <view class="action-label">兑换好礼</view>
+    </view>
+    <view class="action-item" bindtap="onWithdraw">
+      <view class="action-icon" style="background:#DBEAFE;color:#2563EB">💰</view>
+      <view class="action-label">提现</view>
+    </view>
+  </view>
+
+  <!-- 流水列表 -->
+  <view class="section-header">
+    <view class="section-title">积分明细</view>
+    <view class="section-tabs">
+      <view
+        wx:for="{{tabs}}"
+        wx:key="key"
+        class="section-tab {{item.active ? 'active' : ''}}"
+        data-key="{{item.key}}"
+        bindtap="onTabChange"
+      >{{item.label}}</view>
+    </view>
+  </view>
+
+  <view class="logs">
+    <view wx:for="{{logs}}" wx:key="id" class="log-item">
+      <view class="log-icon {{item.isPositive ? 'plus' : 'minus'}}">
+        {{item.iconText}}
+      </view>
+      <view class="log-info">
+        <view class="log-title">{{item.title}}</view>
+        <view class="log-time">{{item.timeText}}</view>
+      </view>
+      <view class="log-delta {{item.isPositive ? 'plus' : 'minus'}}">
+        {{item.deltaText}}
+      </view>
+    </view>
+    <view wx:if="{{logs.length === 0}}" class="empty">
+      <view class="empty-text">暂无明细</view>
+    </view>
+  </view>
+
+  <!-- 提示卡 -->
+  <view class="tip-card">
+    <view class="tip-icon">🌱</view>
+    <view class="tip-info">
+      <view class="tip-title">碳积分可兑换树苗 / 公益</view>
+      <view class="tip-sub">每 100 积分 = 1 棵树苗，由您亲种于西北荒漠</view>
+    </view>
+    <view class="tip-btn" bindtap="onExchange">去兑换</view>
+  </view>
+</view>

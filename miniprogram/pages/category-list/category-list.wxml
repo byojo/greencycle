@@ -1,0 +1,47 @@
+<!--pages/category-list/category-list.wxml-->
+<view class="page">
+  <!-- 顶部导航（白条） -->
+  <view class="nav">
+    <view class="nav-back" bindtap="onBack">
+      <text class="back-icon">‹</text>
+    </view>
+    <view class="nav-title">{{name}}</view>
+    <view class="nav-action" bindtap="onRecords">回收记录</view>
+  </view>
+
+  <!-- 品类 banner：左侧大图标 + 右侧多行文字 -->
+  <view class="banner" style="background:{{bannerBg}}">
+    <view class="banner-left">
+      <view class="banner-icon">{{icon}}</view>
+    </view>
+    <view class="banner-right">
+      <view class="banner-name">{{name}} · 0邮费上门</view>
+      <view class="banner-desc">{{bannerDesc}}</view>
+      <view class="banner-tip">{{bannerHint}}</view>
+    </view>
+  </view>
+
+  <!-- 选择类型标题 -->
+  <view class="list-title">选择{{categoryShort}}类型</view>
+
+  <!-- 2x2 网格 -->
+  <view class="grid">
+    <view
+      class="grid-item"
+      wx:for="{{items}}"
+      wx:key="id"
+      data-item="{{item}}"
+      bindtap="onItemTap"
+    >
+      <view class="grid-icon">{{item.icon}}</view>
+      <view class="grid-name">{{item.name}}</view>
+      <view class="grid-desc">{{item.desc}}</view>
+    </view>
+  </view>
+
+  <!-- 暂不回收提示 -->
+  <view class="warn">
+    <view class="warn-title">⚠️ 暂不回收</view>
+    <view class="warn-desc">{{warnDesc}}</view>
+  </view>
+</view>

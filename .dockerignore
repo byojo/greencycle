@@ -1,0 +1,39 @@
+# 构建上下文忽略（根目录）
+# 云托管构建时只 COPY . /build，这里排除不要的
+
+# Git
+.git
+.gitignore
+
+# 文档
+*.md
+README.md
+LICENSE
+docs/
+
+# 环境变量
+.env
+.env.*
+deploy/
+
+# 小程序（不需要进后端镜像）
+miniprogram/
+
+# 日志
+*.log
+logs/
+
+# CI/CD
+.github/
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# 构建产物
+bin/
+dist/
+*.zip
+*.tar.gz

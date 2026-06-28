@@ -1,0 +1,60 @@
+<!--pages/login/login.wxml-->
+<view class="page">
+  <!-- 顶部 logo + 标题 -->
+  <view class="logo-area">
+    <view class="logo-circle">
+      <view class="logo-emoji">✈️</view>
+    </view>
+    <view class="app-name">纸飞机</view>
+    <view class="slogan">让每一件旧物，都值得被温柔对待</view>
+  </view>
+
+  <!-- 3 个特色 -->
+  <view class="features">
+    <view class="feature">
+      <view class="feature-icon" style="background:#DBEAFE">
+        <text>📷</text>
+      </view>
+      <view class="feature-label">拍照即评估</view>
+    </view>
+    <view class="feature">
+      <view class="feature-icon" style="background:#E8F8EE">
+        <text>🚴</text>
+      </view>
+      <view class="feature-label">上门回收</view>
+    </view>
+    <view class="feature">
+      <view class="feature-icon" style="background:#FEF3C7">
+        <text>🌳</text>
+      </view>
+      <view class="feature-label">碳积分换礼</view>
+    </view>
+  </view>
+
+  <!-- 操作区 -->
+  <view class="actions">
+    <!-- 微信一键登录（绿色大按钮 + 微信图标） -->
+    <button
+      class="btn-login"
+      bindtap="onLogin"
+    >
+      <view class="wechat-icon">
+        <text class="wechat-text">微</text>
+      </view>
+      <text class="btn-text">微信一键登录</text>
+    </button>
+    <button class="btn-skip" bindtap="onSkip">暂不登录，先逛逛</button>
+  </view>
+
+  <!-- 协议勾选 -->
+  <view class="agreement">
+    <view class="agreement-check {{agreed ? 'checked' : ''}}" bindtap="onToggleAgree">
+      <view wx:if="{{agreed}}" class="check-mark">✓</view>
+    </view>
+    <view class="agreement-text">
+      登录即表示同意
+      <text class="link" bindtap="onUserAgreement">《用户协议》</text>
+      <text class="link" bindtap="onPrivacyPolicy">《隐私政策》</text>
+    </view>
+  </view>
+</view>

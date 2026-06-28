@@ -1,0 +1,17 @@
+<!--custom-tab-bar/index.wxml-->
+<view class="tab-bar">
+  <view
+    wx:for="{{list}}"
+    wx:key="pagePath"
+    class="tab-item {{item.isFab ? 'fab' : ''}} {{selected === index ? 'active' : ''}}"
+    data-index="{{index}}"
+    data-path="{{item.pagePath}}"
+    bindtap="switchTab"
+  >
+    <view wx:if="{{item.isFab}}" class="fab-circle">
+      <view class="fab-icon">{{item.icon}}</view>
+    </view>
+    <view wx:else class="tab-icon">{{item.icon}}</view>
+    <view class="tab-label">{{item.text}}</view>
+  </view>
+</view>

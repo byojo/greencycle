@@ -1,0 +1,314 @@
+version: 1
+plan:
+  name: '绿循环小程序 · UI 一比一对齐（Phase 1-3 并行）'
+  max_concurrency: 3
+  max_consecutive_failures: 2
+  max_cycles: 8
+  auto_reject_retries: 1
+tasks:
+
+  # ============================================================
+  # Track 1: 首页 + 品类流程（4 个页面）
+  # ============================================================
+  - id: ui-track-home-flow
+    title: '首页 + 品类选择 + 分类列表 + 照片上传 UI 还原'
+    prompt: |
+      目标：将以下 4 个小程序页面的样式 1:1 还原到 HTML 原型 /workspace/recycle-miniprogram/index.html 的视觉风格。
+
+      必须严格遵守：
+      - 设计 token 文档：/workspace/greencycle/docs/team/design-tokens.md
+      - 颜色值必须直接写具体值，不能用 var()（小程序 var() 兼容性问题）
+      - 所有 px 必须转换为 rpx（px * 2 = rpx，1px ≈ 2rpx）
+      - 项目目录：/workspace/greencycle/miniprogram/
+
+      涉及页面（已存在 wxml/wxss/js/json，只改样式，必要时小改 wxml）：
+      1. /workspace/greencycle/miniprogram/pages/home/home.{wxml,wxss,js}
+      2. /workspace/greencycle/miniprogram/pages/pick-category/pick-category.{wxml,wxss,js}
+      3. /workspace/greencycle/miniprogram/pages/category-list/category-list.{wxml,wxss,js}
+      4. /workspace/greencycle/miniprogram/pages/photo-upload/photo-upload.{wxml,wxss,js}
+
+      原型参考：/workspace/recycle-miniprogram/index.html
+      - 找到对应的 page id：#page-home / #page-pick-category / #page-category-phone / #page-photo-upload
+      - 搜索 CSS 类名（如 .home-hero, .quick-grid, .search-bar, .points-card, .story-card）
+      - 把视觉细节（颜色、间距、圆角、阴影、字号）1:1 还原
+
+      特别要求（必须执行）：
+      1. 8 大品类 emoji 改为：衣物 👕 / 手机 📱 / 数码 💻 / 家电 🔌 / 书籍 📚 / 废品 🥫 / 闲置包 👜 / 全部 ···
+         （home.js 和 pick-category.js 都要改）
+      2. 废品的图标从 ♻️ 改为 🥫
+      3. home.wxss 的 .categories 必须是 4 列 grid 布局
+      4. 环保承诺卡的绿色渐变 `linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)` + 边框 #A7F3D0
+      5. 碳积分卡：橙色渐变 + 大数字 + "查看 ›" 箭头
+      6. 故事横滑：每个 story-card 宽 320rpx，圆角 28rpx，cover 高 220rpx
+      7. photo-upload 顶部进度条要清晰展示 4 步：选品类(已) → 上传照片(当前) → 确认订单 → 完成
+      8. photo-upload 的动态字段 chip 选中态：背景 #07C160 + 白色文字 + 加粗
+      9. 每个 page 的 .page 容器必须有 min-height: 100vh 和 padding-bottom: 200rpx（留出 TabBar 空间）
+
+      输出：
+      - 修改的文件列表
+      - 每个文件的关键改动说明（不超过 3 行）
+      - 任何无法 1:1 还原的差异点（合理原因）
+    assigned_to: Coder
+    verified_by: Verifier
+    verify_prompt: |
+      任务：独立验证首页 + 品类流程 4 个页面的样式是否与 HTML 原型 1:1 对齐。
+
+      必查项（每项都要给结论 PASS/FAIL）：
+
+      1. 8 大品类 emoji 是否正确（衣物 👕 / 废品 🥫 / 其他按设计 token）
+         检查：home.js 第 16-25 行 + pick-category.js 的 CATEGORIES 常量
+
+      2. home.wxss 的 .categories 是否是 4 列 grid 布局
+         必含：display: grid; grid-template-columns: repeat(4, 1fr);
+
+      3. 颜色是否全部使用具体值
+         必查：grep "var(--" 应返回 0 行
+
+      4. 碳积分卡渐变：linear-gradient(135deg, #FF8C42 0%, #FF6B1A 100%)
+
+      5. 环保承诺卡：渐变 #ECFDF5→#D1FAE5 + 边框 #A7F3D0
+
+      6. 故事卡：宽 320rpx，圆角 28rpx，cover 高 220rpx
+
+      7. photo-upload 进度条 4 步：选品类/上传/确认/完成
+
+      8. 字段 chip 选中态：#07C160 背景 + 白色文字
+
+      9. 所有 page 容器有 min-height: 100vh
+
+      10. wxml 里不能出现 .toFixed()、.indexOf() 这类 WXML 不支持的方法调用
+
+      操作方式：
+      - 直接读 /workspace/greencycle/miniprogram/ 下的文件
+      - 读 /workspace/recycle-miniprogram/index.html 作为对照
+      - 读 /workspace/greencycle/docs/team/design-tokens.md 作为规范
+      - 列出 10 项的 PASS/FAIL，FAIL 项给具体行号和建议
+    timeout_ms: 1800000
+
+  # ============================================================
+  # Track 2: 订单流程（5 个页面）
+  # ============================================================
+  - id: ui-track-order-flow
+    title: '订单确认 + 成功 + 列表 + 详情 + 追踪 UI 还原'
+    prompt: |
+      目标：将以下 5 个订单相关页面的样式 1:1 还原。
+
+      涉及页面：
+      1. /workspace/greencycle/miniprogram/pages/order-confirm/order-confirm.{wxml,wxss,js}
+      2. /workspace/greencycle/miniprogram/pages/order-success/order-success.{wxml,wxss,js}
+      3. /workspace/greencycle/miniprogram/pages/order-list/order-list.{wxml,wxss,js}
+      4. /workspace/greencycle/miniprogram/pages/order-detail/order-detail.{wxml,wxss,js}
+      5. /workspace/greencycle/miniprogram/pages/order-track/order-track.{wxml,wxss,js}
+
+      必读：
+      - 设计 token：/workspace/greencycle/docs/team/design-tokens.md
+      - 原型：/workspace/recycle-miniprogram/index.html 找 #page-order / #page-order-list / #page-order-detail / #page-track
+
+      关键要求：
+
+      【order-confirm】（订单确认页）
+      - 顶部地址卡：白底圆角 24rpx，显示姓名/电话/详细地址
+      - 物品信息卡：展示品类图标 + 名称 + 数量
+      - 备注输入：textarea 风格 + 100 字限制
+      - 底部固定提交按钮栏：绿色主按钮"提交订单" + 价格说明"当面评估"
+      - 进度条：4 步可视化
+
+      【order-success】（下单成功）
+      - 顶部大对勾：96rpx 绿色圆形 + ✓
+      - "下单成功" 标题 + 副标题
+      - 流程说明：3-4 步流程图（接单 → 上门 → 评估 → 完成）
+      - "查看订单" + "返回首页" 双按钮
+
+      【order-list】（订单列表）
+      - 顶部筛选 chips：全部 / 进行中 / 已完成 / 已取消
+      - 时间提示行：📅 默认展示近三个月订单
+      - 按月分组：month-title 加粗大字号
+      - 订单 item：左侧品类图标（渐变色 + emoji）+ 中间品名/品类名 + 右侧时间 + › 箭头
+      - 底部提示：— 仅展示近 3 个月订单 —
+
+      【order-detail】（订单详情）
+      - 顶部状态条：根据 status 显示不同色（待评估灰/已派单蓝/已取件橙/已完成绿/已取消红）
+      - 物品信息：图片缩略图 + 品类 + 动态字段值
+      - 订单信息：订单号、下单时间、地址、回收员
+      - 环保贡献：碳积分 + 减碳 kg
+
+      【order-track】（订单追踪）
+      - 大时间线：左侧 dot 节点 + 右侧内容
+      - 4 步：已下单 / 已派单 / 上门中 / 已完成
+      - 当前步骤高亮绿色 + 脉冲动画
+      - 回收员卡片：头像 + 姓名 + 电话
+
+      通用规则：
+      - 颜色全部用具体值，不用 var()
+      - px 转 rpx（px * 2）
+      - WXML 不允许 .toFixed()、.indexOf() 等方法调用
+      - 每个 page 容器 min-height: 100vh + padding-bottom: 200rpx
+      - 数据：mock 数据中订单字段用 categoryCode（不是 category），且 status 1-5
+
+      输出：
+      - 修改的文件列表 + 关键改动说明
+      - 任何无法 1:1 还原的差异点
+    assigned_to: Coder
+    verified_by: Verifier
+    verify_prompt: |
+      任务：独立验证订单流程 5 个页面的样式是否与 HTML 原型对齐。
+
+      必查项（每项 PASS/FAIL）：
+
+      1. order-confirm 是否有：地址卡 / 物品信息卡 / 备注 / 底部固定提交栏 / 进度条
+      2. order-success 是否有：绿色大对勾 + 流程说明 + 双按钮
+      3. order-list 是否有：4 个筛选 chip + 按月分组 + 订单 item
+      4. order-detail 是否有：状态条 + 物品信息 + 订单信息 + 环保贡献
+      5. order-track 是否有：4 步时间线 + 当前步骤高亮 + 回收员卡
+
+      通用检查：
+      - 0 个 var() 残留（grep -r "var(--" pages/）
+      - 所有 page 容器有 min-height: 100vh
+      - WXML 无 .toFixed() / .indexOf() 等不支持方法
+      - mock 订单字段是 categoryCode 不是 category
+      - order-list.js 的 onShow 同步 selected: 1 到 TabBar
+      - order-track / order-detail 至少要有 mock 数据能展示完整流程
+
+      操作：
+      - 直接读 /workspace/greencycle/miniprogram/ 下的文件
+      - 读原型对照 /workspace/recycle-miniprogram/index.html
+      - 列出所有项 PASS/FAIL + 具体行号
+    timeout_ms: 1800000
+
+  # ============================================================
+  # Track 3: 其他页面（5 个）
+  # ============================================================
+  - id: ui-track-misc-pages
+    title: '积分 + 故事 + 地址 + 个人 + 登录 UI 还原'
+    prompt: |
+      目标：将以下 5 个页面的样式 1:1 还原。
+
+      涉及页面：
+      1. /workspace/greencycle/miniprogram/pages/points/points.{wxml,wxss,js}
+      2. /workspace/greencycle/miniprogram/pages/story/story.{wxml,wxss,js}
+      3. /workspace/greencycle/miniprogram/pages/address/address.{wxml,wxss,js}
+      4. /workspace/greencycle/miniprogram/pages/profile/profile.{wxml,wxss,js}
+      5. /workspace/greencycle/miniprogram/pages/login/login.{wxml,wxss,js}
+
+      必读：
+      - 设计 token：/workspace/greencycle/docs/team/design-tokens.md
+      - 原型：/workspace/recycle-miniprogram/index.html 找 #page-points / #page-story / #page-address / #page-profile / #page-login
+
+      关键要求：
+
+      【points】（碳积分页）
+      - 顶部 hero：渐变绿色背景 + 大数字（碳积分余额）+ "已种下 N 棵真树"
+      - 统计卡片 2 个：碳积分 / 减碳 kg（2 列）
+      - 功能入口：每日签到 / 兑换好礼 / 提现（3 个横排）
+      - 流水列表：每条 item 显示图标 + 描述 + 积分（+/- 区分颜色）
+      - 提示卡：底部 "碳积分可兑换树苗/公益"
+
+      【story】（故事列表）
+      - 顶部 tabs 横滑：全部 / 视频 / 图文
+      - 头条（feature）：大图 + 视频时长角标 + 标题 + 元数据
+      - 列表：每个 story-item 横向布局 + cover emoji + 标题 + meta
+      - 视频/图文标签
+
+      【address】（地址管理）
+      - 列表：每个地址卡：姓名+电话+默认徽章+详细地址
+      - 操作：编辑/删除/设为默认
+      - 底部固定按钮：+ 新增地址
+      - 空状态：🗑️ + 提示文字
+
+      【profile】（个人中心）
+      - 顶部用户卡：头像 + 昵称 + 等级 + 已认证
+      - 4 个数据统计：积分 / 减碳 / 订单数 / 在用
+      - 功能列表：我的订单 / 我的地址 / 邀请好友 / 联系客服 / 设置 / 关于
+      - 底部 logo + 版本号
+
+      【login】（登录页）
+      - 顶部 logo + "绿循环" 标题
+      - 微信一键登录按钮（绿色大按钮 + 微信图标）
+      - 协议勾选
+      - 3 个特色 feature：拍照即评估 / 上门回收 / 碳积分换礼
+
+      通用规则：
+      - 颜色全部用具体值，不用 var()
+      - px 转 rpx（px * 2）
+      - WXML 不允许 .toFixed()、.indexOf() 等方法调用
+      - 每个 page 容器 min-height: 100vh + padding-bottom: 200rpx
+      - 每个 tab 页 onShow 同步 selected 到 custom-tab-bar
+
+      输出：
+      - 修改的文件列表 + 关键改动说明
+      - 任何无法 1:1 还原的差异点
+    assigned_to: Coder
+    verified_by: Verifier
+    verify_prompt: |
+      任务：独立验证 5 个其他页面的样式是否与 HTML 原型对齐。
+
+      必查项（每项 PASS/FAIL）：
+
+      1. points：渐变 hero + 2 统计卡 + 3 功能入口 + 流水列表
+      2. story：tabs 横滑 + 头条大图 + 列表
+      3. address：地址卡 + 操作按钮 + 新增按钮
+      4. profile：用户卡 + 4 统计 + 功能列表
+      5. login：微信登录按钮 + 协议 + 3 个特色
+
+      通用检查：
+      - 0 个 var() 残留
+      - 所有 page 容器有 min-height: 100vh
+      - WXML 无不支持的方法
+      - 各 tab 页 onShow 同步 selected（story=3, profile=4）
+
+      操作同前。
+    timeout_ms: 1800000
+
+  # ============================================================
+  # 整合验证（最后跑）
+  # ============================================================
+  - id: ui-integration-verify
+    title: '所有页面整合一致性验证'
+    prompt: |
+      任务：作为整合验证者，对所有 14 个页面做全局一致性检查。
+
+      检查范围：
+      1. /workspace/greencycle/miniprogram/pages/home/home.wxss
+      2. /workspace/greencycle/miniprogram/pages/pick-category/
+      3. /workspace/greencycle/miniprogram/pages/category-list/
+      4. /workspace/greencycle/miniprogram/pages/photo-upload/
+      5. /workspace/greencycle/miniprogram/pages/order-confirm/
+      6. /workspace/greencycle/miniprogram/pages/order-success/
+      7. /workspace/greencycle/miniprogram/pages/order-list/
+      8. /workspace/greencycle/miniprogram/pages/order-detail/
+      9. /workspace/greencycle/miniprogram/pages/order-track/
+      10. /workspace/greencycle/miniprogram/pages/points/
+      11. /workspace/greencycle/miniprogram/pages/story/
+      12. /workspace/greencycle/miniprogram/pages/address/
+      13. /workspace/greencycle/miniprogram/pages/profile/
+      14. /workspace/greencycle/miniprogram/pages/login/
+      15. /workspace/greencycle/miniprogram/custom-tab-bar/
+
+      全局检查项（每项 PASS/FAIL）：
+      1. 所有页面用统一设计 token（颜色、间距、圆角、阴影）
+      2. 0 个 var() 残留
+      3. 0 个 WXML 不支持的方法（.toFixed() / .indexOf() 等）
+      4. 每个 page 都有 min-height: 100vh
+      5. 每个 page 都有 padding-bottom: 200rpx（留出 TabBar 空间）
+      6. 所有 5 个 tab 页 onShow 都同步 selected
+      7. mock 路由（mock.js）字段名一致（categoryCode / categoryName / itemName / date / time）
+      8. custom-tab-bar 中间 FAB 凸起样式正确
+      9. 项目能通过微信开发者工具编译（无 WXML 错误、无 wxss 错误）
+      10. 跟 HTML 原型对比，每个页面能找到对应 prototype page
+
+      输出：
+      - 完整 PASS/FAIL 报告
+      - 每个 FAIL 项的具体位置和建议
+      - 整体可发布就绪度评估
+    assigned_to: Verifier
+    verified_by: Verifier
+    verify_prompt: |
+      整合验证已由独立 verifier 完成。复检：
+      1. PASS/FAIL 报告是否覆盖所有 14 个页面
+      2. 关键 FAIL 项是否给出可操作的修复建议
+      3. 整体评估是否合理
+    depends_on:
+      - ui-track-home-flow
+      - ui-track-order-flow
+      - ui-track-misc-pages
+    timeout_ms: 1500000

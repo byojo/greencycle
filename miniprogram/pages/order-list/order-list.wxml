@@ -1,0 +1,89 @@
+<!--pages/order-list/order-list.wxml-->
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="nav">
+    <view class="nav-title">我的订单</view>
+    <view class="nav-action" bindtap="onFilter">筛选</view>
+  </view>
+
+  <!-- 状态筛选 chips -->
+  <view class="filter-bar">
+    <view
+      class="filter-chip {{status === 0 ? 'active' : ''}}"
+      data-status="0"
+      bindtap="onStatusChange"
+    >全部</view>
+    <view
+      class="filter-chip {{status === 1 || status === 2 || status === 3 ? 'active' : ''}}"
+      data-status="1"
+      bindtap="onStatusChange"
+    >进行中</view>
+    <view
+      class="filter-chip {{status === 4 ? 'active' : ''}}"
+      data-status="4"
+      bindtap="onStatusChange"
+    >已完成</view>
+    <view
+      class="filter-chip {{status === 5 ? 'active' : ''}}"
+      data-status="5"
+      bindtap="onStatusChange"
+    >已取消</view>
+  </view>
+
+  <!-- 时间提示行 -->
+  <view class="time-hint">
+    <text class="hint-text">📅 默认展示近三个月订单</text>
+    <text class="hint-more" bindtap="onMore">查看更早 ›</text>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-state">
+    <view class="loading-icon"></view>
+    <text>加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:elif="{{groupedOrders.length === 0}}" class="empty-state">
+    <view class="empty-icon">📭</view>
+    <view class="empty-text">暂无订单</view>
+    <button class="empty-btn" bindtap="goHome">去下单</button>
+  </view>
+
+  <!-- 订单列表 -->
+  <block wx:else>
+    <view wx:for="{{groupedOrders}}" wx:key="month" wx:for-item="group">
+      <view class="month-title">{{group.monthLabel}}</view>
+      <view class="order-list">
+        <view
+          class="order-item {{index === group.list.length - 1 ? 'last' : ''}}"
+          wx:for="{{group.list}}"
+          wx:key="id"
+          wx:for-item="order"
+          data-id="{{order.id}}"
+          data-category="{{order.categoryCode}}"
+          bindtap="onOrderTap"
+        >
+          <view class="order-icon" style="background:{{order.bg}}">{{order.icon}}</view>
+          <view class="order-info">
+            <view class="order-name">{{order.itemName}}</view>
+            <view class="order-cat">
+              <text class="order-cat-tag">{{order.categoryName}}</text>
+              <text wx:if="{{order.statusText}}" class="order-status-tag" style="color:{{order.statusColor}}">{{order.statusText}}</text>
+            </view>
+          </view>
+          <view class="order-time">
+            <view class="time-date">{{order.date}}</view>
+            <view class="time-hour">{{order.time}}</view>
+          </view>
+          <view class="order-arrow">›</view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 底部提示 -->
+  <view class="footer-tip">— 仅展示近 3 个月订单 —</view>
+
+  <!-- 底部安全区占位 -->
+  <view class="safe-area-bottom" style="height: 140rpx;"></view>
+</view>

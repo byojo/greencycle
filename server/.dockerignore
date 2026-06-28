@@ -1,0 +1,27 @@
+# 构建上下文忽略（不打包进 Docker）
+.git
+.gitignore
+.env
+.env.*
+*.md
+README.md
+Dockerfile.bak
+.dockerignore
+
+# 日志
+*.log
+logs/
+
+# 临时文件
+tmp/
+*.tmp
+*.bak
+*.swp
+
+# IDE
+.vscode
+.idea
+
+# 构建产物
+bin/
+dist/

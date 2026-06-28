@@ -1,0 +1,97 @@
+<!--pages/order-track/order-track.wxml-->
+<view class="page">
+  <!-- 顶部透明导航（在渐变背景上） -->
+  <view class="nav">
+    <view class="nav-back" bindtap="onBack">‹</view>
+    <view class="nav-title">订单详情</view>
+    <view class="nav-action" bindtap="onCall">客服</view>
+  </view>
+
+  <!-- 顶部状态条（绿色渐变 + 白字） -->
+  <view class="status-bar">
+    <view class="state-row">
+      <view class="pulse-dot"></view>
+      <text class="state-text">{{stateText}}</text>
+    </view>
+    <view class="eta-title">{{etaTitle}}</view>
+    <view class="eta-info">骑手距您 {{distance}} · 预计 {{eta}} 分钟</view>
+  </view>
+
+  <!-- 地图 mock -->
+  <view class="map-mock">
+    <view class="map-grid"></view>
+    <view class="route"></view>
+    <view class="user-pin">📍</view>
+    <view class="rider-pin">🚴</view>
+  </view>
+
+  <!-- 回收员卡片（头像 + 姓名 + 电话） -->
+  <view class="rider-card">
+    <view class="avatar">{{rider.avatar}}</view>
+    <view class="rider-info">
+      <view class="rider-name">
+        {{rider.name}}
+        <text class="rating">⭐ {{rider.rating}}</text>
+      </view>
+      <view class="rider-meta">{{rider.phone}} · {{rider.plate}}</view>
+    </view>
+    <view class="rider-actions">
+      <view class="action-btn" bindtap="onCallPhone">
+        <text>📞</text>
+      </view>
+      <view class="action-btn" bindtap="onChat">
+        <text>💬</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 大时间线（4 步：已下单 / 已派单 / 上门中 / 已完成） -->
+  <view class="timeline-card">
+    <view class="timeline-title">📍 订单进度</view>
+    <view class="timeline">
+      <view
+        wx:for="{{timeline}}"
+        wx:key="id"
+        class="tl-item {{item.status}}"
+      >
+        <view class="tl-dot">
+          <text wx:if="{{item.status === 'done'}}">✓</text>
+          <text wx:elif="{{item.status === 'active'}}">●</text>
+          <text wx:else>{{item.id}}</text>
+        </view>
+        <view class="tl-body">
+          <view class="tl-step">{{item.step}}</view>
+          <view class="tl-title">{{item.title}}</view>
+          <view class="tl-time">{{item.time}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 订单信息 -->
+  <view class="info-card">
+    <view class="card-title">📋 订单信息</view>
+    <view class="info-row">
+      <text class="info-key">订单编号</text>
+      <text class="info-val">{{orderNo}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-key">回收品类</text>
+      <text class="info-val">{{catText}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-key">回收时间</text>
+      <text class="info-val">{{estimatedAt}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-key">回收金额</text>
+      <text class="info-val highlight">👨‍🔧 上门当面评估</text>
+    </view>
+  </view>
+
+  <!-- 操作 -->
+  <view class="actions safe-area-bottom">
+    <button class="btn-ghost" bindtap="onShareLocation">📍 共享位置</button>
+    <button class="btn-danger" bindtap="onCancel">取消订单</button>
+  </view>
+</view>

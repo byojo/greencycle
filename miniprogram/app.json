@@ -1,0 +1,58 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/pick-category/pick-category",
+    "pages/category-list/category-list",
+    "pages/photo-upload/photo-upload",
+    "pages/order-confirm/order-confirm",
+    "pages/order-success/order-success",
+    "pages/order-list/order-list",
+    "pages/order-detail/order-detail",
+    "pages/order-track/order-track",
+    "pages/points/points",
+    "pages/profile/profile",
+    "pages/story/story",
+    "pages/address/address",
+    "pages/address-edit/address-edit",
+    "pages/invite/invite",
+    "pages/settings/settings",
+    "pages/login/login"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#07C160",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "纸飞机",
+    "backgroundColor": "#F7F8FA",
+    "backgroundTextStyle": "dark",
+    "enablePullDownRefresh": false
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#9CA3AF",
+    "selectedColor": "#07C160",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/photo-upload/photo-upload",
+        "text": "下单"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于显示附近的回收服务"
+    }
+  },
+  "requiredPrivateInfos": ["getLocation"],
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

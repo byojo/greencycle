@@ -1,0 +1,418 @@
+/* pages/order-track/order-track.wxss */
+.page {
+  min-height: 100vh;
+  background: #F7F8FA;
+  padding-bottom: 200rpx;
+}
+
+/* ============ 顶部透明导航（在绿色渐变上） ============ */
+.nav {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #07C160 0%, #06AD56 100%);
+  color: #FFFFFF;
+  position: relative;
+  z-index: 10;
+}
+.nav-back {
+  width: 80rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  color: #FFFFFF;
+}
+.nav-title {
+  flex: 1;
+  text-align: center;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+.nav-action {
+  position: absolute;
+  right: 32rpx;
+  font-size: 28rpx;
+  color: #FFFFFF;
+}
+
+/* ============ 顶部状态条（绿色渐变 + 白字） ============ */
+.status-bar {
+  background: linear-gradient(135deg, #07C160 0%, #06AD56 100%);
+  padding: 16rpx 32rpx 48rpx;
+  color: #FFFFFF;
+}
+.state-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+.pulse-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6);
+  animation: pulseDot 1.6s infinite;
+}
+@keyframes pulseDot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6); }
+  50% { box-shadow: 0 0 0 12rpx rgba(255, 255, 255, 0); }
+}
+.state-text {
+  font-size: 26rpx;
+  opacity: 0.95;
+}
+.eta-title {
+  font-size: 44rpx;
+  font-weight: 700;
+  margin-top: 8rpx;
+}
+.eta-info {
+  font-size: 24rpx;
+  opacity: 0.9;
+  margin-top: 12rpx;
+}
+
+/* ============ 地图 mock ============ */
+.map-mock {
+  margin: -24rpx 32rpx 0;
+  height: 280rpx;
+  background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+  border-radius: 24rpx;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.06);
+  z-index: 2;
+}
+.map-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.4) 1px, transparent 1px);
+  background-size: 60rpx 60rpx;
+}
+.route {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  right: 30%;
+  height: 6rpx;
+  background: #07C160;
+  border-radius: 4rpx;
+  transform: translateY(-50%) rotate(-8deg);
+  box-shadow: 0 2rpx 6rpx rgba(7, 193, 96, 0.4);
+}
+.route::before {
+  content: '';
+  position: absolute;
+  left: -4rpx;
+  top: -8rpx;
+  width: 20rpx;
+  height: 20rpx;
+  background: #07C160;
+  border-radius: 50%;
+  border: 3rpx solid #FFFFFF;
+}
+.route::after {
+  content: '';
+  position: absolute;
+  right: -4rpx;
+  top: -8rpx;
+  width: 20rpx;
+  height: 20rpx;
+  background: #FF8C42;
+  border-radius: 50%;
+  border: 3rpx solid #FFFFFF;
+}
+.user-pin, .rider-pin {
+  position: absolute;
+  width: 72rpx;
+  height: 72rpx;
+  background: #FFFFFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.18);
+  z-index: 2;
+}
+.rider-pin {
+  top: 50%;
+  left: 40%;
+  transform: translate(-50%, -50%) rotate(-8deg);
+}
+.user-pin {
+  top: 50%;
+  right: 18%;
+  transform: translate(50%, -50%);
+  background: #FF8C42;
+  color: #FFFFFF;
+  font-size: 32rpx;
+}
+
+/* ============ 回收员卡片（头像 + 姓名 + 电话） ============ */
+.rider-card {
+  margin: 24rpx 32rpx 0;
+  padding: 28rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+.avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 36rpx;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.rider-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+.rider-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1F2937;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+.rating {
+  background: #FF8C42;
+  color: #FFFFFF;
+  padding: 2rpx 12rpx;
+  border-radius: 8rpx;
+  font-size: 20rpx;
+  font-weight: 600;
+}
+.rider-meta {
+  font-size: 22rpx;
+  color: #6B7280;
+}
+.rider-actions {
+  display: flex;
+  gap: 16rpx;
+  flex-shrink: 0;
+}
+.action-btn {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: #E8F8EE;
+  color: #07C160;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+}
+
+/* ============ 大时间线（4 步） ============ */
+.timeline-card {
+  margin: 24rpx 32rpx 0;
+  padding: 28rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+.timeline-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 24rpx;
+}
+.timeline {
+  position: relative;
+  padding-left: 4rpx;
+}
+.tl-item {
+  position: relative;
+  display: flex;
+  gap: 24rpx;
+  padding-bottom: 36rpx;
+}
+.tl-item:last-child {
+  padding-bottom: 0;
+}
+.tl-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 22rpx;
+  top: 48rpx;
+  bottom: 0;
+  width: 4rpx;
+  background: #E5E7EB;
+  border-radius: 2rpx;
+}
+.tl-item.done:not(:last-child)::before {
+  background: #07C160;
+}
+.tl-dot {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: #E5E7EB;
+  color: #9CA3AF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  font-weight: 700;
+  flex-shrink: 0;
+  z-index: 1;
+  box-shadow: 0 0 0 6rpx #FFFFFF;
+}
+.tl-item.done .tl-dot {
+  background: #07C160;
+  color: #FFFFFF;
+}
+/* 当前步骤高亮绿色 + 脉冲动画 */
+.tl-item.active .tl-dot {
+  background: #07C160;
+  color: #FFFFFF;
+  font-size: 28rpx;
+  box-shadow: 0 0 0 0 rgba(7, 193, 96, 0.4);
+  animation: tlPulse 1.6s infinite;
+}
+@keyframes tlPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(7, 193, 96, 0.4); }
+  50% { box-shadow: 0 0 0 12rpx rgba(7, 193, 96, 0.05); }
+}
+.tl-item.pending .tl-dot {
+  background: #F3F4F6;
+  color: #9CA3AF;
+}
+.tl-body {
+  flex: 1;
+  padding-top: 4rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+.tl-step {
+  font-size: 20rpx;
+  color: #9CA3AF;
+  font-weight: 500;
+}
+.tl-item.active .tl-step {
+  color: #07C160;
+  font-weight: 700;
+}
+.tl-item.done .tl-step {
+  color: #07C160;
+  font-weight: 600;
+}
+.tl-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+.tl-item.pending .tl-title {
+  color: #9CA3AF;
+}
+.tl-time {
+  font-size: 22rpx;
+  color: #9CA3AF;
+  margin-top: 2rpx;
+}
+
+/* ============ 订单信息 ============ */
+.info-card {
+  margin: 24rpx 32rpx 0;
+  padding: 28rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+.card-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 16rpx;
+}
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #F3F4F6;
+}
+.info-row:last-child {
+  border-bottom: none;
+}
+.info-key {
+  font-size: 26rpx;
+  color: #6B7280;
+  flex-shrink: 0;
+}
+.info-val {
+  font-size: 26rpx;
+  color: #1F2937;
+  font-weight: 500;
+  text-align: right;
+}
+.info-val.highlight {
+  color: #07C160;
+  font-weight: 600;
+}
+
+/* ============ 操作按钮 ============ */
+.actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24rpx 32rpx;
+  background: #FFFFFF;
+  border-top: 1rpx solid #E5E7EB;
+  display: flex;
+  gap: 20rpx;
+  z-index: 100;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+}
+.btn-ghost {
+  flex: 1;
+  height: 88rpx;
+  background: #FFFFFF;
+  border: 2rpx solid #E5E7EB;
+  border-radius: 44rpx;
+  color: #1F2937;
+  font-size: 28rpx;
+  font-weight: 600;
+  line-height: 84rpx;
+  text-align: center;
+}
+.btn-ghost::after {
+  border: none;
+}
+.btn-danger {
+  flex: 1;
+  height: 88rpx;
+  background: #FFFFFF;
+  border: 2rpx solid #FCA5A5;
+  border-radius: 44rpx;
+  color: #DC2626;
+  font-size: 28rpx;
+  font-weight: 600;
+  line-height: 84rpx;
+  text-align: center;
+}
+.btn-danger::after {
+  border: none;
+}

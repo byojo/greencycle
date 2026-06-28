@@ -1,0 +1,168 @@
+/* pages/pick-category/pick-category.wxss */
+/* 严格遵循 design-tokens.md：所有 var() 已展开为具体值，所有 px 已转 rpx（×2）*/
+
+.page {
+  min-height: 100vh;
+  background: #F7F8FA;
+  padding: 0 32rpx 200rpx; /* 留出自定义 TabBar 空间 */
+}
+
+/* ============ 顶部导航 ============ */
+.nav {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  margin: 0 -32rpx; /* 让导航条横到边缘 */
+}
+.nav-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+/* ============ 顶部提示卡（绿色渐变） ============ */
+.tips {
+  margin-top: 24rpx;
+  padding: 32rpx;
+  background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+  border: 2rpx solid #A7F3D0;
+  border-radius: 28rpx;
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+.tips-icon {
+  font-size: 60rpx;
+  line-height: 1;
+}
+.tips-content { flex: 1; }
+.tips-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+.tips-sub {
+  font-size: 22rpx;
+  color: #6B7280;
+  margin-top: 8rpx;
+}
+
+/* ============ 品类标题 ============ */
+.section-title {
+  margin-top: 40rpx;
+  margin-bottom: 24rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #6B7280;
+}
+
+/* ============ 品类网格（4 列） ============ */
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24rpx;
+}
+.cat-item {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 24rpx 12rpx;
+  text-align: center;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+.cat-icon {
+  width: 96rpx;
+  height: 96rpx;
+  margin: 0 auto 12rpx;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  line-height: 1;
+}
+.cat-name {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+.cat-desc {
+  font-size: 20rpx;
+  color: #9CA3AF;
+  margin-top: 4rpx;
+}
+
+/* ============ 常见问题 ============ */
+.help {
+  margin-top: 40rpx;
+  padding: 32rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+.help-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 20rpx;
+}
+.help-item {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  font-size: 24rpx;
+  color: #6B7280;
+  margin-bottom: 12rpx;
+  line-height: 1.5;
+}
+.help-icon {
+  font-size: 28rpx;
+}
+.help-btn {
+  margin-top: 24rpx;
+  width: 100%;
+  background: #E8F8EE;
+  color: #06A050;
+  border-radius: 24rpx;
+  padding: 24rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.help-btn::after { border: none; }
+
+/* ============ 上次回收 ============ */
+.recent {
+  margin-top: 40rpx;
+}
+.recent-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 16rpx;
+}
+.recent-items {
+  white-space: nowrap;
+}
+.recent-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 16rpx 24rpx;
+  font-size: 24rpx;
+  color: #1F2937;
+  font-weight: 500;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+.recent-emoji {
+  font-size: 28rpx;
+  line-height: 1;
+}
+.recent-name {
+  margin-left: 4rpx;
+}

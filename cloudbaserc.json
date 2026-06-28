@@ -1,0 +1,40 @@
+{
+  "version": "2.0",
+  "envId": "your-env-id",
+  "framework": {
+    "name": "greencycle",
+    "plugins": {
+      "service": {
+        "name": "greencycle-api",
+        "path": "./server",
+        "dockerfile": "./Dockerfile",
+        "containerPort": 80,
+        "minNum": 0,
+        "maxNum": 5,
+        "cpu": 1,
+        "mem": 2,
+        "envVariables": {
+          "SERVER_MODE": "release",
+          "MYSQL_USERNAME": "${env.MYSQL_USERNAME}",
+          "MYSQL_PASSWORD": "${env.MYSQL_PASSWORD}",
+          "MYSQL_ADDRESS": "${env.MYSQL_ADDRESS}",
+          "MYSQL_DATABASE": "${env.MYSQL_DATABASE}",
+          "JWT_SECRET": "${env.JWT_SECRET}",
+          "WECHAT_APPID": "${env.WECHAT_APPID}",
+          "WECHAT_APPSECRET": "${env.WECHAT_APPSECRET}",
+          "COS_SECRETID": "${env.COS_SECRETID}",
+          "COS_SECRETKEY": "${env.COS_SECRETKEY}",
+          "COS_REGION": "${env.COS_REGION}",
+          "COS_BUCKET": "${env.COS_BUCKET}",
+          "COS_CDN": "${env.COS_CDN}"
+        },
+        "servicePath": "/api",
+        "healthCheck": {
+          "type": "HTTP",
+          "path": "/health",
+          "port": 80
+        }
+      }
+    }
+  }
+}

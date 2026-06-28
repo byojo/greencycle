@@ -1,0 +1,48 @@
+/* variables.wxss - 全局变量 */
+
+page {
+  /* 主题色 */
+  --color-primary: #4CAF50;
+  --color-primary-light: #66BB6A;
+  --color-primary-dark: #388E3C;
+  --color-secondary: #2E7D32;
+  --color-accent: #8BC34A;
+  
+  /* 功能色 */
+  --color-success: #4CAF50;
+  --color-warning: #FF9800;
+  --color-danger: #F44336;
+  --color-info: #2196F3;
+  
+  /* 中性色 */
+  --color-text-primary: #333;
+  --color-text-regular: #666;
+  --color-text-secondary: #999;
+  --color-text-placeholder: #c0c4cc;
+  
+  --color-bg-page: #f5f5f5;
+  --color-bg-card: #ffffff;
+  --color-border: #ebeef5;
+  --color-divider: #f0f0f0;
+  
+  /* 间距 */
+  --space-xs: 8rpx;
+  --space-sm: 16rpx;
+  --space-md: 24rpx;
+  --space-lg: 32rpx;
+  --space-xl: 48rpx;
+  
+  /* 字号 */
+  --font-xs: 22rpx;
+  --font-sm: 26rpx;
+  --font-md: 28rpx;
+  --font-lg: 32rpx;
+  --font-xl: 36rpx;
+  --font-xxl: 44rpx;
+  
+  /* 圆角 */
+  --radius-sm: 8rpx;
+  --radius-md: 16rpx;
+  --radius-lg: 24rpx;
+  --radius-circle: 50%;
+}

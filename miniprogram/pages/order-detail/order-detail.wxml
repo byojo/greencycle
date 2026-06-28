@@ -1,0 +1,124 @@
+<!--pages/order-detail/order-detail.wxml-->
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="nav">
+    <view class="nav-back" bindtap="onBack">‹</view>
+    <view class="nav-title">订单详情</view>
+    <view class="nav-action" bindtap="onContact">客服</view>
+  </view>
+
+  <!-- 状态条（按 status 显示不同色） -->
+  <view class="status-bar" style="background:{{statusBarBg}}">
+    <view class="status-icon-row">
+      <view class="status-icon">{{statusIcon}}</view>
+      <text class="status-text">{{statusText}}</text>
+    </view>
+    <view class="amount" wx:if="{{status === 4}}">{{amountText}}</view>
+    <view class="amount-time" wx:if="{{status === 4}}">{{completedAt}} · 微信钱包</view>
+    <view class="amount-time" wx:elif="{{status === 5}}">{{cancelReason || '用户主动取消'}}</view>
+    <view class="amount-time" wx:elif="{{status === 3}}">{{rider.name}} 已到达 {{rider.distance}}</view>
+    <view class="amount-time" wx:elif="{{status === 2}}">回收员 {{rider.name}} 正在前往</view>
+    <view class="amount-time" wx:else>提交于 {{createdAt}} · 等待回收员评估</view>
+  </view>
+
+  <!-- 回收物品 -->
+  <view class="card">
+    <view class="card-title">📦 回收物品</view>
+    <view class="item-row">
+      <view class="item-thumb" wx:if="{{photos.length > 0}}">
+        <image src="{{photos[0]}}" class="thumb-img" mode="aspectFill" />
+      </view>
+      <view class="item-icon-fallback" wx:elif="{{info}}" style="background:{{info.bg}}">{{info.icon}}</view>
+      <view class="item-info">
+        <view class="item-name" wx:if="{{info}}">{{info.item}}</view>
+        <view class="item-desc" wx:if="{{info}}">{{info.desc}}</view>
+        <view class="item-attrs" wx:if="{{info && info.attrs}}">
+          <text wx:for="{{info.attrs}}" wx:key="*this" class="attr-chip">{{item}}</text>
+        </view>
+      </view>
+      <view class="item-price" wx:if="{{amountText && status === 4}}">{{priceText}}</view>
+    </view>
+  </view>
+
+  <!-- 时间节点 -->
+  <view class="card">
+    <view class="card-title">⏱️ 时间节点</view>
+    <view class="timeline">
+      <view class="timeline-item">
+        <view class="dot {{status >= 1 ? 'done' : ''}}"></view>
+        <view class="info">
+          <view class="title">下单</view>
+          <view class="time">{{createdAt}}</view>
+        </view>
+      </view>
+      <view class="timeline-item">
+        <view class="dot {{status >= 2 ? 'done' : ''}}"></view>
+        <view class="info">
+          <view class="title">派单</view>
+          <view class="time">{{rider.dispatchedAt || (status >= 2 ? '已分配回收员' : '等待中')}}</view>
+        </view>
+      </view>
+      <view class="timeline-item">
+        <view class="dot {{status >= 3 ? 'done' : ''}}"></view>
+        <view class="info">
+          <view class="title">上门回收</view>
+          <view class="time">{{pickupAt || (status >= 3 ? rider.name + ' 已到达' : '等待中')}}</view>
+        </view>
+      </view>
+      <view class="timeline-item">
+        <view class="dot {{status >= 4 ? 'done' : ''}}"></view>
+        <view class="info">
+          <view class="title">回收完成</view>
+          <view class="time">{{completedAt || '回收员评估完成后'}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 环保贡献 -->
+  <view class="carbon-card">
+    <view class="carbon-icon">🌍</view>
+    <view class="carbon-info">
+      <view class="carbon-title">你为地球减碳 {{carbonKg}}kg</view>
+      <view class="carbon-sub">已获得 {{carbonPoints}} 碳积分 · 已种下 {{treeCount}} 棵树</view>
+    </view>
+    <view class="carbon-cert" bindtap="onCert">证书 ›</view>
+  </view>
+
+  <!-- 订单信息 -->
+  <view class="card">
+    <view class="card-title">📋 订单信息</view>
+    <view class="info-row">
+      <text class="info-key">订单编号</text>
+      <text class="info-val">{{orderNo}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-key">回收品类</text>
+      <text class="info-val">{{catText}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-key">下单时间</text>
+      <text class="info-val">{{createdAt}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-key">回收地址</text>
+      <text class="info-val">{{pickupAddr}}</text>
+    </view>
+    <view class="info-row" wx:if="{{status >= 2 && status <= 4}}">
+      <text class="info-key">回收员</text>
+      <text class="info-val">{{rider.name}} {{rider.phone}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-key">支付方式</text>
+      <text class="info-val">微信钱包</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="actions safe-area-bottom">
+    <button class="btn-ghost" bindtap="onApplyAfterSale" wx:if="{{status === 4}}">申请售后</button>
+    <button class="btn-ghost" bindtap="onContact" wx:elif="{{status === 5}}">再次回收</button>
+    <button class="btn-ghost" bindtap="onTrack" wx:elif="{{status >= 1 && status <= 3}}">查看追踪</button>
+    <button class="btn-primary" bindtap="onAgain">{{againText}}</button>
+  </view>
+</view>

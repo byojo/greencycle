@@ -1,0 +1,299 @@
+/* pages/points/points.wxss */
+.page {
+  min-height: 100vh;
+  background: #F7F8FA;
+  padding-bottom: 200rpx;
+}
+
+/* === Hero（渐变绿） === */
+.hero {
+  background: linear-gradient(135deg, #07C160 0%, #06AD56 100%);
+  padding: 0 32rpx 80rpx;
+  color: #FFFFFF;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -120rpx;
+  right: -120rpx;
+  width: 440rpx;
+  height: 440rpx;
+  background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -80rpx;
+  left: -80rpx;
+  width: 280rpx;
+  height: 280rpx;
+  background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.hero-nav {
+  display: flex;
+  align-items: center;
+  height: 88rpx;
+  position: relative;
+  z-index: 5;
+}
+.hero-nav .back {
+  width: 80rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  font-weight: 300;
+  color: #FFFFFF;
+}
+.hero-nav .title {
+  flex: 1;
+  text-align: center;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+.hero-nav .action {
+  width: 80rpx;
+  text-align: right;
+  font-size: 26rpx;
+  color: #FFFFFF;
+}
+
+.hero-body {
+  margin-top: 24rpx;
+  position: relative;
+  z-index: 5;
+}
+.balance-label {
+  font-size: 26rpx;
+  opacity: 0.9;
+}
+.balance {
+  display: flex;
+  align-items: baseline;
+  margin: 12rpx 0 0;
+  letter-spacing: -2rpx;
+}
+.balance .icon {
+  font-size: 44rpx;
+  margin-right: 12rpx;
+}
+.balance .num {
+  font-size: 88rpx;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.hero-sub {
+  font-size: 26rpx;
+  opacity: 0.92;
+  margin-top: 12rpx;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+/* === 统计卡片 2 列 === */
+.stats {
+  margin: -40rpx 32rpx 0;
+  display: flex;
+  gap: 20rpx;
+  position: relative;
+  z-index: 5;
+}
+.stat-card {
+  flex: 1;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 28rpx 24rpx;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.06);
+}
+.stat-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  flex-shrink: 0;
+}
+.stat-icon.carbon { background: #ECFDF5; }
+.stat-icon.tree { background: #D1FAE5; }
+.stat-info { flex: 1; min-width: 0; }
+.stat-num {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1F2937;
+  line-height: 1.2;
+}
+.stat-label {
+  font-size: 22rpx;
+  color: #6B7280;
+  margin-top: 4rpx;
+}
+
+/* === 功能入口 3 个横排 === */
+.actions {
+  margin: 24rpx 32rpx 0;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 32rpx 0;
+  display: flex;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+.action-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+}
+.action-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+}
+.action-label {
+  font-size: 26rpx;
+  color: #1F2937;
+}
+
+/* === 区块标题 + Tabs === */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 32rpx 32rpx 16rpx;
+}
+.section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1F2937;
+}
+.section-tabs {
+  display: flex;
+  background: #F3F4F6;
+  border-radius: 16rpx;
+  padding: 4rpx;
+}
+.section-tab {
+  padding: 8rpx 20rpx;
+  font-size: 24rpx;
+  color: #6B7280;
+  border-radius: 12rpx;
+}
+.section-tab.active {
+  background: #07C160;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+/* === 流水 === */
+.logs {
+  background: #FFFFFF;
+  margin: 0 32rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+}
+.log-item {
+  padding: 28rpx 24rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  border-bottom: 1rpx solid #F3F4F6;
+}
+.log-item:last-child { border-bottom: none; }
+.log-icon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.log-icon.plus { background: #E8F8EE; color: #07C160; }
+.log-icon.minus { background: #FEE2E2; color: #EF4444; }
+.log-info { flex: 1; min-width: 0; }
+.log-title {
+  font-size: 28rpx;
+  color: #1F2937;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.log-time {
+  font-size: 22rpx;
+  color: #9CA3AF;
+  margin-top: 4rpx;
+}
+.log-delta {
+  font-size: 30rpx;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.log-delta.plus { color: #07C160; }
+.log-delta.minus { color: #EF4444; }
+
+.empty {
+  padding: 60rpx 0;
+  text-align: center;
+}
+.empty-text {
+  font-size: 26rpx;
+  color: #9CA3AF;
+}
+
+/* === 提示卡 === */
+.tip-card {
+  margin: 32rpx;
+  padding: 28rpx 24rpx;
+  background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+  border: 2rpx solid #A7F3D0;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+.tip-icon {
+  font-size: 56rpx;
+  flex-shrink: 0;
+}
+.tip-info { flex: 1; min-width: 0; }
+.tip-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1F2937;
+  line-height: 1.4;
+}
+.tip-sub {
+  font-size: 22rpx;
+  color: #6B7280;
+  margin-top: 4rpx;
+  line-height: 1.4;
+}
+.tip-btn {
+  background: #07C160;
+  color: #FFFFFF;
+  border-radius: 100rpx;
+  font-size: 24rpx;
+  padding: 12rpx 24rpx;
+  font-weight: 600;
+  flex-shrink: 0;
+}

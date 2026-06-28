@@ -1,0 +1,46 @@
+# 绿循环服务端配置
+server:
+  addr: ":8080"
+  mode: "release"  # debug / release / test
+
+mysql:
+  host: "127.0.0.1"
+  port: 3306
+  user: "greencycle"
+  password: "your_password"
+  dbname: "greencycle"
+  charset: "utf8mb4"
+  parseTime: true
+  loc: "Local"
+  maxOpenConns: 100
+  maxIdleConns: 10
+
+redis:
+  host: "127.0.0.1"
+  port: 6379
+  password: ""
+  db: 0
+  poolSize: 100
+
+jwt:
+  secret: "your-jwt-secret-change-in-production"
+  expireHours: 720  # 30 天
+
+wechat:
+  appID: "your-wechat-appid"
+  appSecret: "your-wechat-appsecret"
+
+cos:
+  secretID: "your-cos-secret-id"
+  secretKey: "your-cos-secret-key"
+  region: "ap-shanghai"
+  bucket: "greencycle-1250000000"
+  uploadPrefix: "order-images/"
+  cdnDomain: "https://cdn.greencycle.com"
+
+log:
+  level: "info"  # debug / info / warn / error
+  path: "./logs/app.log"
+  maxSize: 100  # MB
+  maxAge: 30  # days
+  maxBackups: 10

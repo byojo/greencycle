@@ -1,0 +1,57 @@
+# ===== 操作系统 =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== IDE =====
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ===== 敏感配置（绝对不能 commit！）=====
+# 包含 AppSecret / DB 密码 / JWT 密钥 等
+.env
+.env.local
+.env.*.local
+*.env
+deploy/.env
+server/.env
+config.local.js
+secret.txt
+credentials.json
+
+# ===== 日志 =====
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm/
+.tmp/
+
+# ===== 构建产物 =====
+dist/
+build/
+target/
+bin/
+*.zip
+*.tar.gz
+
+# ===== 依赖 =====
+node_modules/
+vendor/
+
+# ===== 数据库 / 上传 =====
+*.db
+*.sqlite
+uploads/
+runtime/
+
+# ===== 测试覆盖率 =====
+coverage/
+*.lcov
+
+# ===== 微信小程序 =====
+miniprogram_npm/
+project.private.config.json

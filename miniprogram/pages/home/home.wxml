@@ -1,0 +1,62 @@
+<!--pages/home/home.wxml-->
+<view class="page">
+  <!-- 顶部 Banner -->
+  <view class="banner">
+    <view class="location">
+      <text class="loc-icon">📍</text>
+      <text>{{location}}</text>
+      <text class="arrow">▾</text>
+    </view>
+    <view class="greeting">
+      <view class="hello">{{greeting}}</view>
+      <view class="name">{{userInfo.nickname || '绿友'}}</view>
+    </view>
+
+    <!-- 搜索框 -->
+    <view class="search" bindtap="onSearchConfirm">
+      <text class="search-icon">🔍</text>
+      <input
+        class="search-input"
+        placeholder="搜索回收品类 · iPhone · 羽绒服..."
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        bindconfirm="onSearchConfirm"
+        confirm-type="search"
+      />
+    </view>
+  </view>
+
+  <!-- 8 大分类 -->
+  <view class="categories">
+    <view
+      class="cat-card"
+      wx:for="{{categories}}"
+      wx:key="code"
+      data-code="{{item.code}}"
+      bindtap="onCategoryTap"
+    >
+      <view class="cat-icon" style="background:{{item.color}}">{{item.icon}}</view>
+      <view class="cat-label">{{item.name}}</view>
+    </view>
+  </view>
+
+  <!-- 碳积分卡片 -->
+  <view class="points-card" bindtap="goPoints">
+    <view class="points-icon">🌳</view>
+    <view class="points-info">
+      <view class="points-num">{{points}}</view>
+      <view class="points-label">碳积分 · 已为地球减碳 {{carbonKg}}kg</view>
+    </view>
+    <view class="points-arrow">查看 ›</view>
+  </view>
+
+  <!-- 环保承诺 -->
+  <view class="commit">
+    <view class="commit-icon">🌍</view>
+    <view class="commit-text">
+      <view class="commit-title">你已为地球减少 {{carbonKg}}kg 碳排放</view>
+      <view class="commit-sub">相当于种下 {{treeCount}} 棵树</view>
+    </view>
+    <button class="share-btn" open-type="share">分享 ›</button>
+  </view>
+</view>

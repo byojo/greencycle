@@ -1,0 +1,79 @@
+<!--pages/order-success/order-success.wxml-->
+<view class="page">
+  <!-- 顶部绿色 hero -->
+  <view class="hero">
+    <view class="hero-check">
+      <text class="check-mark">✓</text>
+    </view>
+    <view class="hero-title">下单成功</view>
+    <view class="hero-sub">回收员将在 1 小时内联系您</view>
+  </view>
+
+  <!-- 订单概览卡 -->
+  <view class="summary-card">
+    <view class="summary-row">
+      <text class="summary-label">订单编号</text>
+      <text class="summary-value">{{orderNo || '处理中...'}}</text>
+    </view>
+    <view class="summary-row">
+      <text class="summary-label">回收品类</text>
+      <text class="summary-value">{{categoryName}}</text>
+    </view>
+    <view class="summary-row">
+      <text class="summary-label">上门时间</text>
+      <text class="summary-value">{{estimatedAt}}</text>
+    </view>
+    <view class="summary-row">
+      <text class="summary-label">回收金额</text>
+      <text class="summary-value highlight">👨‍🔧 上门当面评估</text>
+    </view>
+  </view>
+
+  <!-- 流程说明（4 步） -->
+  <view class="flow-card">
+    <view class="flow-title">📋 接下来的流程</view>
+    <view class="flow-item">
+      <view class="flow-num">1</view>
+      <view class="flow-body">
+        <view class="flow-name">回收员接单</view>
+        <view class="flow-desc">1 小时内电话联系您确认</view>
+      </view>
+    </view>
+    <view class="flow-line"></view>
+    <view class="flow-item">
+      <view class="flow-num">2</view>
+      <view class="flow-body">
+        <view class="flow-name">上门回收</view>
+        <view class="flow-desc">按约定时间上门取件</view>
+      </view>
+    </view>
+    <view class="flow-line"></view>
+    <view class="flow-item">
+      <view class="flow-num">3</view>
+      <view class="flow-body">
+        <view class="flow-name">当面评估</view>
+        <view class="flow-desc">当面验货、给出报价</view>
+      </view>
+    </view>
+    <view class="flow-line"></view>
+    <view class="flow-item">
+      <view class="flow-num">4</view>
+      <view class="flow-body">
+        <view class="flow-name">当面转账</view>
+        <view class="flow-desc">同意后微信钱包即时到账 + 碳积分</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 双按钮 -->
+  <view class="action-bar safe-area-bottom">
+    <button class="btn-ghost" bindtap="onViewOrder">查看订单</button>
+    <button class="btn-primary" bindtap="onGoHome">返回首页</button>
+  </view>
+
+  <!-- 分享提示 -->
+  <view class="share-tip">
+    分享纸飞机，让更多人参与环保 ♻️
+  </view>
+  <button class="share-btn" open-type="share">分享给好友</button>
+</view>

@@ -1,0 +1,67 @@
+<!--pages/story/story.wxml-->
+<view class="page">
+  <!-- 顶部标题栏 -->
+  <view class="nav">
+    <view class="nav-title">改造故事</view>
+    <view class="nav-action" bindtap="onPublish">发布</view>
+  </view>
+
+  <!-- 横滑 Tabs -->
+  <scroll-view scroll-x class="tabs" enable-flex enhanced show-scrollbar="{{false}}">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="key"
+      class="tab {{item.active ? 'active' : ''}}"
+      data-key="{{item.key}}"
+      bindtap="onTabChange"
+    >{{item.label}}</view>
+  </scroll-view>
+
+  <!-- 头条（feature） -->
+  <view wx:if="{{feature}}" class="feature" bindtap="onItemTap" data-id="{{feature.id}}">
+    <view class="feature-cover" style="background:{{feature.coverBg}}">
+      <view class="cover-emoji">{{feature.coverEmoji}}</view>
+      <view class="play" wx:if="{{feature.type === 'video'}}">▶ {{feature.durationText || '02:34'}}</view>
+    </view>
+    <view class="feature-body">
+      <view class="feature-title">{{feature.title}}</view>
+      <view class="feature-desc">{{feature.desc}}</view>
+      <view class="feature-meta">
+        <text class="meta-item">👁 {{feature.viewText}}</text>
+        <text class="meta-item">❤️ {{feature.likeText}}</text>
+        <text class="meta-item">💬 {{feature.commentText}}</text>
+        <text class="meta-author">@{{feature.author}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 列表 -->
+  <view class="story-list">
+    <view
+      wx:for="{{list}}"
+      wx:key="id"
+      class="story-item"
+      bindtap="onItemTap"
+      data-id="{{item.id}}"
+    >
+      <view class="story-cover" style="background:{{item.coverBg}}">{{item.coverEmoji}}</view>
+      <view class="story-body">
+        <view class="story-title">{{item.title}}</view>
+        <view class="story-desc">{{item.desc}}</view>
+        <view class="story-meta">
+          <text class="tag {{item.type === 'video' ? 'tag-video' : 'tag-image'}}">
+            {{item.type === 'video' ? '视频' : '图文'}}
+          </text>
+          <text class="meta-item">👁 {{item.viewText}}</text>
+          <text class="meta-item">❤️ {{item.likeText}}</text>
+          <text class="meta-time">{{item.timeText}}</text>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{list.length === 0}}" class="empty">
+      <view class="empty-text">暂无内容</view>
+    </view>
+  </view>
+
+  <view class="footer">— 加载更多 —</view>
+</view>

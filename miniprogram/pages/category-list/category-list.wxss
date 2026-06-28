@@ -1,0 +1,151 @@
+/* pages/category-list/category-list.wxss */
+.page {
+  min-height: 100vh;
+  background: #F7F8FA;
+  padding-bottom: 200rpx;
+}
+
+/* ============ 顶部导航 ============ */
+.nav {
+  height: 88rpx;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.nav-back {
+  width: 80rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.back-icon {
+  font-size: 56rpx;
+  color: #1F2937;
+  font-weight: 300;
+  line-height: 1;
+}
+.nav-title {
+  flex: 1;
+  text-align: center;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+.nav-action {
+  width: 120rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: #07C160;
+  font-weight: 500;
+  padding-right: 16rpx;
+}
+
+/* ============ Banner（左侧图标 + 右侧文字） ============ */
+.banner {
+  padding: 48rpx 32rpx 56rpx;
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  color: #FFFFFF;
+}
+.banner-left {
+  flex-shrink: 0;
+}
+.banner-icon {
+  font-size: 80rpx;
+  line-height: 1;
+  text-align: center;
+}
+.banner-right {
+  flex: 1;
+  min-width: 0;
+}
+.banner-name {
+  font-size: 36rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  line-height: 1.3;
+}
+.banner-desc {
+  font-size: 24rpx;
+  opacity: 0.95;
+  margin-top: 10rpx;
+  line-height: 1.4;
+}
+.banner-tip {
+  display: inline-block;
+  background: #F59E0B;
+  padding: 8rpx 20rpx;
+  border-radius: 100rpx;
+  font-size: 22rpx;
+  margin-top: 16rpx;
+  font-weight: 500;
+}
+
+/* ============ 标题 ============ */
+.list-title {
+  padding: 32rpx 32rpx 20rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+/* ============ 2x2 网格 ============ */
+.grid {
+  padding: 0 32rpx;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20rpx;
+}
+.grid-item {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 40rpx 24rpx;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+}
+.grid-item:active {
+  background: #F9FAFB;
+}
+.grid-icon {
+  font-size: 64rpx;
+  line-height: 1;
+}
+.grid-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1F2937;
+  line-height: 1.2;
+}
+.grid-desc {
+  font-size: 22rpx;
+  color: #6B7280;
+  line-height: 1.3;
+}
+
+/* ============ 暂不回收提示 ============ */
+.warn {
+  margin: 40rpx 32rpx 0;
+  padding: 28rpx;
+  background: #FFF1F2;
+  border: 2rpx dashed #FCA5A5;
+  border-radius: 24rpx;
+}
+.warn-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 8rpx;
+}
+.warn-desc {
+  font-size: 24rpx;
+  color: #6B7280;
+  line-height: 1.6;
+}

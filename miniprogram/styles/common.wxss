@@ -1,0 +1,58 @@
+/* common.wxss - 通用工具类 */
+
+/* 文字 */
+.text-primary { color: #4CAF50; }
+.text-warning { color: #FF9800; }
+.text-danger { color: #F44336; }
+.text-muted { color: #999; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-bold { font-weight: bold; }
+
+/* 布局 */
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.flex-1 { flex: 1; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+
+/* 间距 */
+.mt-8 { margin-top: 16rpx; }
+.mt-16 { margin-top: 32rpx; }
+.mt-24 { margin-top: 48rpx; }
+.mb-8 { margin-bottom: 16rpx; }
+.mb-16 { margin-bottom: 32rpx; }
+.mb-24 { margin-bottom: 48rpx; }
+.p-16 { padding: 32rpx; }
+.p-24 { padding: 48rpx; }
+
+/* 圆角 */
+.rounded { border-radius: 8rpx; }
+.rounded-lg { border-radius: 16rpx; }
+.rounded-full { border-radius: 9999rpx; }
+
+/* 阴影 */
+.shadow-sm { box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06); }
+.shadow { box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08); }
+.shadow-lg { box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.12); }
+
+/* 文字省略 */
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.text-ellipsis-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* 背景色 */
+.bg-white { background: #fff; }
+.bg-gray { background: #f5f5f5; }
+.bg-primary { background: #4CAF50; }

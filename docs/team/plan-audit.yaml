@@ -1,0 +1,196 @@
+version: 1
+plan:
+  name: '所有页面与原型 1:1 对齐审计（11 页并行）'
+  max_concurrency: 3
+  max_consecutive_failures: 2
+  max_cycles: 6
+  auto_reject_retries: 1
+tasks:
+
+  # ============================================================
+  # Track 1: 首页 + 品类流程（4 页）
+  # ============================================================
+  - id: audit-track-1
+    title: '审计 home / pick-category / category-list / photo-upload'
+    prompt: |
+      任务：审计这 4 个页面与 HTML 原型 1:1 对齐情况，**只报告问题不修改**。
+
+      必读：
+      - 设计 token: /workspace/greencycle/docs/team/design-tokens.md
+      - 原型 HTML: /workspace/recycle-miniprogram/index.html
+
+      涉及页面：
+      1. /workspace/greencycle/miniprogram/pages/home/
+      2. /workspace/greencycle/miniprogram/pages/pick-category/
+      3. /workspace/greencycle/miniprogram/pages/category-list/  （**已重做，看是否完全对齐图一**）
+      4. /workspace/greencycle/miniprogram/pages/photo-upload/
+
+      原型里找对应 page id:
+      - #page-home
+      - #page-pick-category
+      - #page-category-phone / #page-category-clothes 等
+      - #page-photo-upload
+
+      审计清单（每项 PASS / FAIL + 位置）：
+
+      ## home
+      - [ ] 顶部 banner 渐变色与原型一致
+      - [ ] 8 大品类按原型顺序（衣物→手机→数码→家电→书籍→废品→闲置包→全部）
+      - [ ] 8 大品类 emoji 正确（衣物👕、手机📱、数码💻、家电🔌、书籍📚、废品🥫、闲置包👜、全部···）
+      - [ ] 8 大品类色块与 design-tokens.md §1.3 一致
+      - [ ] 碳积分卡：橙色渐变 + 大数字 + "查看 ›"
+      - [ ] 环保承诺卡：渐变 #ECFDF5→#D1FAE5 + 边框 #A7F3D0
+
+      ## pick-category
+      - [ ] 顶部绿色 tips 卡
+      - [ ] 4 列网格（grid-template-columns: repeat(4, 1fr)）
+      - [ ] "上次回收过" 横滑 chips
+      - [ ] 帮助卡（联系客服按钮）
+
+      ## category-list（已 v20 重做）
+      - [ ] 横向 banner（左大 emoji + 右文字 + 黄色标签）
+      - [ ] 2x2 网格（grid-template-columns: 1fr 1fr）
+      - [ ] 4 个 grid-item 含 icon + name + desc
+      - [ ] 底部"暂不回收"提示（粉色虚线框）
+
+      ## photo-upload
+      - [ ] 4 步进度条（选品类✓→上传照片（当前）→确认订单→完成）
+      - [ ] 照片 3 列网格（grid-template-columns: repeat(3, 1fr)）
+      - [ ] "+" 添加按钮
+      - [ ] 动态字段渲染（text/select/multi/switch）
+      - [ ] chip 选中态：#07C160 + 白色字 + 加粗
+
+      输出格式（每个页面一节）：
+      - PASS/FAIL 清单
+      - FAIL 给出具体行号 + 修复建议
+    assigned_to: Coder
+    verified_by: Verifier
+    verify_prompt: |
+      独立审计 home/pick-category/category-list/photo-upload 4 个页面与原型的对齐。
+      操作：直接读 4 个页面的 .wxml/.wxss/.js，对照 /workspace/recycle-miniprogram/index.html 找 page id。
+      每项 PASS/FAIL + 失败给行号。
+    timeout_ms: 1500000
+
+  # ============================================================
+  # Track 2: 订单流程（5 页）
+  # ============================================================
+  - id: audit-track-2
+    title: '审计 order-confirm / order-success / order-list / order-detail / order-track'
+    prompt: |
+      任务：审计订单流程 5 个页面，**只报告问题不修改**。
+
+      涉及页面：
+      1. /workspace/greencycle/miniprogram/pages/order-confirm/
+      2. /workspace/greencycle/miniprogram/pages/order-success/
+      3. /workspace/greencycle/miniprogram/pages/order-list/
+      4. /workspace/greencycle/miniprogram/pages/order-detail/
+      5. /workspace/greencycle/miniprogram/pages/order-track/
+
+      原型 page id:
+      - #page-order（原型里可能就是 #page-confirm）
+      - #page-order-list
+      - #page-order-detail
+      - #page-track
+
+      审计清单：
+
+      ## order-confirm
+      - [ ] 4 步进度条（选品类✓→上传照片✓→确认订单（当前）→完成）
+      - [ ] 顶部地址卡（姓名/电话/详细地址）
+      - [ ] 物品信息卡（图标+名称+数量）
+      - [ ] 备注输入（maxlength=100 + 字数计数）
+      - [ ] 底部固定栏（"当面评估"价格 + 绿色"提交订单"按钮）
+
+      ## order-success
+      - [ ] 顶部绿色 hero + 96rpx 绿色对勾
+      - [ ] "下单成功"标题 + 副标题
+      - [ ] 4 步流程图（接单→上门→评估→完成）
+      - [ ] 双按钮（"查看订单" + "返回首页"）
+
+      ## order-list
+      - [ ] 4 状态 chips（全部/进行中/已完成/已取消）
+      - [ ] 时间提示行（📅 + "查看更早 ›"）
+      - [ ] 按月分组（month-title）
+      - [ ] 订单 item：渐变品类 icon + 品名 + 品类 + 右侧时间 + › 箭头
+      - [ ] 底部"— 仅展示近 3 个月订单 —"
+
+      ## order-detail
+      - [ ] 顶部状态条（5 色：1灰/2蓝/3橙/4绿/5红）
+      - [ ] 物品信息卡
+      - [ ] 订单信息（订单号/品类/时间/地址/回收员）
+      - [ ] 环保贡献卡（碳积分 + 减碳 kg）
+
+      ## order-track
+      - [ ] 顶部绿色状态条（白脉冲点 + ETA）
+      - [ ] 4 步大时间线（已下单/已派单/上门中/已完成，当前脉冲）
+      - [ ] 回收员卡片（头像 + 姓名 + 电话）
+
+      输出格式：每页一节，PASS/FAIL 清单 + 失败给行号
+    assigned_to: Coder
+    verified_by: Verifier
+    verify_prompt: |
+      独立审计订单 5 页与原型的对齐。
+      操作：直接读 5 个页面的 .wxml/.wxss/.js，对照 prototype HTML。
+    timeout_ms: 1500000
+
+  # ============================================================
+  # Track 3: 其他页面（5 页）
+  # ============================================================
+  - id: audit-track-3
+    title: '审计 points / story / address / profile / login'
+    prompt: |
+      任务：审计其他 5 个页面，**只报告问题不修改**。
+
+      涉及页面：
+      1. /workspace/greencycle/miniprogram/pages/points/
+      2. /workspace/greencycle/miniprogram/pages/story/
+      3. /workspace/greencycle/miniprogram/pages/address/
+      4. /workspace/greencycle/miniprogram/pages/profile/
+      5. /workspace/greencycle/miniprogram/pages/login/
+
+      原型 page id:
+      - #page-points
+      - #page-story
+      - #page-address
+      - #page-profile
+      - #page-login
+
+      审计清单：
+
+      ## points
+      - [ ] 顶部绿色 hero（圆角光斑 + 大数字 + "已种下 N 棵真树"）
+      - [ ] 2 统计卡（碳积分/减碳 kg）
+      - [ ] 3 入口（签到/兑换/提现）
+      - [ ] 流水列表（+/- 区分色）
+      - [ ] 底部"碳积分可兑换树苗/公益"提示
+
+      ## story（虽 TabBar 隐藏，代码保留）
+      - [ ] 顶部 tabs（全部/视频/图文）
+      - [ ] 头条 feature
+      - [ ] 列表项（视频/图文 tag）
+      - [ ] emoji 封面（coverEmoji 字段已加）
+
+      ## address
+      - [ ] 地址卡（默认态绿色边框 + 浅绿背景）
+      - [ ] 编辑/设为默认/删除 操作行
+      - [ ] 底部"+ 新增地址"按钮
+      - [ ] 空状态（🗑️ + 文字）
+
+      ## profile
+      - [ ] 渐变 header（头像 + 昵称 + 等级）
+      - [ ] 4 统计（积分/减碳/订单数/在用）
+      - [ ] 6 项菜单（订单/地址/邀请/客服/设置/关于）
+      - [ ] footer logo + 版本
+
+      ## login
+      - [ ] 圆形 logo（绿色 + emoji）
+      - [ ] 3 个特色 feature
+      - [ ] 微信一键登录大按钮
+      - [ ] 协议勾选
+
+      输出格式：每页一节，PASS/FAIL 清单 + 失败给行号
+    assigned_to: Coder
+    verified_by: Verifier
+    verify_prompt: |
+      独立审计 5 个其他页面与原型的对齐。
+    timeout_ms: 1500000

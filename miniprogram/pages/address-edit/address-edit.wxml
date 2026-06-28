@@ -1,0 +1,104 @@
+<!--pages/address-edit/address-edit.wxml-->
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="nav">
+    <view class="nav-back" bindtap="onBack">
+      <text class="back-icon">‹</text>
+    </view>
+    <view class="nav-title">{{isEdit ? '编辑地址' : '新增地址'}}</view>
+    <view class="nav-action" bindtap="onSave">保存</view>
+  </view>
+
+  <!-- 表单 -->
+  <view class="form">
+    <!-- 姓名 -->
+    <view class="form-item">
+      <text class="form-label">姓名</text>
+      <input
+        class="form-input"
+        placeholder="请输入收件人姓名"
+        value="{{form.name}}"
+        bindinput="onInput"
+        data-field="name"
+        maxlength="20"
+      />
+    </view>
+
+    <!-- 电话 -->
+    <view class="form-item">
+      <text class="form-label">电话</text>
+      <input
+        class="form-input"
+        type="number"
+        placeholder="请输入手机号"
+        value="{{form.phone}}"
+        bindinput="onInput"
+        data-field="phone"
+        maxlength="11"
+      />
+    </view>
+
+    <!-- 省市区（官方 picker 三级联动） -->
+    <picker
+      mode="region"
+      bindchange="onRegionChange"
+      value="{{regionValue}}"
+      custom-item="{{customItem}}"
+    >
+      <view class="form-item picker-item">
+        <text class="form-label">省市区</text>
+        <view class="form-picker-value {{form.region ? '' : 'placeholder'}}">
+          {{form.region || '请选择省 / 市 / 区'}}
+        </view>
+        <text class="form-arrow">›</text>
+      </view>
+    </picker>
+
+    <!-- 详细地址 -->
+    <view class="form-item form-item-block">
+      <text class="form-label">详细地址</text>
+      <textarea
+        class="form-textarea"
+        placeholder="街道、楼栋、门牌号（5-60 字）"
+        value="{{form.detail}}"
+        bindinput="onInput"
+        data-field="detail"
+        maxlength="60"
+        auto-height
+      />
+      <view class="form-counter">{{form.detail.length}}/60</view>
+    </view>
+
+    <!-- 标签 -->
+    <view class="form-item">
+      <text class="form-label">标签</text>
+      <view class="tag-list">
+        <view
+          wx:for="{{tagOptions}}"
+          wx:key="*this"
+          class="tag-item {{form.tag === item ? 'active' : ''}}"
+          data-tag="{{item}}"
+          bindtap="onTagSelect"
+        >{{item}}</view>
+      </view>
+    </view>
+
+    <!-- 默认地址开关 -->
+    <view class="form-item form-item-between">
+      <text class="form-label">设为默认地址</text>
+      <switch
+        checked="{{form.isDefault}}"
+        data-field="isDefault"
+        bindchange="onSwitchChange"
+        color="#07C160"
+      />
+    </view>
+  </view>
+
+  <!-- 删除按钮（仅编辑模式显示） -->
+  <view wx:if="{{isEdit}}" class="delete-wrap">
+    <button class="btn-delete" bindtap="onDelete">删除该地址</button>
+  </view>
+
+  <view class="safe-area-bottom" style="height: 200rpx;"></view>
+</view>

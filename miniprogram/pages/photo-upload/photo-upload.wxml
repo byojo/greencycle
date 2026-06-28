@@ -1,0 +1,174 @@
+<!--pages/photo-upload/photo-upload.wxml-->
+<view class="page">
+  <!-- 顶部导航（白条 · sticky） -->
+  <view class="nav">
+    <view class="nav-back" bindtap="onBack">
+      <text class="back-icon">‹</text>
+    </view>
+    <view class="nav-title">上传物品照片</view>
+    <view class="nav-action" bindtap="onShowExamples">示例</view>
+  </view>
+
+  <!-- 4 步进度条（绿色渐变背景） -->
+  <view class="progress">
+    <view class="step done">
+      <text class="step-num">✓</text>
+      <text class="step-label">选品类</text>
+    </view>
+    <view class="line done"></view>
+    <view class="step active">
+      <text class="step-num">2</text>
+      <text class="step-label">上传照片</text>
+    </view>
+    <view class="line"></view>
+    <view class="step">
+      <text class="step-num">3</text>
+      <text class="step-label">确认订单</text>
+    </view>
+    <view class="line"></view>
+    <view class="step">
+      <text class="step-num">4</text>
+      <text class="step-label">完成</text>
+    </view>
+  </view>
+
+  <!-- 已选品类卡片（icon + 名称 + 更换） -->
+  <view class="cat-card">
+    <view class="cat-thumb" style="background:{{categoryBg}}">{{categoryIcon}}</view>
+    <view class="cat-info">
+      <view class="cat-name">已选品类：{{categoryName}}</view>
+      <view class="cat-sub">填写越详细，回收员上门评估越准确</view>
+    </view>
+    <view class="cat-change" bindtap="onBack">更换 ›</view>
+  </view>
+
+  <!-- 品类切换 tab（横滑 · 单选） -->
+  <view class="cat-tabs-wrap">
+    <scroll-view class="cat-tabs" scroll-x enable-flex>
+      <view
+        wx:for="{{categoryTabs}}"
+        wx:key="code"
+        class="cat-tab {{item.code === category ? 'active' : ''}}"
+        data-code="{{item.code}}"
+        bindtap="onSwitchCategory"
+      >{{item.icon}} {{item.name}}</view>
+    </scroll-view>
+  </view>
+
+  <!-- 照片上传 -->
+  <view class="section">
+    <view class="section-header">
+      <view class="section-title">📷 物品照片 <text class="required">*</text></view>
+      <view class="section-count">{{photos.length}}/{{maxPhotos}}</view>
+    </view>
+    <view class="photo-grid">
+      <view
+        class="photo-item"
+        wx:for="{{photos}}"
+        wx:key="index"
+        data-index="{{index}}"
+        bindtap="onPreviewPhoto"
+      >
+        <image src="{{item.tempPath}}" mode="aspectFill"></image>
+        <view class="photo-remove" catchtap="onRemovePhoto" data-index="{{index}}">×</view>
+      </view>
+      <view class="photo-add" bindtap="onChoosePhoto" wx:if="{{photos.length < maxPhotos}}">
+        <view class="add-icon">+</view>
+        <view class="add-text">拍照</view>
+      </view>
+    </view>
+    <view class="photo-tip">支持拍照或从相册选择 · 最多 {{maxPhotos}} 张 · 请拍清晰正面+侧面</view>
+  </view>
+
+  <!-- 动态字段（按当前 category 渲染） -->
+  <view class="section" wx:for="{{fields}}" wx:key="key" wx:for-item="field">
+    <view class="section-header">
+      <view class="section-title">
+        {{field.icon || '📌'}} {{field.label}}
+        <text class="required" wx:if="{{field.required}}">*</text>
+      </view>
+      <view class="section-count" wx:if="{{!field.required}}">选填</view>
+    </view>
+
+    <!-- 文本输入 -->
+    <input
+      wx:if="{{field.type === 'text'}}"
+      class="form-input"
+      placeholder="{{field.placeholder || ('请输入' + field.label)}}"
+      value="{{formData[field.key]}}"
+      data-key="{{field.key}}"
+      bindinput="onFieldInput"
+    />
+
+    <!-- 单选 chips -->
+    <view wx:if="{{field.type === 'select'}}" class="chip-grid">
+      <view
+        wx:for="{{field.options}}"
+        wx:for-item="opt"
+        wx:key="*this"
+        class="chip {{formData[field.key] === opt ? 'active' : ''}}"
+        data-key="{{field.key}}"
+        data-value="{{opt}}"
+        bindtap="onSelectChip"
+      >{{opt}}</view>
+    </view>
+
+    <!-- 多选 chips -->
+    <view wx:if="{{field.type === 'multi'}}" class="chip-grid">
+      <view
+        wx:for="{{field._options || field.options}}"
+        wx:for-item="opt"
+        wx:key="label"
+        class="chip {{opt.selected ? 'active' : ''}}"
+        data-key="{{field.key}}"
+        data-value="{{opt.label}}"
+        bindtap="onSelectChip"
+      >{{opt.label}}</view>
+    </view>
+
+    <!-- 开关 -->
+    <view wx:if="{{field.type === 'switch'}}" class="switch-row">
+      <text>{{field.placeholder || field.label}}</text>
+      <switch
+        checked="{{formData[field.key] || false}}"
+        data-key="{{field.key}}"
+        bindchange="onSwitchChange"
+        color="#07C160"
+      />
+    </view>
+  </view>
+
+  <!-- 备注 -->
+  <view class="section">
+    <view class="section-header">
+      <view class="section-title">📝 补充说明</view>
+      <view class="section-count">选填</view>
+    </view>
+    <textarea
+      class="form-textarea"
+      placeholder="如有特殊说明请告诉我们..."
+      value="{{remark}}"
+      bindinput="onRemarkInput"
+      maxlength="200"
+    ></textarea>
+  </view>
+
+  <!-- 流程说明（黄色虚线提示） -->
+  <view class="flow-tip">
+    <view class="flow-icon">💡</view>
+    <view class="flow-content">
+      <view class="flow-title">下单流程</view>
+      <view class="flow-desc">上门取件 → 当面验货 → 当面转账 · 全程录像 · 隐私保障</view>
+    </view>
+  </view>
+
+  <!-- 底部提交按钮 -->
+  <view class="bottom-action">
+    <button
+      class="btn btn-primary submit-btn"
+      bindtap="onSubmit"
+      loading="{{submitting}}"
+      disabled="{{submitting}}"
+    >下一步 · 下单 ›</button>
+  </view>
+</view>

@@ -1,0 +1,232 @@
+/* pages/order-success/order-success.wxss */
+.page {
+  min-height: 100vh;
+  background: #F7F8FA;
+  padding-bottom: 200rpx;
+}
+
+/* ============ Hero 顶部 ============ */
+.hero {
+  background: linear-gradient(135deg, #07C160 0%, #06AD56 100%);
+  padding: 80rpx 32rpx 100rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #FFFFFF;
+  position: relative;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -1rpx;
+  left: 0;
+  right: 0;
+  height: 40rpx;
+  background: #F7F8FA;
+  border-radius: 40rpx 40rpx 0 0;
+}
+
+/* 顶部大对勾：96rpx 绿色圆形 + ✓ */
+.hero-check {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28rpx;
+  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes popIn {
+  0% { transform: scale(0.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.check-mark {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  background: #07C160;
+  color: #FFFFFF;
+  font-size: 56rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.hero-title {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: 2rpx;
+}
+.hero-sub {
+  font-size: 26rpx;
+  color: #FFFFFF;
+  opacity: 0.9;
+  margin-top: 12rpx;
+}
+
+/* ============ 订单概览卡 ============ */
+.summary-card {
+  margin: -40rpx 32rpx 0;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.06);
+  position: relative;
+  z-index: 2;
+}
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #F3F4F6;
+}
+.summary-row:last-child {
+  border-bottom: none;
+}
+.summary-label {
+  font-size: 26rpx;
+  color: #6B7280;
+  flex-shrink: 0;
+}
+.summary-value {
+  font-size: 26rpx;
+  color: #1F2937;
+  font-weight: 500;
+  text-align: right;
+}
+.summary-value.highlight {
+  color: #07C160;
+  font-weight: 700;
+}
+
+/* ============ 流程说明 ============ */
+.flow-card {
+  margin: 24rpx 32rpx 0;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+.flow-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 24rpx;
+}
+.flow-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+.flow-num {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  background: #E8F8EE;
+  color: #06A050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.flow-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  padding: 12rpx 0;
+}
+.flow-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+.flow-desc {
+  font-size: 24rpx;
+  color: #6B7280;
+  line-height: 1.5;
+}
+.flow-line {
+  width: 2rpx;
+  height: 20rpx;
+  background: #D1FAE5;
+  margin-left: 27rpx;
+}
+
+/* ============ 双按钮（查看订单 + 返回首页） ============ */
+.action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #FFFFFF;
+  padding: 24rpx 32rpx;
+  border-top: 1rpx solid #E5E7EB;
+  display: flex;
+  gap: 20rpx;
+  z-index: 100;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+}
+.btn-ghost {
+  flex: 1;
+  height: 88rpx;
+  background: #FFFFFF;
+  border: 2rpx solid #E5E7EB;
+  border-radius: 44rpx;
+  color: #1F2937;
+  font-size: 30rpx;
+  font-weight: 600;
+  line-height: 84rpx;
+  text-align: center;
+}
+.btn-ghost::after {
+  border: none;
+}
+.btn-primary {
+  flex: 1;
+  height: 88rpx;
+  background: linear-gradient(135deg, #07C160 0%, #06A050 100%);
+  border-radius: 44rpx;
+  color: #FFFFFF;
+  font-size: 30rpx;
+  font-weight: 700;
+  line-height: 88rpx;
+  border: none;
+  box-shadow: 0 6rpx 20rpx rgba(7, 193, 96, 0.3);
+  text-align: center;
+}
+.btn-primary::after {
+  border: none;
+}
+
+/* ============ 分享提示 ============ */
+.share-tip {
+  margin-top: 32rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #6B7280;
+}
+.share-btn {
+  display: block;
+  margin: 16rpx auto 0;
+  width: 280rpx;
+  height: 64rpx;
+  background: #E8F8EE;
+  color: #06A050;
+  border-radius: 100rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  line-height: 64rpx;
+  border: none;
+}
+.share-btn::after {
+  border: none;
+}

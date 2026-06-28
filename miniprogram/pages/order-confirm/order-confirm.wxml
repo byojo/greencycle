@@ -1,0 +1,124 @@
+<!--pages/order-confirm/order-confirm.wxml-->
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="nav">
+    <view class="nav-back" bindtap="onBack">‹</view>
+    <view class="nav-title">确认订单</view>
+    <view class="nav-action"></view>
+  </view>
+
+  <!-- 4 步进度条 -->
+  <view class="progress">
+    <view class="step done">
+      <view class="step-num">✓</view>
+      <text class="step-label">选品类</text>
+    </view>
+    <view class="step-line done"></view>
+    <view class="step done">
+      <view class="step-num">✓</view>
+      <text class="step-label">上传照片</text>
+    </view>
+    <view class="step-line done"></view>
+    <view class="step active">
+      <view class="step-num">3</view>
+      <text class="step-label">确认订单</text>
+    </view>
+    <view class="step-line"></view>
+    <view class="step">
+      <view class="step-num">4</view>
+      <text class="step-label">完成</text>
+    </view>
+  </view>
+
+  <!-- 顶部地址卡（白底圆角 24rpx，显示姓名/电话/详细地址） -->
+  <view class="address-card" bindtap="onChooseAddress">
+    <view class="address-icon">📍</view>
+    <view class="address-body">
+      <view class="address-line1" wx:if="{{address}}">
+        <text class="address-name">{{address.name}}</text>
+        <text class="address-phone">{{address.phone}}</text>
+      </view>
+      <view class="address-line1 placeholder" wx:else>请选择回收地址</view>
+      <view class="address-line2" wx:if="{{address}}">{{address.fullAddr || address.detail}}</view>
+    </view>
+    <view class="address-arrow">›</view>
+  </view>
+
+  <!-- 物品信息卡 -->
+  <view class="card">
+    <view class="card-title">📦 回收物品</view>
+    <view class="item-row">
+      <view class="item-icon" wx:if="{{info}}" style="background:{{info.bg}}">{{info.icon}}</view>
+      <view class="item-info">
+        <view class="item-name" wx:if="{{info}}">{{info.item}}</view>
+        <view class="item-desc" wx:if="{{info}}">{{info.desc}}</view>
+      </view>
+    </view>
+    <scroll-view scroll-x class="photo-scroll" wx:if="{{photos.length > 0}}">
+      <view class="thumb-wrap" wx:for="{{photos}}" wx:key="*this">
+        <image src="{{item.url}}" class="thumb" mode="aspectFill" />
+      </view>
+    </scroll-view>
+    <view class="item-meta">
+      <view class="meta-item">
+        <text class="meta-label">数量</text>
+        <text class="meta-value">{{quantity}}</text>
+      </view>
+      <view class="meta-item">
+        <text class="meta-label">品类</text>
+        <text class="meta-value">{{info.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 预约时间 -->
+  <view class="form-group" bindtap="onChooseTime">
+    <view class="form-row">
+      <view class="form-icon" style="background:#D1FAE5;color:#059669">⏰</view>
+      <view class="form-body">
+        <view class="form-label">预约时间</view>
+        <view class="form-value">{{dateLabel}} · {{timeLabel}}</view>
+      </view>
+      <view class="form-arrow">›</view>
+    </view>
+  </view>
+
+  <!-- 备注输入（100 字限制） -->
+  <view class="card">
+    <view class="card-title-row">
+      <view class="card-title">📝 备注</view>
+      <view class="card-counter">{{remark.length}}/100</view>
+    </view>
+    <textarea
+      class="form-textarea"
+      placeholder="如有特殊说明请告诉我们，如：零件缺失、需要特别处理..."
+      value="{{remark}}"
+      bindinput="onRemarkInput"
+      maxlength="100"
+      auto-height
+    />
+  </view>
+
+  <!-- 当面评估说明 -->
+  <view class="tip-card">
+    <view class="tip-icon">👨‍🔧</view>
+    <view class="tip-content">
+      <view class="tip-title">回收金额 · 上门当面评估</view>
+      <view class="tip-desc">回收员上门后、当面验货、当面报价。您同意后才进行交易，不满意可当场拒绝。</view>
+    </view>
+  </view>
+
+  <!-- 底部固定提交按钮栏 -->
+  <view class="bottom-bar safe-area-bottom">
+    <view class="price-block">
+      <view class="price-label">回收金额</view>
+      <view class="price-value">👨‍🔧 当面评估</view>
+    </view>
+    <button
+      class="btn-submit"
+      bindtap="onSubmit"
+      loading="{{submitting}}"
+      disabled="{{submitting}}"
+    >提交订单</button>
+  </view>
+</view>

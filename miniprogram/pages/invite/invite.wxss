@@ -1,0 +1,358 @@
+/* pages/invite/invite.wxss */
+.page {
+  min-height: 100vh;
+  background: #F7F8FA;
+  padding-bottom: 200rpx;
+}
+
+/* ============ 顶部导航 ============ */
+.nav {
+  height: 88rpx;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1rpx solid #F3F4F6;
+}
+.nav-back {
+  width: 80rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.back-icon {
+  font-size: 56rpx;
+  color: #1F2937;
+  font-weight: 300;
+  line-height: 1;
+}
+.nav-title {
+  flex: 1;
+  text-align: center;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+/* ============ Hero ============ */
+.hero {
+  margin: 24rpx 32rpx;
+  padding: 48rpx 32rpx;
+  background: linear-gradient(135deg, #07C160 0%, #06AD56 50%, #059142 100%);
+  border-radius: 32rpx;
+  text-align: center;
+  color: #FFFFFF;
+  box-shadow: 0 12rpx 32rpx rgba(7, 193, 96, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+.hero-emoji {
+  font-size: 96rpx;
+  line-height: 1;
+  margin-bottom: 16rpx;
+}
+.hero-title {
+  font-size: 40rpx;
+  font-weight: 700;
+  margin-bottom: 12rpx;
+}
+.hero-desc {
+  font-size: 26rpx;
+  opacity: 0.95;
+  line-height: 1.5;
+}
+.highlight {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #FEF3C7;
+}
+
+/* ============ 卡片 ============ */
+.card {
+  background: #FFFFFF;
+  margin: 0 32rpx 24rpx;
+  border-radius: 24rpx;
+  padding: 32rpx 28rpx;
+}
+.card-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+.card-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1F2937;
+  margin-bottom: 24rpx;
+}
+.card-more {
+  font-size: 24rpx;
+  color: #6B7280;
+  margin-bottom: 24rpx;
+}
+
+/* ============ 邀请码 ============ */
+.invite-code {
+  font-size: 64rpx;
+  font-weight: 700;
+  color: #07C160;
+  text-align: center;
+  letter-spacing: 8rpx;
+  padding: 32rpx 0;
+  font-family: 'Courier New', monospace;
+  background: #F0FDF4;
+  border-radius: 16rpx;
+  margin-bottom: 24rpx;
+}
+.btn-copy {
+  background: #07C160;
+  color: #FFFFFF;
+  font-size: 28rpx;
+  font-weight: 600;
+  border-radius: 100rpx;
+  padding: 18rpx 0;
+  border: none;
+  line-height: 1.4;
+}
+.btn-copy::after { border: none; }
+
+/* ============ 邀请方式列表 ============ */
+.invite-list {
+  display: flex;
+  flex-direction: column;
+}
+.invite-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  gap: 20rpx;
+  border-bottom: 1rpx solid #F3F4F6;
+}
+.invite-item:last-child { border-bottom: none; }
+.invite-item:active { background: #F9FAFB; }
+.invite-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+.invite-info { flex: 1; min-width: 0; }
+.invite-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1F2937;
+  line-height: 1.4;
+}
+.invite-desc {
+  font-size: 24rpx;
+  color: #6B7280;
+  margin-top: 6rpx;
+}
+.invite-arrow {
+  font-size: 36rpx;
+  color: #C0C4CC;
+  font-weight: 300;
+}
+
+/* ============ 邀请记录 ============ */
+.record-list {
+  display: flex;
+  flex-direction: column;
+}
+.record-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  gap: 20rpx;
+  border-bottom: 1rpx solid #F3F4F6;
+}
+.record-item:last-child { border-bottom: none; }
+.record-avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #DBEAFE, #BFDBFE);
+  color: #2563EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.record-info { flex: 1; min-width: 0; }
+.record-name {
+  font-size: 28rpx;
+  color: #1F2937;
+  line-height: 1.4;
+}
+.record-time {
+  font-size: 22rpx;
+  color: #9CA3AF;
+  margin-top: 4rpx;
+}
+.record-points {
+  font-size: 26rpx;
+  color: #07C160;
+  font-weight: 600;
+}
+
+.empty {
+  padding: 48rpx 0;
+  text-align: center;
+}
+.empty-icon {
+  font-size: 80rpx;
+  line-height: 1;
+  margin-bottom: 12rpx;
+  opacity: 0.6;
+}
+.empty-text {
+  font-size: 28rpx;
+  color: #9CA3AF;
+  margin-bottom: 8rpx;
+}
+.empty-tip {
+  font-size: 22rpx;
+  color: #C0C4CC;
+}
+
+/* ============ 规则 ============ */
+.rules {
+  margin: 0 32rpx;
+  padding: 24rpx 28rpx;
+  background: #FFF7ED;
+  border-radius: 24rpx;
+  border: 2rpx dashed #FED7AA;
+}
+.rules-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #9A3412;
+  margin-bottom: 12rpx;
+}
+.rules-text {
+  font-size: 24rpx;
+  color: #C2410C;
+  line-height: 1.7;
+}
+
+/* ============ 海报预览弹层 ============ */
+.poster-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.poster-mask {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+}
+.poster-wrap {
+  position: relative;
+  width: 660rpx;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.poster-close {
+  position: absolute;
+  top: -80rpx;
+  right: 0;
+  width: 64rpx;
+  height: 64rpx;
+  background: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.canvas-hide {
+  position: fixed;
+  top: -9999rpx;
+  left: -9999rpx;
+  width: 750rpx;
+  height: 1200rpx;
+  pointer-events: none;
+}
+.poster-canvas {
+  width: 750rpx;
+  height: 1200rpx;
+}
+
+.poster-preview {
+  width: 600rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 24rpx;
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.3);
+}
+.poster-image {
+  width: 552rpx;
+  height: 884rpx;
+  border-radius: 16rpx;
+  display: block;
+}
+.poster-hint {
+  margin-top: 16rpx;
+  font-size: 22rpx;
+  color: #9CA3AF;
+  text-align: center;
+}
+
+.poster-loading {
+  height: 880rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.poster-loading-icon {
+  font-size: 96rpx;
+  line-height: 1;
+  margin-bottom: 24rpx;
+  animation: rotate 2s linear infinite;
+}
+.poster-loading-text {
+  font-size: 26rpx;
+  color: #6B7280;
+}
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.poster-save-btn {
+  margin-top: 32rpx;
+  width: 600rpx;
+  background: #07C160;
+  color: #FFFFFF;
+  font-size: 30rpx;
+  font-weight: 600;
+  border-radius: 100rpx;
+  padding: 24rpx 0;
+  border: none;
+  line-height: 1.4;
+}
+.poster-save-btn::after { border: none; }

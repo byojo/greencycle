@@ -1,0 +1,228 @@
+/* pages/order-list/order-list.wxss */
+.page {
+  min-height: 100vh;
+  background: #F7F8FA;
+}
+
+/* ============ 顶部导航 ============ */
+.nav {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1rpx solid #F3F4F6;
+}
+.nav-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+.nav-action {
+  position: absolute;
+  right: 32rpx;
+  font-size: 28rpx;
+  color: #07C160;
+}
+
+/* ============ 筛选 chips ============ */
+.filter-bar {
+  display: flex;
+  gap: 16rpx;
+  padding: 24rpx 32rpx;
+  background: #FFFFFF;
+  position: sticky;
+  top: 88rpx;
+  z-index: 9;
+  border-bottom: 1rpx solid #F3F4F6;
+}
+.filter-chip {
+  padding: 12rpx 32rpx;
+  border-radius: 100rpx;
+  background: #F3F4F6;
+  color: #4B5563;
+  font-size: 26rpx;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.filter-chip.active {
+  background: #07C160;
+  color: #FFFFFF;
+  font-weight: 700;
+  box-shadow: 0 4rpx 12rpx rgba(7, 193, 96, 0.3);
+}
+
+/* ============ 时间提示行 ============ */
+.time-hint {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 32rpx 12rpx;
+  font-size: 24rpx;
+  color: #6B7280;
+}
+.hint-text {
+  color: #6B7280;
+}
+.hint-more {
+  color: #07C160;
+  font-weight: 600;
+}
+
+/* ============ 月份标题 ============ */
+.month-title {
+  padding: 24rpx 32rpx 12rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1F2937;
+  letter-spacing: 1rpx;
+}
+
+/* ============ 订单列表卡片 ============ */
+.order-list {
+  background: #FFFFFF;
+  margin: 0 32rpx 24rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+.order-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 28rpx 24rpx;
+  border-bottom: 1rpx solid #F3F4F6;
+}
+.order-item.last {
+  border-bottom: none;
+}
+.order-icon {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  flex-shrink: 0;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+.order-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+.order-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1F2937;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.order-cat {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  font-size: 22rpx;
+}
+.order-cat-tag {
+  color: #9CA3AF;
+}
+.order-status-tag {
+  font-size: 20rpx;
+  font-weight: 600;
+  padding: 2rpx 10rpx;
+  border-radius: 6rpx;
+  background: rgba(0, 0, 0, 0.04);
+}
+.order-time {
+  text-align: right;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4rpx;
+}
+.time-date {
+  font-size: 24rpx;
+  color: #6B7280;
+  font-weight: 500;
+}
+.time-hour {
+  font-size: 22rpx;
+  color: #9CA3AF;
+}
+.order-arrow {
+  color: #D1D5DB;
+  font-size: 36rpx;
+  margin-left: 4rpx;
+  flex-shrink: 0;
+}
+
+/* ============ 加载状态 ============ */
+.loading-state {
+  padding: 80rpx 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #9CA3AF;
+  font-size: 24rpx;
+  gap: 16rpx;
+}
+.loading-icon {
+  width: 48rpx;
+  height: 48rpx;
+  border: 4rpx solid #E5E7EB;
+  border-top-color: #07C160;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============ 空状态 ============ */
+.empty-state {
+  padding: 120rpx 32rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+}
+.empty-icon {
+  font-size: 100rpx;
+  opacity: 0.5;
+}
+.empty-text {
+  font-size: 28rpx;
+  color: #6B7280;
+}
+.empty-btn {
+  margin-top: 8rpx;
+  background: #07C160;
+  color: #FFFFFF;
+  border-radius: 100rpx;
+  padding: 0 48rpx;
+  height: 72rpx;
+  line-height: 72rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  border: none;
+}
+.empty-btn::after {
+  border: none;
+}
+
+/* ============ 底部提示 ============ */
+.footer-tip {
+  text-align: center;
+  padding: 32rpx;
+  font-size: 22rpx;
+  color: #9CA3AF;
+}

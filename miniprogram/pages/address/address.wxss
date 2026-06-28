@@ -1,0 +1,195 @@
+/* pages/address/address.wxss */
+.page {
+  min-height: 100vh;
+  background: #F7F8FA;
+  padding-bottom: 200rpx;
+}
+
+/* === Nav === */
+.nav {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1rpx solid #F3F4F6;
+}
+.nav-back {
+  width: 80rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  font-weight: 300;
+  color: #1F2937;
+}
+.nav-title {
+  flex: 1;
+  text-align: center;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+.nav-manage {
+  width: 120rpx;
+  text-align: right;
+  padding-right: 32rpx;
+  font-size: 26rpx;
+  color: #07C160;
+  font-weight: 500;
+}
+
+/* === 地址列表 === */
+.addr-list {
+  padding: 24rpx 32rpx;
+}
+.addr-item {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 28rpx 28rpx 24rpx;
+  margin-bottom: 20rpx;
+  position: relative;
+  border: 2rpx solid transparent;
+  transition: border-color 0.15s;
+}
+.addr-item.selectable:active {
+  background: #F9FAFB;
+}
+.addr-item.default {
+  border-color: #A7F3D0;
+  background: linear-gradient(180deg, #ECFDF5 0%, #FFFFFF 30%);
+}
+
+.addr-name-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+.addr-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+.addr-phone {
+  font-size: 26rpx;
+  color: #6B7280;
+  font-weight: 400;
+}
+.default-badge {
+  background: #E8F8EE;
+  color: #06A050;
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  font-weight: 500;
+  margin-left: 4rpx;
+}
+.addr-detail {
+  font-size: 26rpx;
+  color: #6B7280;
+  margin-top: 12rpx;
+  line-height: 1.5;
+}
+.addr-tag {
+  display: inline-block;
+  font-size: 20rpx;
+  color: #07C160;
+  background: #E8F8EE;
+  padding: 2rpx 12rpx;
+  border-radius: 6rpx;
+  margin-top: 12rpx;
+}
+
+/* === 操作 === */
+.addr-actions {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #F3F4F6;
+  justify-content: flex-end;
+}
+.action {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  font-size: 24rpx;
+  color: #6B7280;
+  padding: 4rpx 8rpx;
+}
+.action.danger { color: #EF4444; }
+.action-icon {
+  font-size: 22rpx;
+  line-height: 1;
+}
+.action-icon.edit { color: #2563EB; }
+.action-icon.default-mark { color: #07C160; }
+.action-icon.delete { color: #EF4444; }
+
+/* === 空状态 === */
+.empty {
+  text-align: center;
+  padding: 160rpx 32rpx 60rpx;
+}
+.empty-icon {
+  font-size: 120rpx;
+  opacity: 0.6;
+  margin-bottom: 24rpx;
+}
+.empty-text {
+  font-size: 28rpx;
+  color: #6B7280;
+  font-weight: 500;
+}
+.empty-sub {
+  font-size: 24rpx;
+  color: #9CA3AF;
+  margin-top: 12rpx;
+  line-height: 1.5;
+}
+.empty-btn {
+  display: inline-block;
+  margin-top: 40rpx;
+  background: #07C160;
+  color: #FFFFFF;
+  font-size: 28rpx;
+  font-weight: 600;
+  padding: 20rpx 48rpx;
+  border-radius: 48rpx;
+  box-shadow: 0 8rpx 24rpx rgba(7, 193, 96, 0.3);
+}
+
+/* === 底部新增按钮（固定） === */
+.add-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16rpx 32rpx 32rpx;
+  background: #FFFFFF;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.04);
+  padding-bottom: calc(32rpx + env(safe-area-inset-bottom));
+  z-index: 10;
+}
+.add-btn {
+  background: linear-gradient(135deg, #07C160 0%, #06A050 100%);
+  color: #FFFFFF;
+  height: 96rpx;
+  border-radius: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  box-shadow: 0 8rpx 24rpx rgba(7, 193, 96, 0.3);
+}
+.add-btn .plus {
+  font-size: 36rpx;
+  font-weight: 300;
+  line-height: 1;
+}

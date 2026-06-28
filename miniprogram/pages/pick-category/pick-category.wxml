@@ -1,0 +1,65 @@
+<!--pages/pick-category/pick-category.wxml-->
+<view class="page">
+  <!-- 顶部导航（小白条 · 居中标题） -->
+  <view class="nav">
+    <view class="nav-title">选择回收品类</view>
+  </view>
+
+  <!-- 顶部提示：绿色渐变 + 边框 A7F3D0 -->
+  <view class="tips">
+    <view class="tips-icon">♻️</view>
+    <view class="tips-content">
+      <view class="tips-title">三步完成回收</view>
+      <view class="tips-sub">选品类 → 上传照片 → 下单</view>
+    </view>
+  </view>
+
+  <!-- 品类标题 -->
+  <view class="section-title">请选择要回收的品类</view>
+
+  <!-- 品类网格：4 列（原型 grid-cols-4） -->
+  <view class="cat-grid">
+    <view
+      class="cat-item"
+      wx:for="{{categories}}"
+      wx:key="code"
+      data-code="{{item.code}}"
+      bindtap="onCategoryTap"
+    >
+      <view class="cat-icon" style="background:{{item.bgLight}}">{{item.icon}}</view>
+      <view class="cat-name">{{item.name}}</view>
+      <view class="cat-desc">{{item.tagline}}</view>
+    </view>
+  </view>
+
+  <!-- 常见问题 -->
+  <view class="help">
+    <view class="help-title">❓ 不确定选哪个品类？</view>
+    <view class="help-item">
+      <text class="help-icon">💬</text>
+      <text>点击品类卡后，可以看到详细物品列表</text>
+    </view>
+    <view class="help-item">
+      <text class="help-icon">📞</text>
+      <text>进入品类后可联系在线客服帮您选择</text>
+    </view>
+    <button class="help-btn" bindtap="onContact">💬 联系在线客服</button>
+  </view>
+
+  <!-- 上次回收（横滑 chips） -->
+  <view wx:if="{{recentItems.length > 0}}" class="recent">
+    <view class="recent-title">🕐 上次回收过</view>
+    <scroll-view class="recent-items" scroll-x enable-flex>
+      <view
+        class="recent-chip"
+        wx:for="{{recentItems}}"
+        wx:key="code"
+        data-code="{{item.code}}"
+        bindtap="onRecentTap"
+      >
+        <text class="recent-emoji">{{item.icon}}</text>
+        <text class="recent-name">{{item.name}}</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>

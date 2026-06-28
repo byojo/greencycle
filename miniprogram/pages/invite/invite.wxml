@@ -1,0 +1,128 @@
+<!--pages/invite/invite.wxml-->
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="nav">
+    <view class="nav-back" bindtap="onBack">
+      <text class="back-icon">‹</text>
+    </view>
+    <view class="nav-title">邀请好友</view>
+  </view>
+
+  <!-- 渐变 hero -->
+  <view class="hero">
+    <view class="hero-emoji">🎁</view>
+    <view class="hero-title">邀好友 · 一起环保</view>
+    <view class="hero-desc">每邀请一位好友注册，你和他各得 <text class="highlight">50 碳积分</text></view>
+  </view>
+
+  <!-- 我的邀请码 -->
+  <view class="card">
+    <view class="card-title">我的邀请码</view>
+    <view class="invite-code">{{inviteCode}}</view>
+    <button class="btn-copy" bindtap="onCopyCode">复制邀请码</button>
+  </view>
+
+  <!-- 3 种邀请方式 -->
+  <view class="card">
+    <view class="card-title">邀请方式</view>
+    <view class="invite-list">
+      <view class="invite-item" bindtap="onShareApp">
+        <view class="invite-icon" style="background:#07C160">💬</view>
+        <view class="invite-info">
+          <view class="invite-name">微信好友</view>
+          <view class="invite-desc">点击右上角 · 分享给好友</view>
+        </view>
+        <view class="invite-arrow">›</view>
+      </view>
+
+      <view class="invite-item" bindtap="onCopyLink">
+        <view class="invite-icon" style="background:#3B82F6">🔗</view>
+        <view class="invite-info">
+          <view class="invite-name">复制链接</view>
+          <view class="invite-desc">复制邀请链接发给好友</view>
+        </view>
+        <view class="invite-arrow">›</view>
+      </view>
+
+      <view class="invite-item" bindtap="onSavePoster">
+        <view class="invite-icon" style="background:#FF8C42">🖼️</view>
+        <view class="invite-info">
+          <view class="invite-name">保存海报</view>
+          <view class="invite-desc">保存邀请海报到相册 · 长按分享</view>
+        </view>
+        <view class="invite-arrow">›</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 邀请记录 -->
+  <view class="card">
+    <view class="card-title-row">
+      <view class="card-title">邀请记录</view>
+      <view class="card-more">已邀请 {{inviteCount}} 人</view>
+    </view>
+    <view wx:if="{{inviteList.length > 0}}" class="record-list">
+      <view class="record-item" wx:for="{{inviteList}}" wx:key="id">
+        <view class="record-avatar">{{item.avatarText}}</view>
+        <view class="record-info">
+          <view class="record-name">{{item.name}}</view>
+          <view class="record-time">{{item.timeText}}</view>
+        </view>
+        <view class="record-points">+{{item.points}}</view>
+      </view>
+    </view>
+    <view wx:else class="empty">
+      <view class="empty-icon">📭</view>
+      <view class="empty-text">还没有邀请记录</view>
+      <view class="empty-tip">分享给好友，双方都得 50 积分</view>
+    </view>
+  </view>
+
+  <!-- 活动规则 -->
+  <view class="rules">
+    <view class="rules-title">活动规则</view>
+    <view class="rules-text">1. 好友通过你的邀请码注册后，双方各得 50 碳积分</view>
+    <view class="rules-text">2. 同一好友只能被邀请一次</view>
+    <view class="rules-text">3. 积分实时到账，可在「碳积分」页面查看</view>
+    <view class="rules-text">4. 如有问题请联系客服</view>
+  </view>
+
+  <view class="safe-area-bottom" style="height: 200rpx;"></view>
+</view>
+
+<!-- 海报预览弹层 -->
+<view wx:if="{{posterVisible}}" class="poster-modal" bindtap="onClosePoster">
+  <view class="poster-mask"></view>
+
+  <view class="poster-wrap" catchtap="">
+    <view class="poster-close" bindtap="onClosePoster">×</view>
+
+    <!-- 离线 canvas（屏幕外渲染，不可见） -->
+    <view class="canvas-hide">
+      <canvas type="2d" id="posterCanvas" class="poster-canvas"></canvas>
+    </view>
+
+    <!-- 海报预览（canvas 渲染后这里显示图片） -->
+    <view class="poster-preview" wx:if="{{posterPath}}">
+      <image
+        class="poster-image"
+        src="{{posterPath}}"
+        show-menu-by-longpress="true"
+        bindlongpress="onPosterLongPress"
+        mode="aspectFit"
+      ></image>
+      <view class="poster-hint">长按图片可分享或保存到相册</view>
+    </view>
+
+    <view class="poster-preview poster-loading" wx:else>
+      <view class="poster-loading-icon">🎨</view>
+      <view class="poster-loading-text">海报生成中…</view>
+    </view>
+
+    <button
+      class="poster-save-btn"
+      wx:if="{{posterPath}}"
+      bindtap="onSavePosterClick"
+    >保存到相册</button>
+  </view>
+</view>
