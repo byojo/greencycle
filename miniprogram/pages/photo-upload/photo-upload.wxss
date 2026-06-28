@@ -4,7 +4,7 @@
 .page {
   min-height: 100vh;
   background: #F7F8FA;
-  padding-bottom: calc(200rpx + env(safe-area-inset-bottom));
+  padding-bottom: calc(200rpx + env(safe-area-inset-bottom) + 40rpx);
 }
 
 /* ============ 顶部导航（白条 · sticky） ============ */
