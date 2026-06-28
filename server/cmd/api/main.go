@@ -30,7 +30,6 @@ func main() {
 	gin.SetMode(cfg.Server.Mode)
 
 	db := database.InitMySQL(cfg.MySQL)
-	rdb := database.InitRedis(cfg.Redis)
 
 	repo := repository.New(db)
 	wechatCli := wechat.NewClient()
@@ -64,5 +63,4 @@ func main() {
 		log.Printf("服务关闭异常: %v", err)
 	}
 	log.Println("服务已退出")
-	_ = rdb // suppress unused
 }
