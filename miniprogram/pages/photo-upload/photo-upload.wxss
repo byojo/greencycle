@@ -269,12 +269,13 @@
   width: 100%;
   background: #F9FAFB;
   border-radius: 16rpx;
-  padding: 24rpx 28rpx;
+  padding: 20rpx 28rpx;
   font-size: 28rpx;
   color: #1F2937;
   border: 2rpx solid transparent;
   box-sizing: border-box;
-  line-height: 1.5;
+  line-height: 40rpx;
+  height: 80rpx;
 }
 .form-input:focus {
   border-color: #07C160;
