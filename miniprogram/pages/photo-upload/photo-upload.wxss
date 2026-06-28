@@ -4,7 +4,7 @@
 .page {
   min-height: 100vh;
   background: #F7F8FA;
-  padding-bottom: calc(200rpx + env(safe-area-inset-bottom) + 120rpx);
+  padding-bottom: calc(200rpx + env(safe-area-inset-bottom) + 160rpx);
 }
 
 /* ============ 顶部导航（白条 · sticky） ============ */
@@ -361,32 +361,39 @@
   line-height: 1.5;
 }
 
-/* ============ 底部按钮 ============ */
+/* ============ 底部按钮（左右分布） ============ */
 .bottom-action {
   position: fixed;
   bottom: calc(120rpx + env(safe-area-inset-bottom));
   left: 0;
   right: 0;
-  height: 120rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background: #FFFFFF;
+  padding: 20rpx 32rpx calc(20rpx + env(safe-area-inset-bottom));
   border-top: 1rpx solid #E5E7EB;
   z-index: 1000;
 }
+.bottom-hint {
+  font-size: 22rpx;
+  color: #6B7280;
+  line-height: 1.4;
+  flex-shrink: 1;
+  padding-right: 16rpx;
+}
 .submit-btn {
-  position: absolute;
-  left: 32rpx;
-  right: 32rpx;
-  top: 16rpx;
-  height: 88rpx;
-  background: #07C160;
+  flex-shrink: 0;
+  height: 80rpx;
+  padding: 0 36rpx;
+  background: linear-gradient(135deg, #11CD60 0%, #07A74B 100%);
   color: #FFFFFF;
-  border-radius: 44rpx;
-  font-size: 28rpx;
+  border-radius: 999rpx;
+  font-size: 26rpx;
   font-weight: 600;
-  text-align: center;
-  box-shadow: 0 6rpx 30rpx rgba(7, 193, 96, 0.35);
+  box-shadow: 0 6rpx 24rpx rgba(14, 188, 86, 0.25);
   border: none;
-  line-height: 88rpx;
+  line-height: 80rpx;
 }
 .submit-btn::after { border: none; }
 .submit-btn[disabled] {

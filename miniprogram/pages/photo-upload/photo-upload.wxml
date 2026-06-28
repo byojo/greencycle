@@ -162,13 +162,14 @@
     </view>
   </view>
 
-  <!-- 底部提交按钮 -->
+  <!-- 底部提交按钮（左右分布：提示文字 + 绿色按钮） -->
   <view class="bottom-action">
+    <view class="bottom-hint">提交后 专员 1 小时内联系</view>
     <button
       class="btn btn-primary submit-btn"
       bindtap="onSubmit"
       loading="{{submitting}}"
       disabled="{{submitting}}"
-    >提交后 专员 1 小时内联系 ›</button>
+    >下一步 ›</button>
   </view>
 </view>
