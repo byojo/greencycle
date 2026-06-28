@@ -365,14 +365,15 @@
 .bottom-action {
   position: fixed;
   bottom: calc(120rpx + env(safe-area-inset-bottom));
-  left: 0;
-  right: 0;
+  left: 24rpx;
+  right: 24rpx;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: #FFFFFF;
-  padding: 20rpx 32rpx calc(20rpx + env(safe-area-inset-bottom));
-  border-top: 1rpx solid #E5E7EB;
+  padding: 20rpx 24rpx calc(20rpx + env(safe-area-inset-bottom));
+  border-radius: 24rpx;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.05);
   z-index: 1000;
 }
 .bottom-hint {
