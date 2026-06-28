@@ -169,6 +169,6 @@
       bindtap="onSubmit"
       loading="{{submitting}}"
       disabled="{{submitting}}"
-    >提交后 专员 1 小时内联系</button>
+    >提交后 专员 1 小时内联系 ›</button>
   </view>
 </view>
