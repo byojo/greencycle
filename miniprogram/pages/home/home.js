@@ -130,11 +130,6 @@ Page({
     });
   },
 
-  // 跳到积分页
-  goPoints() {
-    wx.switchTab({ url: '/pages/points/points' });
-  },
-
   // 加入我们
   onJoinUs() {
     wx.navigateTo({ url: '/pages/join-us/join-us' });

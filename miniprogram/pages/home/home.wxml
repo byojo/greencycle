@@ -40,16 +40,6 @@
     </view>
   </view>
 
-  <!-- 碳积分卡片 -->
-  <view class="points-card" bindtap="goPoints">
-    <view class="points-icon">🌳</view>
-    <view class="points-info">
-      <view class="points-num">{{points}}</view>
-      <view class="points-label">碳积分 · 已为地球减碳 {{carbonKg}}kg</view>
-    </view>
-    <view class="points-arrow">查看 ›</view>
-  </view>
-
   <!-- 环保承诺 -->
   <view class="commit">
     <view class="commit-icon">🌍</view>
