@@ -175,7 +175,7 @@ Page({
   },
 
   onOrderTap(e) {
-    const orderId = e.currentTarget.dataset.id;
+    const orderId = String(e.currentTarget.dataset.id || '');
     const category = e.currentTarget.dataset.category;
     if (orderId && !orderId.startsWith('m')) {
       wx.navigateTo({ url: `/pages/order-detail/order-detail?id=${orderId}` });
