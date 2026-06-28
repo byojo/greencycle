@@ -54,6 +54,9 @@
   color: #FFFFFF;
   background: linear-gradient(135deg, #07C160 0%, #06A050 100%);
   box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: calc(88rpx + env(safe-area-inset-top));
+  z-index: 9;
 }
 .status-icon-row {
   display: flex;
