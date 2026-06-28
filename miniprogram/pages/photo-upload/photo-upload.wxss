@@ -375,10 +375,10 @@
 }
 .submit-btn {
   position: absolute;
-  left: 32rpx;
   right: 32rpx;
   top: 0;
   height: 88rpx;
+  padding: 0 40rpx;
   background: #07C160;
   color: #FFFFFF;
   border-radius: 44rpx;
