@@ -81,3 +81,19 @@ func (r *OrderRepository) UpdateStatus(ctx context.Context, id uint64, status in
 func (r *OrderRepository) Transaction(ctx context.Context, fn func(tx *gorm.DB) error) error {
 	return r.db.WithContext(ctx).Transaction(fn)
 }
+
+// CountByUser 用户订单总数
+func (r *OrderRepository) CountByUser(ctx context.Context, userID uint) (int, error) {
+	var count int64
+	err := r.db.WithContext(ctx).Model(&model.Order{}).Where("user_id = ?", userID).Count(&count).Error
+	return int(count), err
+}
+
+// CountInProgressByUser 用户进行中订单数（待评估+已派单+已取件）
+func (r *OrderRepository) CountInProgressByUser(ctx context.Context, userID uint) (int, error) {
+	var count int64
+	err := r.db.WithContext(ctx).Model(&model.Order{}).
+		Where("user_id = ? AND status IN ?", userID, []int{1, 2, 3}).
+		Count(&count).Error
+	return int(count), err
+}

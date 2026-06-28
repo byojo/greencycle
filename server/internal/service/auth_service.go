@@ -78,8 +78,17 @@ func (s *AuthService) WechatLogin(ctx context.Context, code string, userInfo map
 	}, nil
 }
 
-// GetUserInfo 获取用户信息
-func (s *AuthService) GetUserInfo(ctx context.Context, userID uint) (*model.User, error) {
+// UserInfoResponse 用户信息（带扩展统计字段）
+type UserInfoResponse struct {
+	model.User
+	OrderCount   int     `json:"orderCount"`    // 总订单数
+	AddressCount int     `json:"addressCount"`  // 地址数量
+	CarbonKg     float64 `json:"carbonKg"`      // 累计减碳 kg
+	InUseCount   int     `json:"inUseCount"`    // 在用中订单数（未完成）
+}
+
+// GetUserInfo 获取用户信息（含统计）
+func (s *AuthService) GetUserInfo(ctx context.Context, userID uint) (*UserInfoResponse, error) {
 	user, err := s.repo.User.FindByID(ctx, userID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -87,7 +96,19 @@ func (s *AuthService) GetUserInfo(ctx context.Context, userID uint) (*model.User
 		}
 		return nil, err
 	}
-	return user, nil
+
+	orderCount, _ := s.repo.Order.CountByUser(ctx, userID)
+	addrCount, _ := s.repo.Address.CountByUser(ctx, userID)
+	inUseCount, _ := s.repo.Order.CountInProgressByUser(ctx, userID)
+	carbonKg, _ := s.repo.Point.TotalCarbonByUser(ctx, userID)
+
+	return &UserInfoResponse{
+		User:         *user,
+		OrderCount:   orderCount,
+		AddressCount: addrCount,
+		CarbonKg:     carbonKg,
+		InUseCount:   inUseCount,
+	}, nil
 }
 
 // helpers

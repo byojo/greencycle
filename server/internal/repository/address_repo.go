@@ -57,6 +57,13 @@ func (r *AddressRepository) Create(ctx context.Context, addr *model.Address) err
 	return r.db.WithContext(ctx).Create(addr).Error
 }
 
+// CountByUser 用户地址数量
+func (r *AddressRepository) CountByUser(ctx context.Context, userID uint) (int, error) {
+	var count int64
+	err := r.db.WithContext(ctx).Model(&model.Address{}).Where("user_id = ?", userID).Count(&count).Error
+	return int(count), err
+}
+
 // CreateTx 事务内创建
 func (r *AddressRepository) CreateTx(ctx context.Context, tx *gorm.DB, addr *model.Address) error {
 	return tx.WithContext(ctx).Create(addr).Error

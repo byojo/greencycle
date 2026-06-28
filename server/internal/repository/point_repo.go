@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 
 	"gorm.io/gorm"
 
@@ -40,4 +41,20 @@ func (r *PointRepository) HistoryByUser(ctx context.Context, userID uint, page, 
 		Find(&logs).Error
 
 	return logs, total, err
+}
+
+// TotalCarbonByUser 用户累计减碳量（kg）
+func (r *PointRepository) TotalCarbonByUser(ctx context.Context, userID uint) (float64, error) {
+	var total sql.NullFloat64
+	err := r.db.WithContext(ctx).Model(&model.CarbonReduction{}).
+		Where("user_id = ?", userID).
+		Select("COALESCE(SUM(carbon_kg), 0)").
+		Scan(&total).Error
+	if err != nil {
+		return 0, err
+	}
+	if !total.Valid {
+		return 0, nil
+	}
+	return total.Float64, nil
 }
