@@ -118,7 +118,7 @@
   <!-- 操作按钮 -->
   <view class="actions safe-area-bottom">
     <button class="btn-ghost" bindtap="onApplyAfterSale" wx:if="{{status === 4}}">申请售后</button>
-    <button class="btn-ghost" bindtap="onContact" wx:elif="{{status === 5}}">再次回收</button>
+    <button class="btn-ghost" bindtap="onAgain" wx:elif="{{status === 5}}">再次回收</button>
     <button class="btn-primary" bindtap="onAgain">{{againText}}</button>
   </view>
 </view>
