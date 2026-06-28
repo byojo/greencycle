@@ -36,6 +36,7 @@
   right: 32rpx;
   font-size: 28rpx;
   color: #FFFFFF;
+  line-height: 88rpx;
 }
 
 /* ============ 顶部状态条（绿色渐变 + 白字） ============ */

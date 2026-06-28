@@ -40,6 +40,7 @@
 }
 .nav-action {
   width: 80rpx;
+  line-height: 88rpx;
 }
 
 /* ============ 4 步进度条 ============ */

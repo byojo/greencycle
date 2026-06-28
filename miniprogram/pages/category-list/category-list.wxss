@@ -45,6 +45,7 @@
   color: #07C160;
   font-weight: 500;
   padding-right: 16rpx;
+  line-height: 88rpx;
 }
 
 /* ============ Banner（左侧图标 + 右侧文字） ============ */
