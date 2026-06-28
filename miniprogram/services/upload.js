@@ -14,14 +14,13 @@ function uploadImage(tempFilePath) {
     api.getUploadSign({
       ext: tempFilePath.split('.').pop() || 'jpg'
     }).then(signRes => {
-      const { url, method, headers, formData, key } = signRes.data;
+      const { url, key } = signRes.data;
 
-      // 2. 上传到 COS
+      // 2. 上传到 COS（预签名 URL 已在 query string 包含凭证）
       wx.uploadFile({
         url: url,
         filePath: tempFilePath,
         name: 'file',
-        formData: formData,
         success: (res) => {
           if (res.statusCode === 200 || res.statusCode === 204) {
             resolve(key);  // 返回图片 key，由业务层拼接 CDN 域名
