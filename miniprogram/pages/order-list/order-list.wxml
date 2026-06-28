@@ -3,32 +3,9 @@
   <!-- 顶部导航 -->
   <view class="nav">
     <view class="nav-inner">
+      <view class="nav-back" bindtap="onBack">‹</view>
       <view class="nav-title">我的订单</view>
-      <view class="nav-action" bindtap="onFilter">筛选</view>
     </view>
-  </view>
-  <!-- 状态筛选 chips -->
-  <view class="filter-bar">
-    <view
-      class="filter-chip {{status === 0 ? 'active' : ''}}"
-      data-status="0"
-      bindtap="onStatusChange"
-    >全部</view>
-    <view
-      class="filter-chip {{status === 1 || status === 2 || status === 3 ? 'active' : ''}}"
-      data-status="1"
-      bindtap="onStatusChange"
-    >进行中</view>
-    <view
-      class="filter-chip {{status === 4 ? 'active' : ''}}"
-      data-status="4"
-      bindtap="onStatusChange"
-    >已完成</view>
-    <view
-      class="filter-chip {{status === 5 ? 'active' : ''}}"
-      data-status="5"
-      bindtap="onStatusChange"
-    >已取消</view>
   </view>
 
   <!-- 时间提示行 -->

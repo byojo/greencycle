@@ -194,5 +194,9 @@ Page({
 
   goHome() {
     wx.switchTab({ url: '/pages/home/home' });
+  },
+
+  onBack() {
+    wx.navigateBack();
   }
 });
