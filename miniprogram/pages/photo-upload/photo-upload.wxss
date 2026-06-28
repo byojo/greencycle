@@ -367,19 +367,24 @@
   bottom: calc(120rpx + env(safe-area-inset-bottom));
   left: 0;
   right: 0;
+  height: 88rpx;
   background: #FFFFFF;
-  padding: 24rpx 32rpx;
+  padding: 0 32rpx;
   border-top: 1rpx solid #E5E7EB;
   z-index: 1000;
 }
 .submit-btn {
-  width: 100%;
+  position: absolute;
+  left: 32rpx;
+  right: 32rpx;
+  top: 0;
   height: 88rpx;
   background: linear-gradient(135deg, #07C160 0%, #06A050 100%);
   color: #FFFFFF;
   border-radius: 44rpx;
   font-size: 30rpx;
   font-weight: 600;
+  text-align: center;
   box-shadow: 0 6rpx 20rpx rgba(7, 193, 96, 0.3);
   border: none;
   line-height: 88rpx;
