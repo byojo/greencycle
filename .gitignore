@@ -8,6 +8,10 @@ desktop.ini
 .idea/
 *.swp
 *.swo
+.workbuddy/
+
+# ===== 临时文件 =====
+matrix-media-*.png
 
 # ===== 敏感配置（绝对不能 commit！）=====
 # 包含 AppSecret / DB 密码 / JWT 密钥 等

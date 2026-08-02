@@ -91,5 +91,15 @@ module.exports = {
 
   // ========== 合作加盟 ==========
   // 提交加盟申请
-  submitPartnerApply: (data) => post('/partner-apply', data, { showLoading: true, loadingText: '提交中...' })
+  submitPartnerApply: (data) => post('/partner-apply', data, { showLoading: true, loadingText: '提交中...' }),
+
+  // ========== 积分商城 ==========
+  // 获取可兑换商品列表
+  getExchangeItems: () => get('/exchange/items'),
+
+  // 兑换商品
+  exchangeItem: (data) => post('/exchange', data, { showLoading: true, loadingText: '兑换中...' }),
+
+  // 用户兑换记录
+  getExchangeHistory: (params) => get('/exchange/history', params)
 };

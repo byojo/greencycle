@@ -58,12 +58,9 @@ Page({
   onSelect(e) {
     if (!this.data.selectMode) return;
     const addr = e.currentTarget.dataset.addr;
-    const pages = getCurrentPages();
-    const prev = pages[pages.length - 2];
-    if (prev) {
-      prev.setData({ address: addr, selectedAddress: addr });
-      wx.navigateBack();
-    }
+    // 通过 globalData 传递选中地址
+    app.globalData.selectedAddress = addr;
+    wx.navigateBack();
   },
 
   onAdd() {

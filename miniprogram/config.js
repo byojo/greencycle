@@ -30,6 +30,6 @@ module.exports = {
   },
 
   // ====== 开关 ======
-  useMock: false,        // 关闭 mock，调真实后端
+  useMock: false,        // 已关闭 Mock，使用真实 API
   enableConsole: true   // 是否打印调试日志
 };

@@ -113,6 +113,7 @@ Page({
   goOrders() { wx.navigateTo({ url: '/pages/order-list/order-list' }); },
   goAddresses() { wx.navigateTo({ url: '/pages/address/address' }); },
   goPoints() { wx.navigateTo({ url: '/pages/points/points' }); },
+  goExchange() { wx.navigateTo({ url: '/pages/exchange/exchange' }); },
   goInvite() { wx.navigateTo({ url: '/pages/invite/invite' }); },
   goService() {
     // 优先尝试官方客服会话，失败后退到 modal

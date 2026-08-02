@@ -17,7 +17,8 @@
     "pages/invite/invite",
     "pages/settings/settings",
     "pages/login/login",
-    "pages/join-us/join-us"
+    "pages/join-us/join-us",
+    "pages/exchange/exchange"
   ],
   "window": {
     "navigationBarBackgroundColor": "#07C160",

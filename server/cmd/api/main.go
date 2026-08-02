@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 
 	"github.com/greencycle/server/internal/handler"
 	"github.com/greencycle/server/internal/model"
@@ -32,10 +33,15 @@ func main() {
 
 	db := database.InitMySQL(cfg.MySQL)
 
-	// 自动建表
+	// 自动建表（含兑换模块）
 	db.AutoMigrate(
 		&model.PartnerApplication{},
+		&model.ExchangeItem{},
+		&model.ExchangeRecord{},
 	)
+
+	// 兑换商品种子数据（表为空时才插入）
+	seedExchangeItems(db)
 
 	repo := repository.New(db)
 	wechatCli := wechat.NewClient()
@@ -69,4 +75,25 @@ func main() {
 		log.Printf("服务关闭异常: %v", err)
 	}
 	log.Println("服务已退出")
+}
+
+// seedExchangeItems 兑换商品种子数据（仅表为空时插入）
+func seedExchangeItems(db *gorm.DB) {
+	var count int64
+	db.Model(&model.ExchangeItem{}).Count(&count)
+	if count > 0 {
+		return
+	}
+	items := []model.ExchangeItem{
+		{Name: "环保帆布袋", Desc: "可循环使用的棉布购物袋，减少一次性塑料袋使用", Image: "https://cos.example.com/exchange/bag.png", Points: 200, Stock: 100, LimitPerUser: 1, Sort: 1, Enabled: true},
+		{Name: "碳中和徽章", Desc: "绿循环官方认证碳中和徽章，佩戴即环保", Image: "https://cos.example.com/exchange/badge.png", Points: 500, Stock: 200, LimitPerUser: 1, Sort: 2, Enabled: true},
+		{Name: "绿植种子套装", Desc: "包含 3 种适合家养的绿植种子，共建绿色家园", Image: "https://cos.example.com/exchange/seeds.png", Points: 800, Stock: 50, LimitPerUser: 2, Sort: 3, Enabled: true},
+		{Name: "保温杯", Desc: "不锈钢真空保温杯，随手环保从一杯热水开始", Image: "https://cos.example.com/exchange/cup.png", Points: 1500, Stock: 30, LimitPerUser: 1, Sort: 4, Enabled: true},
+		{Name: "电动牙刷", Desc: "声波震动牙刷，环保从每一次刷牙开始", Image: "https://cos.example.com/exchange/toothbrush.png", Points: 3000, Stock: 20, LimitPerUser: 1, Sort: 5, Enabled: true},
+	}
+	if err := db.Create(&items).Error; err != nil {
+		log.Printf("⚠️ 兑换商品种子数据插入失败: %v", err)
+	} else {
+		log.Printf("✅ 已插入 %d 条兑换商品种子数据", len(items))
+	}
 }

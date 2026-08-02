@@ -17,6 +17,7 @@ type Repository struct {
 	Address  *AddressRepository
 	Story    *StoryRepository
 	Partner  *PartnerRepository
+	Exchange *ExchangeRepository
 }
 
 func New(db *gorm.DB) *Repository {
@@ -29,6 +30,7 @@ func New(db *gorm.DB) *Repository {
 		Address:  NewAddressRepository(db),
 		Story:    NewStoryRepository(db),
 		Partner:  NewPartnerRepository(db),
+		Exchange: NewExchangeRepository(db),
 	}
 }
 

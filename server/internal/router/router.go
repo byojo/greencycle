@@ -59,6 +59,11 @@ func Register(h *handler.Handler) *gin.Engine {
 		auth.POST("/user/addresses/:id/default", h.AddressSetDefault)
 
 		auth.POST("/upload/sign", h.UploadSign)
+
+		// 兑换商城
+		auth.GET("/exchange/items", h.ExchangeList)
+		auth.POST("/exchange", h.ExchangeDo)
+		auth.GET("/exchange/history", h.ExchangeHistory)
 	}
 
 	_ = jwt.GetToken // 保留引用

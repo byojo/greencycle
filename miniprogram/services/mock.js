@@ -324,6 +324,31 @@ const mockRouter = {
     enableMock: true,
     version: '1.0.0',
     notice: '当前为 Mock 模式，所有数据均为演示数据。'
+  }),
+
+  // 积分商城 - 商品列表（不设置图片，使用占位图标）
+  'GET /exchange/items': () => delay([
+    { id: 1, name: '环保帆布袋', desc: '可循环使用的棉布购物袋，减少一次性塑料袋使用', image: '', points: 200, stock: 100, limitPerUser: 1 },
+    { id: 2, name: '碳中和徽章', desc: '绿循环官方认证碳中和徽章，佩戴即环保', image: '', points: 500, stock: 200, limitPerUser: 1 },
+    { id: 3, name: '绿植种子套装', desc: '包含 3 种适合家养的绿植种子，共建绿色家园', image: '', points: 800, stock: 50, limitPerUser: 2 },
+    { id: 4, name: '保温杯', desc: '不锈钢真空保温杯，随手环保从一杯热水开始', image: '', points: 1500, stock: 30, limitPerUser: 1 },
+    { id: 5, name: '电动牙刷', desc: '声波震动牙刷，环保从每一次刷牙开始', image: '', points: 3000, stock: 20, limitPerUser: 1 }
+  ]),
+
+  // 积分商城 - 兑换商品
+  'POST /exchange': (params, body) => delay({
+    success: true,
+    recordId: Date.now(),
+    message: '兑换成功，商品将尽快发货！'
+  }),
+
+  // 积分商城 - 兑换记录
+  'GET /exchange/history': () => delay({
+    list: [
+      { id: 1, itemName: '环保帆布袋', itemImage: '', points: 200, status: 2, createdAt: '2026-06-20 14:30' },
+      { id: 2, itemName: '碳中和徽章', itemImage: '', points: 500, status: 3, createdAt: '2026-06-10 10:15' }
+    ],
+    total: 2
   })
 };
 
