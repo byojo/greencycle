@@ -65,5 +65,14 @@ func Register(h *handler.Handler) *gin.Engine {
 		auth.GET("/exchange/history", h.ExchangeHistory)
 	}
 
+	// ========== 管理端（X-Admin-Key 鉴权）==========
+	admin := api.Group("/admin")
+	admin.Use(middleware.AdminAuth())
+	{
+		admin.GET("/orders", h.AdminOrderList)
+		admin.PUT("/orders/:id/status", h.AdminUpdateOrderStatus)
+		admin.POST("/orders/:id/complete", h.AdminCompleteOrder)
+	}
+
 	return r
 }

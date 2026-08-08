@@ -114,6 +114,58 @@ func (s *OrderService) ListByUser(ctx context.Context, userID uint, page, size i
 	return s.repo.Order.ListByUser(ctx, userID, page, size, status)
 }
 
+// AdminListByUser 管理端订单列表（不按用户过滤）
+func (s *OrderService) AdminListByUser(ctx context.Context, page, size int, status int) ([]model.Order, int64, error) {
+	if page < 1 {
+		page = 1
+	}
+	if size < 1 || size > 100 {
+		size = 20
+	}
+	return s.repo.Order.AdminList(ctx, page, size, status)
+}
+
+// AdminUpdateStatus 管理端更新订单状态
+func (s *OrderService) AdminUpdateStatus(ctx context.Context, orderID uint64, status int, riderID *uint, riderName, riderPhone string) error {
+	updates := map[string]interface{}{
+		"status": status,
+	}
+	if riderID != nil {
+		updates["rider_id"] = *riderID
+	}
+	if riderName != "" {
+		updates["rider_name"] = riderName
+	}
+	if riderPhone != "" {
+		updates["rider_phone"] = riderPhone
+	}
+
+	err := s.repo.Order.AdminUpdateStatus(ctx, orderID, updates)
+	if err != nil {
+		return err
+	}
+
+	// 创建时间线
+	timeline := &model.OrderTimeline{
+		OrderID:  orderID,
+		Status:   status,
+		Operator: "管理员",
+	}
+	switch status {
+	case model.OrderStatusAssigned:
+		timeline.Content = "已派单，回收员即将上门"
+	case model.OrderStatusPicked:
+		timeline.Content = "回收员已取件"
+	case model.OrderStatusCompleted:
+		timeline.Content = "订单已完成"
+	case model.OrderStatusCancelled:
+		timeline.Content = "订单已取消"
+	}
+	_ = s.repo.Order.CreateTimelineWithDetails(ctx, orderID, timeline.Status, timeline.Content, timeline.Operator)
+
+	return nil
+}
+
 // Cancel 取消订单
 func (s *OrderService) Cancel(ctx context.Context, orderID uint64, userID uint, reason string) error {
 	order, err := s.GetDetail(ctx, orderID, userID)

@@ -34,6 +34,16 @@ func (r *OrderRepository) CreateTimeline(ctx context.Context, t *model.OrderTime
 	return r.db.WithContext(ctx).Create(t).Error
 }
 
+// CreateTimelineWithDetails 创建时间线（带参数）
+func (r *OrderRepository) CreateTimelineWithDetails(ctx context.Context, orderID uint64, status int, content, operator string) error {
+	return r.db.WithContext(ctx).Create(&model.OrderTimeline{
+		OrderID:  orderID,
+		Status:   status,
+		Content:  content,
+		Operator: operator,
+	}).Error
+}
+
 // FindByID 查询订单
 func (r *OrderRepository) FindByID(ctx context.Context, id uint64) (*model.Order, error) {
 	var order model.Order
@@ -75,6 +85,37 @@ func (r *OrderRepository) UpdateStatus(ctx context.Context, id uint64, status in
 		Model(&model.Order{}).
 		Where("id = ?", id).
 		Update("status", status).Error
+}
+
+// AdminList 管理端订单列表（不按用户过滤）
+func (r *OrderRepository) AdminList(ctx context.Context, page, size int, status int) ([]model.Order, int64, error) {
+	var orders []model.Order
+	var total int64
+
+	tx := r.db.WithContext(ctx).Model(&model.Order{})
+	if status > 0 {
+		tx = tx.Where("status = ?", status)
+	}
+
+	if err := tx.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+
+	err := tx.Order("created_at DESC").
+		Offset((page - 1) * size).
+		Limit(size).
+		Preload("Images").
+		Find(&orders).Error
+
+	return orders, total, err
+}
+
+// AdminUpdateStatus 管理端更新订单状态
+func (r *OrderRepository) AdminUpdateStatus(ctx context.Context, id uint64, updates map[string]interface{}) error {
+	return r.db.WithContext(ctx).
+		Model(&model.Order{}).
+		Where("id = ?", id).
+		Updates(updates).Error
 }
 
 // Transaction 事务
