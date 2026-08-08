@@ -14,18 +14,11 @@ RUN go mod tidy && CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /build/
 
 FROM alpine:3.18
 
-RUN apk add --no-cache tzdata ca-certificates curl libcap &&     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime &&     echo "Asia/Shanghai" > /etc/timezone
-
-RUN addgroup -S app && adduser -S app -G app
+RUN apk add --no-cache tzdata ca-certificates curl &&     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime &&     echo "Asia/Shanghai" > /etc/timezone
 
 WORKDIR /app
 
 COPY --from=builder /build/server /app/server
-
-# 授权二进制文件绑定 80 端口的权限（非 root 用户需要）
-RUN setcap cap_net_bind_service=+ep /app/server
-
-USER app
 
 ENV PORT=80
 EXPOSE 80
