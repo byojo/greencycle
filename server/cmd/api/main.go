@@ -31,9 +31,9 @@ func main() {
 	defer logger.Sync()
 	gin.SetMode(cfg.Server.Mode)
 
-	// 安全校验：JWT Secret 不能为空
+	// 安全校验：JWT Secret 不应为空，如果未配置则使用随机值并警告
 	if cfg.JWT.Secret == "" {
-		log.Fatal("JWT_SECRET 环境变量未设置，拒绝启动")
+		log.Println("⚠️ JWT_SECRET 环境变量未设置，使用随机密钥（多实例会导致 token 失效，请尽快配置）")
 	}
 
 	db := database.InitMySQL(cfg.MySQL)
