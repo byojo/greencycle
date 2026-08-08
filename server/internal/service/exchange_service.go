@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 
 	"github.com/greencycle/server/internal/model"
 	"github.com/greencycle/server/internal/repository"
@@ -49,26 +50,33 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 		return errors.New("收货地址不存在")
 	}
 
-	// 检查限兑次数
-	if item.LimitPerUser > 0 {
-		count, _ := s.repo.Exchange.UserExchangeCount(ctx, userID, req.ItemID)
-		if int(count) >= item.LimitPerUser {
-			return errors.New("该商品每人限兑一次，您已达上限")
-		}
-	}
-
-	// 检查积分余额
-	user, err := s.repo.User.FindByID(ctx, userID)
-	if err != nil {
-		return errors.New("用户信息获取失败")
-	}
-	if user.Points < item.Points {
-		return errors.New("积分不足，无法兑换")
-	}
-
-	// 事务：扣积分 + 扣库存 + 创建记录
+	// 事务：锁用户行 → 限兑检查 → 扣积分 → 扣库存 → 创建记录
+	// 锁用户行串行化同一用户的并发请求，防止限兑次数 TOCTOU
 	return s.repo.WithTx(ctx, func(tx *gorm.DB) error {
-		// 扣减用户积分（条件更新 + 检查 RowsAffected 防竞态）
+		// 1. 锁定用户行（SELECT FOR UPDATE），串行化同一用户的并发兑换
+		var user model.User
+		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).
+			First(&user, userID).Error; err != nil {
+			return errors.New("用户信息获取失败")
+		}
+
+		// 2. 检查限兑次数（事务内，持锁状态下查询，防止 TOCTOU）
+		if item.LimitPerUser > 0 {
+			var count int64
+			tx.Model(&model.ExchangeRecord{}).
+				Where("user_id = ? AND item_id = ? AND status != ?", userID, item.ID, 4).
+				Count(&count)
+			if int(count) >= item.LimitPerUser {
+				return errors.New("该商品每人限兑一次，您已达上限")
+			}
+		}
+
+		// 3. 检查积分余额
+		if user.Points < item.Points {
+			return errors.New("积分不足，无法兑换")
+		}
+
+		// 4. 扣减用户积分（条件更新 + RowsAffected 双保险）
 		result := tx.Model(&model.User{}).Where("id = ? AND points >= ?", userID, item.Points).
 			UpdateColumn("points", gorm.Expr("points - ?", item.Points))
 		if result.Error != nil {
@@ -78,7 +86,7 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 			return errors.New("积分不足，兑换失败")
 		}
 
-		// 扣减库存（条件更新 + 检查 RowsAffected 防竞态）
+		// 5. 扣减库存（条件更新 + RowsAffected 防超卖）
 		stockResult, err := s.repo.Exchange.DeductStock(ctx, tx, req.ItemID)
 		if err != nil {
 			return errors.New("库存扣减失败")
@@ -87,13 +95,13 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 			return errors.New("商品库存不足")
 		}
 
-		// 查询扣减后的最新积分余额
+		// 6. 查询扣减后的最新积分余额
 		var updatedUser model.User
 		if err := tx.Select("points").First(&updatedUser, userID).Error; err != nil {
 			return errors.New("查询积分余额失败")
 		}
 
-		// 创建积分流水（type=3 兑换）
+		// 7. 创建积分流水（type=3 兑换）
 		pointLog := &model.CarbonPointLog{
 			UserID:   userID,
 			Type:     3, // 兑换
@@ -105,7 +113,7 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 			return errors.New("积分记录创建失败")
 		}
 
-		// 创建兑换记录
+		// 8. 创建兑换记录
 		addrID := req.AddressID
 		record := &model.ExchangeRecord{
 			UserID:    userID,
