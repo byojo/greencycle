@@ -38,8 +38,8 @@ func main() {
 
 	db := database.InitMySQL(cfg.MySQL)
 
-	// 自动建表（全部表）
-	db.AutoMigrate(
+	// 自动建表（全部表，忽略索引已存在的错误）
+	if err := db.AutoMigrate(
 		&model.User{},
 		&model.Category{},
 		&model.CategoryField{},
@@ -54,7 +54,9 @@ func main() {
 		&model.PartnerApplication{},
 		&model.ExchangeItem{},
 		&model.ExchangeRecord{},
-	)
+	); err != nil {
+		log.Printf("⚠️ AutoMigrate 警告（已忽略）: %v", err)
+	}
 
 	// 兑换商品种子数据（表为空时才插入）
 	seedExchangeItems(db)
