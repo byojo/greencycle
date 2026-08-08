@@ -79,6 +79,9 @@ func Register(h *handler.Handler) *gin.Engine {
 		admin.PUT("/orders/:id/status", h.AdminUpdateOrderStatus)
 		admin.POST("/orders/:id/assign", h.AdminAssignOrder)
 		admin.POST("/orders/:id/complete", h.AdminCompleteOrder)
+
+		// 测试
+		admin.POST("/test-notify", h.AdminTestNotify)
 	}
 
 	return r

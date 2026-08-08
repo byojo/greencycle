@@ -6,7 +6,18 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/greencycle/server/pkg/response"
+	"github.com/greencycle/server/pkg/wecom"
 )
+
+// AdminTestNotify 测试企业微信群通知
+func (h *Handler) AdminTestNotify(c *gin.Context) {
+	err := wecom.SendMarkdown("## 🧪 测试通知\n\n> 这是一条来自纸飞机服务端的测试消息\n> 收到说明群机器人配置成功 ✅")
+	if err != nil {
+		response.ServerError(c, "发送失败: "+err.Error())
+		return
+	}
+	response.Success(c, gin.H{"message": "测试消息已发送"})
+}
 
 // ========== 骑手管理 ==========
 
