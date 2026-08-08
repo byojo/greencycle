@@ -132,24 +132,40 @@ async function mockRequest(options) {
   return result;
 }
 
-// token 失效处理
+// token 失效处理（带并发锁，防止多个 401 同时触发多次登录）
+let _loginPromise = null;
+
 async function handleUnauthorized() {
   const app = getApp();
   app.globalData.token = '';
   wx.removeStorageSync('token');
 
+  // 如果已有正在进行的登录请求，复用它（防止并发重复登录）
+  if (_loginPromise) {
+    return _loginPromise;
+  }
+
   // 静默重新登录
+  _loginPromise = (async () => {
+    try {
+      await app.login();
+    } catch (e) {
+      wx.showModal({
+        title: '登录已过期',
+        content: '请重新登录',
+        showCancel: false,
+        success: () => {
+          wx.reLaunch({ url: '/pages/home/home' });
+        }
+      });
+      throw e;
+    }
+  })();
+
   try {
-    await app.login();
-  } catch (e) {
-    wx.showModal({
-      title: '登录已过期',
-      content: '请重新登录',
-      showCancel: false,
-      success: () => {
-        wx.reLaunch({ url: '/pages/home/home' });
-      }
-    });
+    await _loginPromise;
+  } finally {
+    _loginPromise = null;
   }
 }
 
