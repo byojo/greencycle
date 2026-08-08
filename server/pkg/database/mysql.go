@@ -20,8 +20,14 @@ func InitMySQL(cfg config.MySQLConfig) *gorm.DB {
 		cfg.Charset, cfg.ParseTime, cfg.Loc,
 	)
 
+	// 根据运行模式设置日志级别：release 用 Warn，其他用 Info
+	logLevel := logger.Info
+	if config.Get().Server.Mode == "release" {
+		logLevel = logger.Warn
+	}
+
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
+		Logger: logger.Default.LogMode(logLevel),
 	})
 	if err != nil {
 		panic(fmt.Errorf("连接 MySQL 失败: %w", err))

@@ -2,6 +2,7 @@
 package wechat
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -12,6 +13,8 @@ import (
 
 	"github.com/greencycle/server/pkg/config"
 )
+
+var httpClient = &http.Client{Timeout: 10 * time.Second}
 
 type Client struct {
 	appID     string
@@ -49,7 +52,7 @@ func (c *Client) Code2Session(code string) (*Session, error) {
 	params.Set("js_code", code)
 	params.Set("grant_type", "authorization_code")
 
-	resp, err := http.Get(apiURL + "?" + params.Encode())
+	resp, err := httpClient.Get(apiURL + "?" + params.Encode())
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +89,7 @@ func (c *Client) GetAccessToken() (string, error) {
 	params.Set("appid", c.appID)
 	params.Set("secret", c.appSecret)
 
-	resp, err := http.Get(apiURL + "?" + params.Encode())
+	resp, err := httpClient.Get(apiURL + "?" + params.Encode())
 	if err != nil {
 		return "", err
 	}
@@ -123,9 +126,21 @@ func (c *Client) SendSubscribeMessage(msg SubscribeMessage) error {
 	apiURL := fmt.Sprintf("https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=%s", token)
 
 	body, _ := json.Marshal(msg)
-	resp, err := http.Post(apiURL, "application/json", nil)
-	_ = body
-	_ = resp
-	// 实际项目实现
-	return err
+	resp, err := httpClient.Post(apiURL, "application/json", bytes.NewReader(body))
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	var result struct {
+		ErrCode int    `json:"errcode"`
+		ErrMsg  string `json:"errmsg"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return err
+	}
+	if result.ErrCode != 0 {
+		return fmt.Errorf("发送订阅消息失败: %d %s", result.ErrCode, result.ErrMsg)
+	}
+	return nil
 }

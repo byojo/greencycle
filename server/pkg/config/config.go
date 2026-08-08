@@ -156,7 +156,7 @@ func loadFromEnv() *Config {
 			PoolSize: 50,
 		},
 		JWT: JWTConfig{
-			Secret:      getenv("JWT_SECRET", "change-me"),
+			Secret:      getenv("JWT_SECRET", ""),
 			ExpireHours: parseInt(getenv("JWT_EXPIRE_HOURS", "720")),
 		},
 		Wechat: WechatConfig{

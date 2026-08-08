@@ -1,0 +1,23 @@
+<view class="page">
+  <!-- 空状态 -->
+  <view class="empty" wx:if="{{!loading && records.length === 0}}">
+    <view class="empty-icon">📦</view>
+    <view class="empty-text">暂无兑换记录</view>
+  </view>
+
+  <!-- 记录列表 -->
+  <view class="list" wx:if="{{records.length > 0}}">
+    <view class="card" wx:for="{{records}}" wx:key="id">
+      <image class="card-img" src="{{item.itemImage || ''}}" mode="aspectFill" />
+      <view class="card-body">
+        <view class="card-name">{{item.itemName}}</view>
+        <view class="card-points">-{{item.points}} 积分</view>
+        <view class="card-status status-{{item.status}}">{{statusMap[item.status]}}</view>
+      </view>
+      <view class="card-date">{{item.createdAt}}</view>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+</view>

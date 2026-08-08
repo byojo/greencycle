@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math/rand"
 	"time"
 
 	"gorm.io/gorm"
@@ -122,7 +123,22 @@ func (s *OrderService) Cancel(ctx context.Context, orderID uint64, userID uint, 
 	if order.Status >= model.OrderStatusCompleted {
 		return errors.New("订单已完成，无法取消")
 	}
-	return s.repo.Order.UpdateStatus(ctx, orderID, model.OrderStatusCancelled)
+	return s.repo.Order.Transaction(ctx, func(tx *gorm.DB) error {
+		if err := tx.Model(&model.Order{}).Where("id = ?", orderID).
+			Updates(map[string]interface{}{
+				"status":        model.OrderStatusCancelled,
+				"cancel_reason": reason,
+			}).Error; err != nil {
+			return err
+		}
+		timeline := &model.OrderTimeline{
+			OrderID:  order.ID,
+			Status:   model.OrderStatusCancelled,
+			Content:  "用户取消订单：" + reason,
+			Operator: "用户",
+		}
+		return tx.Create(timeline).Error
+	})
 }
 
 // Complete 完成订单（事务：更新订单 + 奖励积分 + 减碳记录）
@@ -155,12 +171,16 @@ func (s *OrderService) Complete(ctx context.Context, orderID uint64, finalAmount
 		}
 
 		// 3. 记录积分流水
+		var updatedUser model.User
+		if err := tx.Select("points").First(&updatedUser, order.UserID).Error; err != nil {
+			return err
+		}
 		log := &model.CarbonPointLog{
 			UserID:  order.UserID,
 			OrderID: &order.ID,
 			Type:    1, // 回收奖励
 			Amount:  points,
-			Balance: 0, // TODO: 查询最新余额
+			Balance: updatedUser.Points,
 			Remark:  fmt.Sprintf("回收 %s 奖励", order.ItemName),
 		}
 		if err := s.repo.Point.CreateLog(ctx, tx, log); err != nil {
@@ -175,15 +195,26 @@ func (s *OrderService) Complete(ctx context.Context, orderID uint64, finalAmount
 			CarbonKg:     carbonKg,
 			TreeCount:    treeCount,
 		}
-		return s.repo.Point.CreateReduction(ctx, tx, red)
+		if err := s.repo.Point.CreateReduction(ctx, tx, red); err != nil {
+			return err
+		}
+
+		// 5. 记录完成时间线
+		timeline := &model.OrderTimeline{
+			OrderID:  order.ID,
+			Status:   model.OrderStatusCompleted,
+			Content:  fmt.Sprintf("订单完成，奖励 %d 积分", points),
+			Operator: "系统",
+		}
+		return tx.Create(timeline).Error
 	})
 }
 
 // generateOrderNo 生成订单号
 func generateOrderNo() string {
-	return fmt.Sprintf("GC%s%04d",
+	return fmt.Sprintf("GC%s%06d",
 		time.Now().Format("20060102150405"),
-		time.Now().Nanosecond()/100000)
+		rand.Intn(1000000))
 }
 
 // 计算碳积分（简化版）

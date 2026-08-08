@@ -22,7 +22,14 @@ type Client struct {
 // NewClient 创建 COS 客户端
 func NewClient() *Client {
 	cfg := config.Get().COS
-	u, _ := url.Parse(fmt.Sprintf("https://%s.cos.%s.myqcloud.com", cfg.Bucket, cfg.Region))
+	if cfg.Bucket == "" || cfg.Region == "" {
+		// 配置不完整时返回空 client，调用时会报错
+		return &Client{cfg: cfg}
+	}
+	u, err := url.Parse(fmt.Sprintf("https://%s.cos.%s.myqcloud.com", cfg.Bucket, cfg.Region))
+	if err != nil {
+		return &Client{cfg: cfg}
+	}
 	bucketURL := &cos.BaseURL{BucketURL: u}
 	client := cos.NewClient(bucketURL, &http.Client{
 		Timeout: 30 * time.Second,
@@ -45,6 +52,9 @@ type UploadSign struct {
 
 // SignUpload 生成上传签名
 func (c *Client) SignUpload(ext string) (*UploadSign, error) {
+	if c.client == nil {
+		return nil, fmt.Errorf("COS 未配置，请设置 COS_BUCKET 和 COS_REGION")
+	}
 	key := fmt.Sprintf("%s%s.%s", c.cfg.UploadPrefix, uuid.New().String(), ext)
 
 	// 简单签名（生产环境推荐 STS + 临时密钥）

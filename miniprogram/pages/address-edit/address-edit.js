@@ -155,9 +155,7 @@ Page({
     } catch (err) {
       wx.hideLoading();
       this.setData({ submitting: false });
-      // 失败也返回（mock 模式），让用户体验完整
-      wx.showToast({ title: '保存成功', icon: 'success' });
-      setTimeout(() => wx.navigateBack(), 600);
+      wx.showToast({ title: err.message || '保存失败', icon: 'none' });
     }
   },
 
@@ -175,8 +173,7 @@ Page({
               setTimeout(() => wx.navigateBack(), 600);
             })
             .catch(() => {
-              wx.showToast({ title: '已删除', icon: 'success' });
-              setTimeout(() => wx.navigateBack(), 600);
+              wx.showToast({ title: '删除失败', icon: 'none' });
             });
         }
       }

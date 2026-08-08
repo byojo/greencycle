@@ -127,7 +127,7 @@ Page({
   onCategoryTap(e) {
     const code = e.currentTarget.dataset.code;
     if (code === 'more') {
-      wx.switchTab({ url: '/pages/pick-category/pick-category' });
+      wx.navigateTo({ url: '/pages/pick-category/pick-category' });
       return;
     }
     app.globalData.currentCategory = code;
@@ -159,7 +159,7 @@ Page({
 
   // 跳到故事页
   goStories() {
-    wx.switchTab({ url: '/pages/story/story' });
+    wx.navigateTo({ url: '/pages/story/story' });
   },
 
   // 分享

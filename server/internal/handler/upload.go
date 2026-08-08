@@ -2,6 +2,7 @@ package handler
 
 import (
 	"bytes"
+	"encoding/base64"
 	"fmt"
 	"io"
 	"net/http"
@@ -45,7 +46,11 @@ func (h *Handler) UploadSign(c *gin.Context) {
 	}
 
 	// 后端直传 COS（云托管有公网出站能力）
-	httpReq, _ := http.NewRequest(http.MethodPut, sign.URL, bytes.NewReader(data))
+	httpReq, err := http.NewRequest(http.MethodPut, sign.URL, bytes.NewReader(data))
+	if err != nil {
+		response.ServerError(c, fmt.Sprintf("创建请求失败: %v", err))
+		return
+	}
 	httpReq.Header.Set("Content-Type", sign.Headers["Content-Type"])
 	httpReq.Header.Set("Content-Length", fmt.Sprintf("%d", len(data)))
 
@@ -79,5 +84,5 @@ func decodeBase64(s string) ([]byte, error) {
 	for len(s)%4 != 0 {
 		s += "="
 	}
-	return []byte(s), nil
+	return base64.StdEncoding.DecodeString(s)
 }

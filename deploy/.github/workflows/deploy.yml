@@ -46,11 +46,10 @@ jobs:
           cd server
           CGO_ENABLED=0 go build -o /tmp/server ./cmd/api
 
-      - name: Test
-        run: |
-          cd server
-          go test -v -race -coverprofile=coverage.out ./...
-        continue-on-error: true  # 业务代码测试可后续补
+    - name: Test
+      run: |
+        cd server
+        go test -v -race -coverprofile=coverage.out ./...
 
   # ===========================================
   # 2. 构建并推送 Docker 镜像
@@ -91,8 +90,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: ./server
-          file: ./server/Dockerfile
+          context: .
+          file: ./Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -134,7 +133,7 @@ jobs:
 
             # 健康检查
             sleep 5
-            curl -f https://api.greencycle.com/health || exit 1
+            curl -f https://sxyrgy.cn/health || exit 1
             
             echo "✅ 部署完成"
 

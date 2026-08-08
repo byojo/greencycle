@@ -18,7 +18,8 @@
     "pages/settings/settings",
     "pages/login/login",
     "pages/join-us/join-us",
-    "pages/exchange/exchange"
+    "pages/exchange/exchange",
+    "pages/exchange-history/exchange-history"
   ],
   "window": {
     "navigationBarBackgroundColor": "#07C160",

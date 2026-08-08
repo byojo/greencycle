@@ -31,10 +31,26 @@ func main() {
 	defer logger.Sync()
 	gin.SetMode(cfg.Server.Mode)
 
+	// 安全校验：JWT Secret 不能为空
+	if cfg.JWT.Secret == "" {
+		log.Fatal("JWT_SECRET 环境变量未设置，拒绝启动")
+	}
+
 	db := database.InitMySQL(cfg.MySQL)
 
-	// 自动建表（含兑换模块）
+	// 自动建表（全部表）
 	db.AutoMigrate(
+		&model.User{},
+		&model.Category{},
+		&model.CategoryField{},
+		&model.Order{},
+		&model.OrderImage{},
+		&model.OrderTimeline{},
+		&model.Address{},
+		&model.CarbonPointLog{},
+		&model.CarbonReduction{},
+		&model.Story{},
+		&model.Rider{},
 		&model.PartnerApplication{},
 		&model.ExchangeItem{},
 		&model.ExchangeRecord{},

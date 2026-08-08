@@ -83,9 +83,14 @@ Page({
   async loadAddresses() {
     try {
       const res = await api.getAddresses();
-      const list = res.data || [];
-      const defaultAddr = list.find(a => a.isDefault) || list[0];
-      this.setData({ addresses: list, selectedAddress: defaultAddr });
+      const list = res.data.list || [];
+      // 如果已有选中地址（从地址页返回的），不覆盖
+      if (!this.data.selectedAddress) {
+        const defaultAddr = list.find(a => a.isDefault) || list[0];
+        this.setData({ addresses: list, selectedAddress: defaultAddr });
+      } else {
+        this.setData({ addresses: list });
+      }
     } catch (err) {
       this.setData({ addresses: [], selectedAddress: null });
     }

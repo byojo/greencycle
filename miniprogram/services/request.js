@@ -69,12 +69,12 @@ function request(options) {
 
         // 业务层错误
         if (data.code !== 0) {
-          // 401 token 失效
-          if (data.code === 401) {
+          // 401 token 失效（仅重试一次，防止无限循环）
+          if (data.code === 401 && !options._isRetry) {
             await handleUnauthorized();
-            // 重新发起请求
+            // 重新发起请求（标记为重试，防止无限循环）
             try {
-              const retryRes = await request({ ...options, silent: true });
+              const retryRes = await request({ ...options, silent: true, _isRetry: true });
               resolve(retryRes);
             } catch (err) {
               reject(err);

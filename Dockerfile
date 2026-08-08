@@ -16,13 +16,18 @@ FROM alpine:3.18
 
 RUN apk add --no-cache tzdata ca-certificates curl &&     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime &&     echo "Asia/Shanghai" > /etc/timezone
 
+RUN addgroup -S app && adduser -S app -G app
+
 WORKDIR /app
 
 COPY --from=builder /build/server /app/server
 
+USER app
+
 ENV PORT=80
 EXPOSE 80
 
-HEALTHCHECK --interval=30s --timeout=5s --retries=3   CMD curl -f http://localhost:80/health || exit 1
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD curl -f http://localhost:80/health || exit 1
 
 CMD ["/app/server"]

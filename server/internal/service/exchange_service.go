@@ -59,24 +59,37 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 
 	// 事务：扣积分 + 扣库存 + 创建记录
 	return s.repo.WithTx(ctx, func(tx *gorm.DB) error {
-		// 扣减用户积分
-		if err := tx.Model(&model.User{}).Where("id = ? AND points >= ?", userID, item.Points).
-			UpdateColumn("points", gorm.Expr("points - ?", item.Points)).Error; err != nil {
+		// 扣减用户积分（条件更新 + 检查 RowsAffected 防竞态）
+		result := tx.Model(&model.User{}).Where("id = ? AND points >= ?", userID, item.Points).
+			UpdateColumn("points", gorm.Expr("points - ?", item.Points))
+		if result.Error != nil {
 			return errors.New("积分扣减失败")
 		}
+		if result.RowsAffected == 0 {
+			return errors.New("积分不足，兑换失败")
+		}
 
-		// 扣减库存
-		if err := s.repo.Exchange.DeductStock(ctx, tx, req.ItemID); err != nil {
+		// 扣减库存（条件更新 + 检查 RowsAffected 防竞态）
+		stockResult, err := s.repo.Exchange.DeductStock(ctx, tx, req.ItemID)
+		if err != nil {
 			return errors.New("库存扣减失败")
+		}
+		if stockResult == 0 {
+			return errors.New("商品库存不足")
+		}
+
+		// 查询扣减后的最新积分余额
+		var updatedUser model.User
+		if err := tx.Select("points").First(&updatedUser, userID).Error; err != nil {
+			return errors.New("查询积分余额失败")
 		}
 
 		// 创建积分流水（type=3 兑换）
-		balance := user.Points - item.Points
 		pointLog := &model.CarbonPointLog{
 			UserID:   userID,
 			Type:     3, // 兑换
 			Amount:   -item.Points,
-			Balance:  balance,
+			Balance:  updatedUser.Points,
 			Remark:   "兑换：" + item.Name,
 		}
 		if err := s.repo.Point.CreateLog(ctx, tx, pointLog); err != nil {

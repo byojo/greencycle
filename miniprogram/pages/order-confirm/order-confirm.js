@@ -102,6 +102,14 @@ Page({
     this.loadDefaultAddress();
   },
 
+  onShow() {
+    // 从地址选择页返回时，接收选中的地址
+    if (app.globalData.selectedAddress) {
+      this.setData({ address: app.globalData.selectedAddress });
+      app.globalData.selectedAddress = null;
+    }
+  },
+
   // 拼接完整的 CDN URL
   getFullUrl(key) {
     const cdn = 'https://cdn.greencycle.com';
@@ -196,7 +204,7 @@ Page({
       app.globalData.pendingOrder = null;
 
       wx.redirectTo({
-        url: `/pages/order-success/order-success?id=${res.data.orderId}`
+        url: `/pages/order-success/order-success?id=${res.data.orderId || res.data.id}`
       });
     } catch (err) {
       console.error('创建订单失败', err);

@@ -16,11 +16,11 @@ matrix-media-*.png
 # ===== 敏感配置（绝对不能 commit！）=====
 # 包含 AppSecret / DB 密码 / JWT 密钥 等
 .env
-.env.local
-.env.*.local
+.env.*
 *.env
 deploy/.env
 server/.env
+server/configs/config.yaml
 config.local.js
 secret.txt
 credentials.json

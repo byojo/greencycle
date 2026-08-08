@@ -37,12 +37,13 @@ func (r *ExchangeRepository) GetByID(ctx context.Context, id uint) (*model.Excha
 	return &item, nil
 }
 
-// DeductStock 扣减库存（在事务中调用）
-func (r *ExchangeRepository) DeductStock(ctx context.Context, tx *gorm.DB, id uint) error {
-	return tx.WithContext(ctx).
+// DeductStock 扣减库存（在事务中调用），返回受影响行数
+func (r *ExchangeRepository) DeductStock(ctx context.Context, tx *gorm.DB, id uint) (int64, error) {
+	result := tx.WithContext(ctx).
 		Model(&model.ExchangeItem{}).
 		Where("id = ? AND stock > 0", id).
-		UpdateColumn("stock", gorm.Expr("stock - 1")).Error
+		UpdateColumn("stock", gorm.Expr("stock - 1"))
+	return result.RowsAffected, result.Error
 }
 
 // UserExchangeCount 用户已兑换次数

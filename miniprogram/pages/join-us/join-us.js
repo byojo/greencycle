@@ -28,7 +28,7 @@ Page({
   },
 
   async onSubmit() {
-    if (this.submitting) return;
+    if (this.data.submitting) return;
     if (!this.validate()) return;
 
     this.setData({ submitting: true });
