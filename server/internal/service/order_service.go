@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 
 	"github.com/greencycle/server/internal/model"
 	"github.com/greencycle/server/internal/repository"
