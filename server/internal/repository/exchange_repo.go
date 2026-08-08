@@ -27,10 +27,12 @@ func (r *ExchangeRepository) ListActive(ctx context.Context) ([]model.ExchangeIt
 	return items, err
 }
 
-// GetByID 根据 ID 获取
+// GetByID 根据 ID 获取（仅上架商品）
 func (r *ExchangeRepository) GetByID(ctx context.Context, id uint) (*model.ExchangeItem, error) {
 	var item model.ExchangeItem
-	err := r.db.WithContext(ctx).First(&item, id).Error
+	err := r.db.WithContext(ctx).
+		Where("id = ? AND enabled = ?", id, true).
+		First(&item).Error
 	if err != nil {
 		return nil, err
 	}

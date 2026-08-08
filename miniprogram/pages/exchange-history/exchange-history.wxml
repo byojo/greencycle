@@ -14,7 +14,7 @@
         <view class="card-points">-{{item.points}} 积分</view>
         <view class="card-status status-{{item.status}}">{{statusMap[item.status]}}</view>
       </view>
-      <view class="card-date">{{item.createdAt}}</view>
+      <view class="card-date">{{item.createdAtText}}</view>
     </view>
   </view>
 

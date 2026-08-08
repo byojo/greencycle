@@ -31,13 +31,22 @@ type ExchangeReq struct {
 
 // Exchange 兑换商品
 func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *ExchangeReq) error {
-	// 获取商品
+	// 获取商品（仅上架商品）
 	item, err := s.repo.Exchange.GetByID(ctx, req.ItemID)
 	if err != nil {
 		return errors.New("商品不存在或已下架")
 	}
 	if item.Stock <= 0 {
 		return errors.New("商品库存不足")
+	}
+
+	// 验证收货地址属于当前用户
+	addrExists, err := s.repo.Address.ExistsByIDAndUser(ctx, uint(req.AddressID), userID)
+	if err != nil {
+		return errors.New("地址验证失败")
+	}
+	if !addrExists {
+		return errors.New("收货地址不存在")
 	}
 
 	// 检查限兑次数
