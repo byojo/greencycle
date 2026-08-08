@@ -185,6 +185,15 @@ Page({
       return;
     }
 
+    // 请求订阅消息授权（用户同意后才能收到订单通知）
+    try {
+      await wx.requestSubscribeMessage({
+        tmplIds: ['REPLACE_WITH_YOUR_TEMPLATE_ID']
+      });
+    } catch (e) {
+      // 用户拒绝订阅不影响下单流程
+    }
+
     this.setData({ submitting: true });
     wx.showLoading({ title: '提交中...', mask: true });
 

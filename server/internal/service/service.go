@@ -32,7 +32,7 @@ func New(repo *repository.Repository, wc *wechat.Client, cosCli *cos.Client) *Se
 	}
 	s.Auth = NewAuthService(repo, wc)
 	s.Category = NewCategoryService(repo)
-	s.Order = NewOrderService(repo)
+	s.Order = NewOrderService(repo, wc)
 	s.Point = NewPointService(repo)
 	s.Address = NewAddressService(repo)
 	s.Story = NewStoryService(repo)

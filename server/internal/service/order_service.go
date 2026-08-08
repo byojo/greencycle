@@ -8,17 +8,20 @@ import (
 	"time"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 
 	"github.com/greencycle/server/internal/model"
 	"github.com/greencycle/server/internal/repository"
+	"github.com/greencycle/server/pkg/wechat"
 )
 
 type OrderService struct {
-	repo *repository.Repository
+	repo   *repository.Repository
+	wechat *wechat.Client
 }
 
-func NewOrderService(repo *repository.Repository) *OrderService {
-	return &OrderService{repo: repo}
+func NewOrderService(repo *repository.Repository, wc *wechat.Client) *OrderService {
+	return &OrderService{repo: repo, wechat: wc}
 }
 
 type CreateOrderParams struct {
@@ -166,7 +169,38 @@ func (s *OrderService) AssignRider(ctx context.Context, orderID uint64, riderID 
 	// 5. 骑手服务次数 +1
 	_ = s.repo.Rider.IncrementServiceCount(ctx, riderID)
 
+	// 6. 发送订阅消息通知用户
+	s.notifyOrderAssigned(order, rider)
+
 	return nil
+}
+
+// notifyOrderAssigned 通知用户订单已派单
+func (s *OrderService) notifyOrderAssigned(order *model.Order, rider *model.Rider) {
+	// 查用户 openid
+	user, err := s.repo.User.FindByID(context.Background(), order.UserID)
+	if err != nil || user.OpenID == "" {
+		return
+	}
+
+	// 模板 ID（替换为你自己的）
+	const tplID = "REPLACE_WITH_YOUR_TEMPLATE_ID"
+
+	msg := wechat.SubscribeMessage{
+		Touser:     user.OpenID,
+		TemplateID: tplID,
+		Page:       fmt.Sprintf("pages/order-detail/order-detail?id=%d", order.ID),
+		Data: map[string]interface{}{
+			"thing1": map[string]string{"value": order.ItemName},           // 物品名称
+			"phrase1": map[string]string{"value": "已派单，即将上门"},          // 当前状态
+			"thing2":  map[string]string{"value": rider.Name},              // 回收员
+			"phone_number1": map[string]string{"value": rider.Phone},       // 联系电话
+		},
+	}
+
+	if err := s.wechat.SendSubscribeMessage(msg); err != nil {
+		fmt.Printf("⚠️ 发送派单通知失败: %v\n", err)
+	}
 }
 
 // AdminUpdateStatus 管理端更新订单状态
@@ -249,7 +283,9 @@ func (s *OrderService) Complete(ctx context.Context, orderID uint64, finalAmount
 	treeCount := carbonKg / 18.0
 
 	now := time.Now()
-	return s.repo.Order.Transaction(ctx, func(tx *gorm.DB) error {
+	var completedPoints int
+	var completedUser *model.User
+	err = s.repo.Order.Transaction(ctx, func(tx *gorm.DB) error {
 		// 1. 更新订单
 		if err := tx.Model(order).
 			Updates(map[string]interface{}{
@@ -302,8 +338,46 @@ func (s *OrderService) Complete(ctx context.Context, orderID uint64, finalAmount
 			Content:  fmt.Sprintf("订单完成，奖励 %d 积分", points),
 			Operator: "系统",
 		}
-		return tx.Create(timeline).Error
+		if err := tx.Create(timeline).Error; err != nil {
+			return err
+		}
+
+		// 保存用于事务后通知
+		completedPoints = points
+		completedUser = &updatedUser
+		return nil
 	})
+
+	// 事务成功后发送通知（不阻塞事务）
+	if err == nil && completedUser != nil {
+		s.notifyOrderCompleted(order, completedPoints, completedUser.OpenID)
+	}
+	return err
+}
+
+// notifyOrderCompleted 通知用户订单已完成
+func (s *OrderService) notifyOrderCompleted(order *model.Order, points int, openID string) {
+	if openID == "" {
+		return
+	}
+
+	const tplID = "REPLACE_WITH_YOUR_TEMPLATE_ID"
+
+	msg := wechat.SubscribeMessage{
+		Touser:     openID,
+		TemplateID: tplID,
+		Page:       fmt.Sprintf("pages/order-detail/order-detail?id=%d", order.ID),
+		Data: map[string]interface{}{
+			"thing1":         map[string]string{"value": order.ItemName},        // 物品名称
+			"phrase1":        map[string]string{"value": "已完成"},               // 当前状态
+			"character_string1": map[string]string{"value": fmt.Sprintf("%d", points)}, // 获得积分
+			"time1":          map[string]string{"value": time.Now().Format("2006-01-02 15:04")}, // 完成时间
+		},
+	}
+
+	if err := s.wechat.SendSubscribeMessage(msg); err != nil {
+		fmt.Printf("⚠️ 发送完成通知失败: %v\n", err)
+	}
 }
 
 // generateOrderNo 生成订单号
