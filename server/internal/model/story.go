@@ -30,7 +30,7 @@ type Rider struct {
 	IDCard     string    `gorm:"size:20" json:"idCard"`
 	PlateNo    string    `gorm:"size:20" json:"plateNo"`
 	Rating     float64   `gorm:"type:decimal(3,2);default:5.00" json:"rating"`
-	ServiceCnt int       `gorm:"default:0" json:"serviceCnt"`
+	ServiceCnt int       `gorm:"column:service_count;default:0" json:"serviceCnt"`
 	Status     int       `gorm:"default:1" json:"status"` // 1在职 0离职
 	Lat        float64   `json:"lat"`
 	Lng        float64   `json:"lng"`
