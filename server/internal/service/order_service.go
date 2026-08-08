@@ -13,6 +13,7 @@ import (
 	"github.com/greencycle/server/internal/model"
 	"github.com/greencycle/server/internal/repository"
 	"github.com/greencycle/server/pkg/wechat"
+	"github.com/greencycle/server/pkg/wecom"
 )
 
 type OrderService struct {
@@ -88,7 +89,34 @@ func (s *OrderService) Create(ctx context.Context, p CreateOrderParams) (*model.
 	}
 
 	order.Images = images
+
+	// 推送新订单通知到企业微信群
+	go s.notifyGroupNewOrder(order)
+
 	return order, nil
+}
+
+// notifyGroupNewOrder 推送新订单到企业微信群
+func (s *OrderService) notifyGroupNewOrder(order *model.Order) {
+	msg := fmt.Sprintf(`## 📦 新回收订单
+
+**订单号：** %s
+**品类：** %s
+**物品：** %s
+**地址：** %s
+**预约时间：** %s
+
+请尽快安排回收员上门评估`,
+		order.OrderNo,
+		order.CategoryCode,
+		order.ItemName,
+		order.PickupAddr,
+		order.EstimatedAt.Format("2006-01-02 15:04"),
+	)
+
+	if err := wecom.SendMarkdown(msg); err != nil {
+		fmt.Printf("⚠️ 企业微信群推送失败: %v\n", err)
+	}
 }
 
 // GetDetail 获取详情
@@ -172,7 +200,34 @@ func (s *OrderService) AssignRider(ctx context.Context, orderID uint64, riderID 
 	// 6. 发送订阅消息通知用户
 	s.notifyOrderAssigned(order, rider)
 
+	// 7. 推送派单通知到企业微信群
+	go s.notifyGroupAssigned(order, rider)
+
 	return nil
+}
+
+// notifyGroupAssigned 推送派单通知到企业微信群
+func (s *OrderService) notifyGroupAssigned(order *model.Order, rider *model.Rider) {
+	msg := fmt.Sprintf(`## 📋 订单已派单
+
+**订单号：** %s
+**物品：** %s
+**地址：** %s
+**回收员：** %s
+**联系电话：** %s
+
+@%s 请及时上门回收`,
+		order.OrderNo,
+		order.ItemName,
+		order.PickupAddr,
+		rider.Name,
+		rider.Phone,
+		rider.Name,
+	)
+
+	if err := wecom.SendMarkdown(msg); err != nil {
+		fmt.Printf("⚠️ 企业微信群推送失败: %v\n", err)
+	}
 }
 
 // notifyOrderAssigned 通知用户订单已派单
@@ -351,8 +406,29 @@ func (s *OrderService) Complete(ctx context.Context, orderID uint64, finalAmount
 	// 事务成功后发送通知（不阻塞事务）
 	if err == nil && completedUser != nil {
 		s.notifyOrderCompleted(order, completedPoints, completedUser.OpenID)
+		// 推送到企业微信群
+		go s.notifyGroupCompleted(order, completedPoints)
 	}
 	return err
+}
+
+// notifyGroupCompleted 推送订单完成通知到企业微信群
+func (s *OrderService) notifyGroupCompleted(order *model.Order, points int) {
+	msg := fmt.Sprintf(`## ✅ 订单已完成
+
+**订单号：** %s
+**物品：** %s
+**获得积分：** %d
+**完成时间：** %s`,
+		order.OrderNo,
+		order.ItemName,
+		points,
+		time.Now().Format("2006-01-02 15:04"),
+	)
+
+	if err := wecom.SendMarkdown(msg); err != nil {
+		fmt.Printf("⚠️ 企业微信群推送失败: %v\n", err)
+	}
 }
 
 // notifyOrderCompleted 通知用户订单已完成
