@@ -8,6 +8,80 @@ import (
 	"github.com/greencycle/server/pkg/response"
 )
 
+// ========== 骑手管理 ==========
+
+// AdminRiderList 骑手列表（仅在职）
+func (h *Handler) AdminRiderList(c *gin.Context) {
+	riders, err := h.Svc.Rider.List(c.Request.Context())
+	if err != nil {
+		response.ServerError(c, err.Error())
+		return
+	}
+	response.Success(c, gin.H{"list": riders})
+}
+
+// AdminRiderCreate 创建骑手
+func (h *Handler) AdminRiderCreate(c *gin.Context) {
+	var req struct {
+		Name    string `json:"name" binding:"required,min=2,max=32"`
+		Phone   string `json:"phone" binding:"required"`
+		IDCard  string `json:"idCard"`
+		PlateNo string `json:"plateNo"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.BadRequest(c, "参数错误: "+err.Error())
+		return
+	}
+
+	if err := h.Svc.Rider.Create(c.Request.Context(), req.Name, req.Phone, req.IDCard, req.PlateNo); err != nil {
+		response.ServerError(c, err.Error())
+		return
+	}
+	response.Success(c, nil)
+}
+
+// AdminRiderUpdate 更新骑手
+func (h *Handler) AdminRiderUpdate(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		response.BadRequest(c, "骑手 ID 错误")
+		return
+	}
+
+	var req struct {
+		Name    *string `json:"name"`
+		Phone   *string `json:"phone"`
+		PlateNo *string `json:"plateNo"`
+		Status  *int    `json:"status"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.BadRequest(c, "参数错误: "+err.Error())
+		return
+	}
+
+	updates := make(map[string]interface{})
+	if req.Name != nil {
+		updates["name"] = *req.Name
+	}
+	if req.Phone != nil {
+		updates["phone"] = *req.Phone
+	}
+	if req.PlateNo != nil {
+		updates["plate_no"] = *req.PlateNo
+	}
+	if req.Status != nil {
+		updates["status"] = *req.Status
+	}
+
+	if err := h.Svc.Rider.Update(c.Request.Context(), uint(id), updates); err != nil {
+		response.ServerError(c, err.Error())
+		return
+	}
+	response.Success(c, nil)
+}
+
+// ========== 订单管理 ==========
+
 // AdminOrderList 管理端订单列表（不按用户过滤）
 func (h *Handler) AdminOrderList(c *gin.Context) {
 	page, size := getPageParams(c)
@@ -27,8 +101,33 @@ func (h *Handler) AdminOrderList(c *gin.Context) {
 	})
 }
 
+// AdminAssignOrder 派单（从骑手列表中选择骑手分配给订单）
+// body: { "riderId": 1 }
+func (h *Handler) AdminAssignOrder(c *gin.Context) {
+	orderID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		response.BadRequest(c, "订单 ID 错误")
+		return
+	}
+
+	var req struct {
+		RiderID uint `json:"riderId" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.BadRequest(c, "参数错误: "+err.Error())
+		return
+	}
+
+	if err := h.Svc.Order.AssignRider(c.Request.Context(), orderID, req.RiderID); err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
+
+	response.Success(c, gin.H{"message": "派单成功"})
+}
+
 // AdminUpdateOrderStatus 更新订单状态
-// body: { "status": 2, "riderId": 1, "riderName": "张师傅", "riderPhone": "13800138000" }
+// body: { "status": 3 }
 func (h *Handler) AdminUpdateOrderStatus(c *gin.Context) {
 	orderID, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
@@ -37,23 +136,19 @@ func (h *Handler) AdminUpdateOrderStatus(c *gin.Context) {
 	}
 
 	var req struct {
-		Status     int    `json:"status" binding:"required"`
-		RiderID    *uint  `json:"riderId"`
-		RiderName  string `json:"riderName"`
-		RiderPhone string `json:"riderPhone"`
+		Status int `json:"status" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.BadRequest(c, "参数错误: "+err.Error())
 		return
 	}
 
-	// 校验状态合法性
 	if req.Status < 1 || req.Status > 5 {
 		response.BadRequest(c, "无效的订单状态")
 		return
 	}
 
-	if err := h.Svc.Order.AdminUpdateStatus(c.Request.Context(), orderID, req.Status, req.RiderID, req.RiderName, req.RiderPhone); err != nil {
+	if err := h.Svc.Order.AdminUpdateStatus(c.Request.Context(), orderID, req.Status, nil, "", ""); err != nil {
 		response.BadRequest(c, err.Error())
 		return
 	}

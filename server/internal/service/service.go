@@ -21,6 +21,7 @@ type Service struct {
 	Upload   *UploadService
 	Partner  *PartnerService
 	Exchange *ExchangeService
+	Rider    *RiderService
 }
 
 func New(repo *repository.Repository, wc *wechat.Client, cosCli *cos.Client) *Service {
@@ -38,5 +39,6 @@ func New(repo *repository.Repository, wc *wechat.Client, cosCli *cos.Client) *Se
 	s.Upload = NewUploadService(cosCli)
 	s.Partner = NewPartnerService(repo)
 	s.Exchange = NewExchangeService(repo)
+	s.Rider = NewRiderService(repo)
 	return s
 }

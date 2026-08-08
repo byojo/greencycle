@@ -125,6 +125,50 @@ func (s *OrderService) AdminListByUser(ctx context.Context, page, size int, stat
 	return s.repo.Order.AdminList(ctx, page, size, status)
 }
 
+// AssignRider 派单：从骑手表读取骑手信息，关联到订单
+func (s *OrderService) AssignRider(ctx context.Context, orderID uint64, riderID uint) error {
+	// 1. 查骑手是否存在且在职
+	rider, err := s.repo.Rider.GetByID(ctx, riderID)
+	if err != nil {
+		return errors.New("骑手查询失败")
+	}
+	if rider == nil {
+		return errors.New("骑手不存在")
+	}
+	if rider.Status != 1 {
+		return errors.New("该骑手已离职")
+	}
+
+	// 2. 查订单是否存在
+	order, err := s.repo.Order.FindByID(ctx, orderID)
+	if err != nil {
+		return errors.New("订单不存在")
+	}
+	if order.Status != model.OrderStatusPending {
+		return errors.New("订单当前状态不允许派单")
+	}
+
+	// 3. 更新订单：状态改为已派单 + 写入骑手信息
+	updates := map[string]interface{}{
+		"status":      model.OrderStatusAssigned,
+		"rider_id":    rider.ID,
+		"rider_name":  rider.Name,
+		"rider_phone": rider.Phone,
+	}
+	if err := s.repo.Order.AdminUpdateStatus(ctx, orderID, updates); err != nil {
+		return errors.New("派单失败")
+	}
+
+	// 4. 创建时间线
+	_ = s.repo.Order.CreateTimelineWithDetails(ctx, orderID, model.OrderStatusAssigned,
+		"已派单，回收员 "+rider.Name+" 即将上门", "管理员")
+
+	// 5. 骑手服务次数 +1
+	_ = s.repo.Rider.IncrementServiceCount(ctx, riderID)
+
+	return nil
+}
+
 // AdminUpdateStatus 管理端更新订单状态
 func (s *OrderService) AdminUpdateStatus(ctx context.Context, orderID uint64, status int, riderID *uint, riderName, riderPhone string) error {
 	updates := map[string]interface{}{

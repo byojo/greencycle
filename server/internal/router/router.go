@@ -69,8 +69,15 @@ func Register(h *handler.Handler) *gin.Engine {
 	admin := api.Group("/admin")
 	admin.Use(middleware.AdminAuth())
 	{
+		// 骑手管理
+		admin.GET("/riders", h.AdminRiderList)
+		admin.POST("/riders", h.AdminRiderCreate)
+		admin.PUT("/riders/:id", h.AdminRiderUpdate)
+
+		// 订单管理
 		admin.GET("/orders", h.AdminOrderList)
 		admin.PUT("/orders/:id/status", h.AdminUpdateOrderStatus)
+		admin.POST("/orders/:id/assign", h.AdminAssignOrder)
 		admin.POST("/orders/:id/complete", h.AdminCompleteOrder)
 	}
 
