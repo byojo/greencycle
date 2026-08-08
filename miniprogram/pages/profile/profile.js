@@ -23,7 +23,7 @@ Page({
   },
 
   onLoad() {
-    this.loadUserInfo();
+    // 初始化加载移至 onShow，避免双重请求
   },
 
   onShow() {
@@ -119,6 +119,7 @@ Page({
     // 优先尝试官方客服会话，失败后退到 modal
     if (wx.openCustomerServiceChat) {
       wx.openCustomerServiceChat({
+        extInfo: { corpId: '' },
         extParam: { from: 'profile' },
         fail: () => {
           this.showCustomerServiceModal();

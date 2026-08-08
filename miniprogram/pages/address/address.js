@@ -13,7 +13,7 @@ Page({
 
   onLoad(options) {
     this.setData({ selectMode: options.select === '1' });
-    this.loadList();
+    // 数据加载移至 onShow，避免双重请求
   },
 
   onShow() {

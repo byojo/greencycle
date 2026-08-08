@@ -196,7 +196,12 @@ Page({
 
   onContact() {
     if (typeof wx.openCustomerServiceChat === 'function') {
-      wx.openCustomerServiceChat();
+      wx.openCustomerServiceChat({
+        extInfo: { corpId: '' },
+        fail: () => {
+          wx.showToast({ title: '联系客服开发中', icon: 'none' });
+        }
+      });
     } else {
       wx.showToast({ title: '联系客服开发中', icon: 'none' });
     }

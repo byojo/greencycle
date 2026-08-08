@@ -129,7 +129,6 @@ async function mockRequest(options) {
   }
 
   const result = await matched.handler(matched.params);
-  // console.log(`[Mock] ${method} ${url} =>`, result);
   return result;
 }
 

@@ -53,6 +53,9 @@
   "permission": {
     "scope.userLocation": {
       "desc": "用于显示附近的回收服务"
+    },
+    "scope.writePhotosAlbum": {
+      "desc": "用于保存邀请海报到相册"
     }
   },
   "requiredPrivateInfos": ["getLocation"],

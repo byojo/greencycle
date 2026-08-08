@@ -13,7 +13,8 @@ module.exports = {
   cos: {
     bucket: 'greencycle-1258888888',
     region: 'ap-shanghai',
-    prefix: 'orders/'
+    prefix: 'orders/',
+    cdnDomain: ''  // CDN 域名，配置后图片走 CDN 加速
   },
 
   // 客服配置

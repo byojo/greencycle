@@ -71,7 +71,15 @@ func (h *Handler) CreateOrder(c *gin.Context) {
 func (h *Handler) OrderList(c *gin.Context) {
 	userID := getUserID(c)
 	page, size := getPageParams(c)
-	status, _ := strconv.Atoi(c.DefaultQuery("status", "0"))
+	status, err := strconv.Atoi(c.DefaultQuery("status", "0"))
+	if err != nil {
+		status = 0
+	}
+	// 校验 status 合法值：0(全部), 1-5
+	if status < 0 || status > 5 {
+		response.BadRequest(c, "无效的订单状态")
+		return
+	}
 
 	orders, total, err := h.Svc.Order.ListByUser(c.Request.Context(), userID, page, size, status)
 	if err != nil {

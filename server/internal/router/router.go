@@ -7,7 +7,6 @@ import (
 
 	"github.com/greencycle/server/internal/handler"
 	"github.com/greencycle/server/internal/middleware"
-	"github.com/greencycle/server/pkg/jwt"
 )
 
 // Register 注册路由
@@ -65,8 +64,6 @@ func Register(h *handler.Handler) *gin.Engine {
 		auth.POST("/exchange", h.ExchangeDo)
 		auth.GET("/exchange/history", h.ExchangeHistory)
 	}
-
-	_ = jwt.GetToken // 保留引用
 
 	return r
 }

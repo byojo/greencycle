@@ -21,7 +21,7 @@ Page({
   },
 
   onLoad() {
-    this.loadData();
+    // 数据加载移至 onShow，避免双重请求
   },
 
   onShow() {

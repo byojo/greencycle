@@ -139,7 +139,7 @@ Page({
         const ctx = canvas.getContext('2d');
 
         // 海报尺寸（2 倍图，避免模糊）
-        const dpr = wx.getSystemInfoSync().pixelRatio;
+        const dpr = wx.getWindowInfo().pixelRatio;
         const width = 750;
         const height = 1200;
         canvas.width = width * dpr;

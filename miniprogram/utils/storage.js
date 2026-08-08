@@ -46,8 +46,15 @@ function remove(key) {
 function clear() {
   try {
     const preserveKeys = ['systemInfo'];
+    const preserved = {};
+    preserveKeys.forEach(k => {
+      const v = wx.getStorageSync(k);
+      if (v) preserved[k] = v;
+    });
     wx.clearStorageSync();
-    // 这里实际项目可以保留一些系统信息
+    Object.keys(preserved).forEach(k => {
+      wx.setStorageSync(k, preserved[k]);
+    });
   } catch (e) {}
 }
 

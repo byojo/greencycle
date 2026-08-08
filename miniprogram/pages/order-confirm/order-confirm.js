@@ -112,8 +112,10 @@ Page({
 
   // 拼接完整的 CDN URL
   getFullUrl(key) {
-    const cdn = 'https://cdn.greencycle.com';
-    return key && key.startsWith('http') ? key : `${cdn}/${key}`;
+    const config = require('../../config.js');
+    const cdn = config.cos && config.cos.cdnDomain ? config.cos.cdnDomain : '';
+    if (key && key.startsWith('http')) return key;
+    return cdn ? `${cdn}/${key}` : key;
   },
 
   initDateTime() {

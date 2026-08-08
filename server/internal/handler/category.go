@@ -19,6 +19,10 @@ func (h *Handler) ListCategories(c *gin.Context) {
 // CategoryDetail 品类详情
 func (h *Handler) CategoryDetail(c *gin.Context) {
 	code := c.Param("code")
+	if code == "" {
+		response.BadRequest(c, "品类编码不能为空")
+		return
+	}
 	cat, fields, err := h.Svc.Category.Detail(c.Request.Context(), code)
 	if err != nil {
 		response.NotFound(c, "品类不存在")
@@ -33,6 +37,10 @@ func (h *Handler) CategoryDetail(c *gin.Context) {
 // CategoryFields 品类字段配置
 func (h *Handler) CategoryFields(c *gin.Context) {
 	code := c.Param("code")
+	if code == "" {
+		response.BadRequest(c, "品类编码不能为空")
+		return
+	}
 	fields, err := h.Svc.Category.Fields(c.Request.Context(), code)
 	if err != nil {
 		response.ServerError(c, err.Error())

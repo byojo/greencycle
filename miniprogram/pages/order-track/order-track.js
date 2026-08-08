@@ -167,7 +167,12 @@ Page({
   },
   onChat() {
     if (typeof wx.openCustomerServiceChat === 'function') {
-      wx.openCustomerServiceChat();
+      wx.openCustomerServiceChat({
+        extInfo: { corpId: '' },
+        fail: () => {
+          wx.showToast({ title: '客服功能开发中', icon: 'none' });
+        }
+      });
     } else {
       wx.showToast({ title: '客服功能开发中', icon: 'none' });
     }
