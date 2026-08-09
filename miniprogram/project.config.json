@@ -50,7 +50,7 @@
     "condition": false,
     "swc": false,
     "disableSWC": true,
-    "lazyCodeLoading": true,
+    "lazyCodeLoading": "requiredComponents",
     "useLazyLoad": true
   },
   "compileType": "miniprogram",
