@@ -97,22 +97,14 @@ Page({
     wx.showToast({ title: '签到功能开发中', icon: 'none' });
   },
 
-  onWithdraw() {
-    if (this.data.balance <= 0) {
-      wx.showToast({ title: '暂无可提现积分', icon: 'none' });
-      return;
-    }
-    wx.showToast({ title: '提现功能开发中', icon: 'none' });
-  },
-
   onExchange() {
-    wx.showToast({ title: '兑换商城开发中', icon: 'none' });
+    wx.navigateTo({ url: '/pages/exchange/exchange' });
   },
 
   onRule() {
     wx.showModal({
       title: '碳积分规则',
-      content: '1. 完成回收获得积分\n2. 每日签到 +5 积分\n3. 积分可兑换商品/提现\n4. 邀请好友有奖励',
+      content: '1. 完成回收获得积分\n2. 每日签到 +5 积分\n3. 积分可兑换商品\n4. 邀请好友有奖励',
       showCancel: false
     });
   },

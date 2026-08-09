@@ -17,7 +17,7 @@
       <view class="points-label">我的积分</view>
       <view class="points-num">{{myPoints}}</view>
     </view>
-    <view class="points-hint">1元 = 100积分 · 积分可提现</view>
+    <view class="points-hint">积分可兑换好礼</view>
   </view>
 
   <!-- 商品列表 -->
