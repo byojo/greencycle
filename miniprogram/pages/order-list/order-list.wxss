@@ -4,7 +4,7 @@
   background: #F7F8FA;
 }
 
-.status-tabs { display: flex; white-space: nowrap; padding: 16rpx 24rpx; gap: 12rpx; }
+.status-tabs { display: flex; white-space: nowrap; padding: 16rpx 24rpx; gap: 12rpx; background: #FFFFFF; border-bottom: 1rpx solid #F3F4F6; }
 .status-tabs .tab { display: inline-block; padding: 8rpx 24rpx; border-radius: 32rpx; font-size: 26rpx; color: #666; background: #fff; }
 .status-tabs .tab.active { background: #07C160; color: #fff; }
 
@@ -14,7 +14,7 @@
   align-items: center;
   background: #FFFFFF;
   border-bottom: 1rpx solid #F3F4F6;
-  padding-top: env(safe-area-inset-top);
+  padding-top: calc(env(safe-area-inset-top) + 8rpx);
 }
 .nav-inner {
   height: 88rpx;
@@ -71,9 +71,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24rpx 32rpx 12rpx;
+  padding: 24rpx 32rpx;
   font-size: 24rpx;
   color: #6B7280;
+  background: #FFFFFF;
 }
 .hint-text {
   color: #6B7280;
@@ -81,6 +82,7 @@
 .hint-more {
   color: #07C160;
   font-weight: 600;
+  flex-shrink: 0;
 }
 
 /* ============ 月份标题 ============ */

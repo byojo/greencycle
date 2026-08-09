@@ -10,7 +10,7 @@
 
   <!-- 时间提示行 -->
   <view class="time-hint">
-    <text class="hint-text">📅 默认展示近三个月订单</text>
+    <text class="hint-text">默认展示近三个月订单</text>
     <text class="hint-more" bindtap="onMore">查看更早 ›</text>
   </view>
 
