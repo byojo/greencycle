@@ -128,12 +128,12 @@ Page({
   showCustomerServiceModal() {
     wx.showModal({
       title: '联系客服',
-      content: '📞 客服电话：400-888-0000\n🕐 工作日 9:00-21:00\n💬 在线咨询：点击右上角客服按钮\n📧 邮箱：help@sxyrgy.cn',
+      content: '📞 客服电话：15249019944\n🕐 工作日 9:00-21:00\n💬 在线咨询：点击右上角客服按钮',
       confirmText: '拨打客服',
       cancelText: '我知道了',
       success: (res) => {
         if (res.confirm) {
-          wx.makePhoneCall({ phoneNumber: '4008880000', fail: () => {
+          wx.makePhoneCall({ phoneNumber: '15249019944', fail: () => {
             wx.showToast({ title: '拨号失败，请手动拨打', icon: 'none' });
           }});
         }

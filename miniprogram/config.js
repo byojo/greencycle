@@ -27,9 +27,8 @@ module.exports = {
 
   // 客服配置
   customerService: {
-    phone: '400-888-0000',
-    workTime: '工作日 9:00-21:00',
-    email: 'help@sxyrgy.cn'
+    phone: '15249019944',
+    workTime: '工作日 9:00-21:00'
   },
 
   // 邀请活动
