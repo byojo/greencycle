@@ -1,5 +1,4 @@
 {
-  "navigationBarTitleText": "邀请好友",
-  "navigationStyle": "default",
+  "navigationStyle": "custom",
   "usingComponents": {}
 }
