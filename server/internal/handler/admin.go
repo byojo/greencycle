@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/greencycle/server/internal/model"
 	"github.com/greencycle/server/pkg/response"
 	"github.com/greencycle/server/pkg/wecom"
 )
@@ -111,6 +112,8 @@ func (h *Handler) AdminOrderList(c *gin.Context) {
 		response.ServerError(c, err.Error())
 		return
 	}
+
+	h.signOrderImages(orders)
 
 	response.Success(c, gin.H{
 		"list":  orders,

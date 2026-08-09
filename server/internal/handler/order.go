@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/greencycle/server/internal/model"
 	"github.com/greencycle/server/internal/service"
 	"github.com/greencycle/server/pkg/response"
 )
@@ -67,6 +68,22 @@ func (h *Handler) CreateOrder(c *gin.Context) {
 	})
 }
 
+// signOrderImages 对订单图片 URL 签名（私有桶）
+func (h *Handler) signOrderImages(orders []model.Order) {
+	for i := range orders {
+		for j := range orders[i].Images {
+			orders[i].Images[j].URL = h.Svc.COS.SignKey(orders[i].Images[j].URL)
+		}
+	}
+}
+
+// signSingleOrderImages 对单个订单图片 URL 签名
+func (h *Handler) signSingleOrderImages(order *model.Order) {
+	for j := range order.Images {
+		order.Images[j].URL = h.Svc.COS.SignKey(order.Images[j].URL)
+	}
+}
+
 // OrderList 订单列表
 func (h *Handler) OrderList(c *gin.Context) {
 	userID := getUserID(c)
@@ -86,6 +103,8 @@ func (h *Handler) OrderList(c *gin.Context) {
 		response.ServerError(c, err.Error())
 		return
 	}
+
+	h.signOrderImages(orders)
 
 	response.Success(c, gin.H{
 		"list":  orders,
@@ -109,6 +128,8 @@ func (h *Handler) OrderDetail(c *gin.Context) {
 		response.NotFound(c, err.Error())
 		return
 	}
+
+	h.signSingleOrderImages(order)
 
 	response.Success(c, order)
 }

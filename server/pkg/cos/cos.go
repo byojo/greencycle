@@ -89,6 +89,43 @@ func (c *Client) GetFullURL(key string) string {
 	return fmt.Sprintf("https://%s.cos.%s.myqcloud.com/%s", c.cfg.Bucket, c.cfg.Region, key)
 }
 
+// GetSignedURL 获取带签名的读取 URL（私有桶用，有效期 1 小时）
+func (c *Client) GetSignedURL(key string) string {
+	if c.client == nil {
+		return c.GetFullURL(key)
+	}
+	signedURL, err := c.client.Object.GetPresignedURL(
+		context.Background(),
+		http.MethodGet,
+		key,
+		c.cfg.SecretID,
+		c.cfg.SecretKey,
+		time.Hour,
+		nil,
+	)
+	if err != nil {
+		return c.GetFullURL(key)
+	}
+	return signedURL.String()
+}
+
+// SignKey 如果 key 是完整 URL，提取 path 部分再签名
+func (c *Client) SignKey(fullURL string) string {
+	if fullURL == "" {
+		return ""
+	}
+	// 如果已经是带签名的 URL，直接返回
+	if u, err := url.Parse(fullURL); err == nil && u.Query().Get("q-sign-algorithm") != "" {
+		return fullURL
+	}
+	// 提取 key（去掉域名部分）
+	key := fullURL
+	if u, err := url.Parse(fullURL); err == nil && u.Path != "" {
+		key = u.Path[1:] // 去掉前导 /
+	}
+	return c.GetSignedURL(key)
+}
+
 func getContentType(ext string) string {
 	switch ext {
 	case "jpg", "jpeg":
