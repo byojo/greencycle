@@ -100,15 +100,33 @@ Page({
   },
 
   onContact() {
-    if (typeof wx.openCustomerServiceChat === 'function') {
+    // 优先尝试官方客服会话，失败后退到 modal（与「我的」页面一致）
+    if (wx.openCustomerServiceChat) {
       wx.openCustomerServiceChat({
         extInfo: { corpId: '' },
+        extParam: { from: 'pick-category' },
         fail: () => {
-          wx.showToast({ title: '客服功能开发中', icon: 'none' });
+          this.showCustomerServiceModal();
         }
       });
     } else {
-      wx.showToast({ title: '客服功能开发中', icon: 'none' });
+      this.showCustomerServiceModal();
     }
+  },
+
+  showCustomerServiceModal() {
+    wx.showModal({
+      title: '联系客服',
+      content: '📞 客服电话：15249019944\n🕐 工作日 9:00-21:00\n💬 在线咨询：点击右上角客服按钮',
+      confirmText: '拨打客服',
+      cancelText: '我知道了',
+      success: (res) => {
+        if (res.confirm) {
+          wx.makePhoneCall({ phoneNumber: '15249019944', fail: () => {
+            wx.showToast({ title: '拨号失败，请手动拨打', icon: 'none' });
+          }});
+        }
+      }
+    });
   }
 });

@@ -44,7 +44,7 @@
       <text class="help-icon">📞</text>
       <text>进入品类后可联系在线客服帮您选择</text>
     </view>
-    <button class="help-btn" bindtap="onContact">💬 联系在线客服</button>
+    <button class="help-btn" bindtap="onContact">💬 联系客服</button>
   </view>
 
   <!-- 上次回收（横滑 chips） -->
