@@ -245,10 +245,11 @@ func (s *OrderService) notifyOrderAssigned(order *model.Order, rider *model.Ride
 		TemplateID: tplID,
 		Page:       fmt.Sprintf("pages/order-detail/order-detail?id=%d", order.ID),
 		Data: map[string]interface{}{
-			"thing1":        map[string]string{"value": order.ItemName},        // 物品名称
-			"phrase1":       map[string]string{"value": "已派单，即将上门"},        // 当前状态
-			"thing2":        map[string]string{"value": rider.Name},            // 回收员
-			"phone_number1": map[string]string{"value": rider.Phone},           // 联系电话
+			"thing9":             map[string]string{"value": order.ItemName},                         // 订单标题
+			"character_string18": map[string]string{"value": order.OrderNo},                          // 订单编号
+			"date5":              map[string]string{"value": order.EstimatedAt.Format("2006-01-02")}, // 预约时间
+			"thing14":            map[string]string{"value": rider.Name},                             // 质检员（回收员）
+			"phone_number15":     map[string]string{"value": rider.Phone},                            // 联系电话
 		},
 	}
 
@@ -443,10 +444,11 @@ func (s *OrderService) notifyOrderCompleted(order *model.Order, points int, open
 		TemplateID: tplID,
 		Page:       fmt.Sprintf("pages/order-detail/order-detail?id=%d", order.ID),
 		Data: map[string]interface{}{
-			"thing1":         map[string]string{"value": order.ItemName},        // 物品名称
-			"phrase1":        map[string]string{"value": "已完成"},               // 当前状态
-			"character_string1": map[string]string{"value": fmt.Sprintf("%d", points)}, // 获得积分
-			"time1":          map[string]string{"value": time.Now().Format("2006-01-02 15:04")}, // 完成时间
+			"character_string14": map[string]string{"value": order.OrderNo},                          // 订单号
+			"thing13":            map[string]string{"value": order.CategoryCode},                      // 回收品类
+			"thing5":             map[string]string{"value": "已完成"},                                 // 订单状态
+			"thing11":            map[string]string{"value": fmt.Sprintf("%d积分", points)},            // 金额（用积分代替）
+			"time7":              map[string]string{"value": time.Now().Format("2006-01-02 15:04")},  // 时间
 		},
 	}
 
