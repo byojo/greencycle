@@ -81,6 +81,10 @@ func (h *Handler) AdminRiderUpdate(c *gin.Context) {
 		updates["plate_no"] = *req.PlateNo
 	}
 	if req.Status != nil {
+		if *req.Status != 0 && *req.Status != 1 {
+			response.BadRequest(c, "骑手状态只能为 0(离职) 或 1(在职)")
+			return
+		}
 		updates["status"] = *req.Status
 	}
 
@@ -97,6 +101,10 @@ func (h *Handler) AdminRiderUpdate(c *gin.Context) {
 func (h *Handler) AdminOrderList(c *gin.Context) {
 	page, size := getPageParams(c)
 	status, _ := strconv.Atoi(c.DefaultQuery("status", "0"))
+	if status < 0 || status > 5 {
+		response.BadRequest(c, "无效的订单状态")
+		return
+	}
 
 	orders, total, err := h.Svc.Order.AdminListByUser(c.Request.Context(), page, size, status)
 	if err != nil {
@@ -180,6 +188,10 @@ func (h *Handler) AdminCompleteOrder(c *gin.Context) {
 		FinalAmount int `json:"finalAmount"`
 	}
 	c.ShouldBindJSON(&req)
+	if req.FinalAmount < 0 {
+		response.BadRequest(c, "金额不能为负数")
+		return
+	}
 
 	if err := h.Svc.Order.Complete(c.Request.Context(), orderID, req.FinalAmount); err != nil {
 		response.BadRequest(c, err.Error())

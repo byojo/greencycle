@@ -46,7 +46,7 @@ func (h *Handler) UploadSign(c *gin.Context) {
 	}
 
 	// 后端直传 COS（云托管有公网出站能力）
-	httpReq, err := http.NewRequest(http.MethodPut, sign.URL, bytes.NewReader(data))
+	httpReq, err := http.NewRequestWithContext(c.Request.Context(), http.MethodPut, sign.URL, bytes.NewReader(data))
 	if err != nil {
 		response.ServerError(c, fmt.Sprintf("创建请求失败: %v", err))
 		return
@@ -79,6 +79,11 @@ func decodeBase64(s string) ([]byte, error) {
 	idx := strings.Index(s, ",")
 	if idx >= 0 {
 		s = s[idx+1:]
+	}
+	// 大小限制（10MB base64 ≈ 13.3MB 字符串）
+	const maxBase64Len = 13 * 1024 * 1024
+	if len(s) > maxBase64Len {
+		return nil, fmt.Errorf("图片过大，最大支持 10MB")
 	}
 	// 补全 padding
 	for len(s)%4 != 0 {

@@ -62,7 +62,7 @@ tr:hover { background: #fafafa; }
 
 <div class="header">
   <h1>♻️ 纸飞机管理后台</h1>
-  <input class="key-input" id="adminKey" type="password" placeholder="输入 Admin Key" value="c7b3f90c47b1bdad7183278dc73664f6" onkeyup="if(event.key==='Enter'){loadOrders();loadRiders();}">
+  <input class="key-input" id="adminKey" type="password" placeholder="输入 Admin Key" value="" onkeyup="if(event.key==='Enter'){loadOrders();loadRiders();}">
 </div>
 
 <div class="tabs">
@@ -169,6 +169,7 @@ let currentCompleteOrderId = null;
 let ridersCache = [];
 
 function getKey() { return document.getElementById('adminKey').value; }
+function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 function api(path, method, data) {
   const opts = { method: method || 'GET', headers: { 'X-Admin-Key': getKey(), 'Content-Type': 'application/json' } };
   if (data) opts.body = JSON.stringify(data);
@@ -206,11 +207,11 @@ async function loadOrders() {
     if (orders.length === 0) { el.innerHTML = '<div class="empty">暂无订单</div>'; return; }
     el.innerHTML = '<table><thead><tr><th>订单号</th><th>物品</th><th>地址</th><th>状态</th><th>骑手</th><th>操作</th></tr></thead><tbody>' +
       orders.map(o => `<tr>
-        <td style="font-size:12px;color:#999">${o.orderNo}</td>
-        <td>${o.itemName}</td>
-        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${o.pickupAddr}</td>
+        <td style="font-size:12px;color:#999">${esc(o.orderNo)}</td>
+        <td>${esc(o.itemName)}</td>
+        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(o.pickupAddr)}</td>
         <td><span class="status-badge status-${o.status}">${STATUS_TEXT[o.status]}</span></td>
-        <td>${o.riderName || '-'}</td>
+        <td>${esc(o.riderName) || '-'}</td>
         <td style="white-space:nowrap">
           ${o.status === 1 ? `<button class="btn btn-blue btn-sm" onclick="showAssign(${o.id})">派单</button>` : ''}
           ${o.status === 2 ? `<button class="btn btn-gray btn-sm" onclick="updateStatus(${o.id},3)">已取件</button>` : ''}

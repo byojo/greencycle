@@ -63,9 +63,11 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 		// 2. 检查限兑次数（事务内，持锁状态下查询，防止 TOCTOU）
 		if item.LimitPerUser > 0 {
 			var count int64
-			tx.Model(&model.ExchangeRecord{}).
+			if err := tx.Model(&model.ExchangeRecord{}).
 				Where("user_id = ? AND item_id = ? AND status != ?", userID, item.ID, 4).
-				Count(&count)
+				Count(&count).Error; err != nil {
+				return errors.New("限兑检查失败")
+			}
 			if int(count) >= item.LimitPerUser {
 				return errors.New("该商品每人限兑一次，您已达上限")
 			}

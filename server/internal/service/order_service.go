@@ -328,8 +328,9 @@ func (s *OrderService) Cancel(ctx context.Context, orderID uint64, userID uint, 
 	if err != nil {
 		return err
 	}
-	if order.Status >= model.OrderStatusCompleted {
-		return errors.New("订单已完成，无法取消")
+	// 仅待评估(1)和已派单(2)状态可取消，已取件(3)后不可取消
+	if order.Status != model.OrderStatusPending && order.Status != model.OrderStatusAssigned {
+		return errors.New("订单当前状态无法取消")
 	}
 	return s.repo.Order.Transaction(ctx, func(tx *gorm.DB) error {
 		if err := tx.Model(&model.Order{}).Where("id = ?", orderID).
@@ -387,7 +388,7 @@ func (s *OrderService) Complete(ctx context.Context, orderID uint64, finalAmount
 
 		// 3. 记录积分流水
 		var updatedUser model.User
-		if err := tx.Select("points").First(&updatedUser, order.UserID).Error; err != nil {
+		if err := tx.First(&updatedUser, order.UserID).Error; err != nil {
 			return err
 		}
 		log := &model.CarbonPointLog{
@@ -504,7 +505,11 @@ func calculateCarbonPoints(categoryCode string, finalAmount int) int {
 		"book":    20,
 		"metal":   10,
 	}
-	return base[categoryCode] + finalAmount/100*5
+	b, ok := base[categoryCode]
+	if !ok {
+		b = 20 // 未知品类默认基础分
+	}
+	return b + finalAmount/100*5
 }
 
 // 计算减碳（kg）

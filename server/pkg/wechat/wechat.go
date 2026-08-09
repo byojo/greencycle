@@ -104,7 +104,13 @@ func (c *Client) GetAccessToken() (string, error) {
 		return "", fmt.Errorf("获取 access_token 失败: %d %s", result.ErrCode, result.ErrMsg)
 	}
 
-	c.cache.Set("access_token", result.AccessToken, time.Duration(result.ExpiresIn-200)*time.Second)
+	expiresIn := result.ExpiresIn
+	if expiresIn > 200 {
+		expiresIn = expiresIn - 200
+	} else {
+		expiresIn = expiresIn / 2
+	}
+	c.cache.Set("access_token", result.AccessToken, time.Duration(expiresIn)*time.Second)
 	return result.AccessToken, nil
 }
 

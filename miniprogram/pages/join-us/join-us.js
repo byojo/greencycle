@@ -20,7 +20,7 @@ Page({
       wx.showToast({ title: '请输入姓名', icon: 'none' });
       return false;
     }
-    if (!this.data.phone.trim() || !/^1\d{10}$/.test(this.data.phone)) {
+    if (!this.data.phone.trim() || !/^1[3-9]\d{9}$/.test(this.data.phone)) {
       wx.showToast({ title: '请输入正确的手机号', icon: 'none' });
       return false;
     }
