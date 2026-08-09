@@ -111,7 +111,10 @@ Page({
   async checkAdmin() {
     try {
       const res = await api.isAdmin();
-      this.setData({ isAdmin: res.data.isAdmin, isRider: res.data.isRider });
+      this.setData({ 
+        isAdmin: res.data.isAdmin || false, 
+        isRider: res.data.isRider || false 
+      });
     } catch (e) {}
   },
   goService() {
