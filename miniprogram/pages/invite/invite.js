@@ -29,24 +29,36 @@ Page({
 
     try {
       const res = await api.getUserInfo();
-      this.setData({
-        inviteCount: (res.data && res.data.inviteCount) || 3,
-        inviteList: [
-          { id: 1, name: '王**', avatarText: '王', timeText: '3 天前', points: 50 },
-          { id: 2, name: '李**', avatarText: '李', timeText: '1 周前', points: 50 },
-          { id: 3, name: '张**', avatarText: '张', timeText: '2 周前', points: 50 }
-        ]
-      });
+      const inviteCount = (res.data && res.data.inviteCount) || 0;
+      // 获取邀请记录
+      let inviteList = [];
+      try {
+        const listRes = await api.getInviteList();
+        inviteList = (listRes.data.list || []).map(item => ({
+          id: item.id,
+          name: '好友',
+          avatarText: '友',
+          timeText: this.formatRelativeTime(item.createdAt),
+          points: item.points
+        }));
+      } catch (e) {}
+      this.setData({ inviteCount, inviteList });
     } catch (err) {
-      this.setData({
-        inviteCount: 3,
-        inviteList: [
-          { id: 1, name: '王**', avatarText: '王', timeText: '3 天前', points: 50 },
-          { id: 2, name: '李**', avatarText: '李', timeText: '1 周前', points: 50 },
-          { id: 3, name: '张**', avatarText: '张', timeText: '2 周前', points: 50 }
-        ]
-      });
+      this.setData({ inviteCount: 0, inviteList: [] });
     }
+  },
+
+  formatRelativeTime(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    const now = new Date();
+    const diff = now - d;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    if (days === 0) return '今天';
+    if (days === 1) return '昨天';
+    if (days < 7) return days + ' 天前';
+    if (days < 30) return Math.floor(days / 7) + ' 周前';
+    return Math.floor(days / 30) + ' 个月前';
   },
 
   onCopyCode() {

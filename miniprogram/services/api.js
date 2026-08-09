@@ -6,7 +6,7 @@ const { get, post, put, delete: del } = require('./request.js');
 module.exports = {
   // ========== 鉴权 ==========
   // 微信登录
-  login: (code, userInfo) => post('/auth/login', { code, userInfo }),
+  login: (code, userInfo, inviteCode) => post('/auth/login', { code, userInfo, inviteCode }),
 
   // 退出登录
   logout: () => post('/auth/logout'),
@@ -17,6 +17,9 @@ module.exports = {
 
   // 判断是否管理员
   isAdmin: () => get('/user/is-admin'),
+
+  // 邀请记录
+  getInviteList: () => get('/user/invite-list'),
 
   // 更新用户信息
   updateUserInfo: (data) => put('/user/info', data),

@@ -84,9 +84,11 @@ App({
       // 1. wx.login 获取 code
       const { code } = await this.wxLogin();
 
-      // 2. 获取用户信息（getUserProfile 已废弃，新用户昵称后端设默认值，用户可在设置页修改）
+      // 2. 从启动参数获取邀请码
+      const launchOpts = wx.getLaunchOptionsSync ? wx.getLaunchOptionsSync() : {};
+      const inviteCode = (launchOpts.query && launchOpts.query.inviteCode) || '';
       // 3. 调服务端登录接口，换取 token
-      const res = await api.login(code, null);
+      const res = await api.login(code, null, inviteCode);
       const { token, user } = res.data;
 
       this.globalData.token = token;

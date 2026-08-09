@@ -45,6 +45,7 @@ func Register(h *handler.Handler) *gin.Engine {
 	{
 		auth.GET("/user/info", h.UserInfo)
 		auth.GET("/user/is-admin", h.IsAdmin)
+		auth.GET("/user/invite-list", h.InviteList)
 		auth.POST("/auth/logout", h.Logout)
 
 		auth.POST("/orders", h.CreateOrder)

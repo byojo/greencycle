@@ -29,7 +29,7 @@ type LoginResult struct {
 }
 
 // WechatLogin 微信登录
-func (s *AuthService) WechatLogin(ctx context.Context, code string, userInfo map[string]interface{}) (*LoginResult, error) {
+func (s *AuthService) WechatLogin(ctx context.Context, code string, userInfo map[string]interface{}, inviteCode string) (*LoginResult, error) {
 	// 1. 调微信接口换 session
 	session, err := s.wechat.Code2Session(code)
 	if err != nil {
@@ -58,6 +58,11 @@ func (s *AuthService) WechatLogin(ctx context.Context, code string, userInfo map
 			return nil, fmt.Errorf("创建用户失败: %w", err)
 		}
 		isNew = true
+
+		// 处理邀请奖励
+		if inviteCode != "" {
+			s.processInviteReward(ctx, user.ID, inviteCode)
+		}
 	} else if userInfo != nil {
 		// 更新用户信息
 		user.Nickname = getString(userInfo, "nickName", user.Nickname)
@@ -127,4 +132,80 @@ func getInt(m map[string]interface{}, key string, def int) int {
 		return v
 	}
 	return def
+}
+
+// processInviteReward 处理邀请奖励
+func (s *AuthService) processInviteReward(ctx context.Context, newUserID uint, inviteCode string) {
+	// 邀请码格式：GC000001，解析出邀请人ID
+	if len(inviteCode) <= 2 {
+		return
+	}
+	codeStr := inviteCode[2:] // 去掉 "GC" 前缀
+	var inviterID uint
+	for _, c := range codeStr {
+		if c < '0' || c > '9' {
+			return // 非数字，忽略
+		}
+		inviterID = inviterID*10 + uint(c-'0')
+	}
+	if inviterID == 0 || inviterID == newUserID {
+		return // 不能自己邀请自己
+	}
+
+	// 查邀请人是否存在
+	inviter, err := s.repo.User.FindByID(ctx, inviterID)
+	if err != nil || inviter == nil {
+		return
+	}
+
+	const rewardPoints = 50
+	db := s.repo.DB()
+
+	// 邀请人 +50 积分
+	_ = s.repo.User.IncrementPoints(ctx, db, inviter.ID, rewardPoints)
+	// 被邀请人 +50 积分
+	_ = s.repo.User.IncrementPoints(ctx, db, newUserID, rewardPoints)
+
+	// 记录积分流水
+	_ = s.repo.Point.CreateLog(ctx, db, &model.CarbonPointLog{
+		UserID:  inviter.ID,
+		Type:    2, // 邀请奖励
+		Amount:  rewardPoints,
+		Balance: inviter.Points + rewardPoints,
+		Remark:  "邀请好友奖励",
+	})
+	_ = s.repo.Point.CreateLog(ctx, db, &model.CarbonPointLog{
+		UserID:  newUserID,
+		Type:    2,
+		Amount:  rewardPoints,
+		Balance: rewardPoints,
+		Remark:  "受邀注册奖励",
+	})
+
+	fmt.Printf("✅ 邀请奖励: 邀请人 #%d +%d, 新用户 #%d +%d\n", inviterID, rewardPoints, newUserID, rewardPoints)
+}
+
+// GetInviteList 获取邀请记录
+func (s *AuthService) GetInviteList(ctx context.Context, userID uint) ([]map[string]interface{}, error) {
+	// 查询所有 Type=2 的积分流水（邀请奖励）
+	logs, _, err := s.repo.Point.ListByUser(ctx, userID, 1, 100)
+	if err != nil {
+		return nil, err
+	}
+	var list []map[string]interface{}
+	for _, log := range logs {
+		if log.Type != 2 {
+			continue
+		}
+		list = append(list, map[string]interface{}{
+			"id":        log.ID,
+			"points":    log.Amount,
+			"remark":    log.Remark,
+			"createdAt": log.CreatedAt,
+		})
+	}
+	if list == nil {
+		list = []map[string]interface{}{}
+	}
+	return list, nil
 }

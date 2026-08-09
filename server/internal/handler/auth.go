@@ -12,8 +12,9 @@ import (
 
 // LoginRequest 登录请求
 type LoginRequest struct {
-	Code     string                 `json:"code" binding:"required"`
-	UserInfo map[string]interface{} `json:"userInfo"`
+	Code        string                 `json:"code" binding:"required"`
+	UserInfo    map[string]interface{} `json:"userInfo"`
+	InviteCode  string                 `json:"inviteCode"`
 }
 
 // Login 微信登录
@@ -24,7 +25,7 @@ func (h *Handler) Login(c *gin.Context) {
 		return
 	}
 
-	result, err := h.Svc.Auth.WechatLogin(c.Request.Context(), req.Code, req.UserInfo)
+	result, err := h.Svc.Auth.WechatLogin(c.Request.Context(), req.Code, req.UserInfo, req.InviteCode)
 	if err != nil {
 		response.ServerError(c, err.Error())
 		return
@@ -69,6 +70,22 @@ func (h *Handler) IsAdmin(c *gin.Context) {
 
 	isAdmin := checkAdmin(userID)
 	response.Success(c, gin.H{"isAdmin": isAdmin})
+}
+
+// InviteList 邀请记录
+func (h *Handler) InviteList(c *gin.Context) {
+	userID := getUserID(c)
+	if userID == 0 {
+		response.Unauthorized(c, "未登录")
+		return
+	}
+
+	list, err := h.Svc.Auth.GetInviteList(c.Request.Context(), userID)
+	if err != nil {
+		response.ServerError(c, err.Error())
+		return
+	}
+	response.Success(c, gin.H{"list": list})
 }
 
 // checkAdmin 检查用户是否是管理员（通过 ADMIN_USER_IDS 环境变量）
