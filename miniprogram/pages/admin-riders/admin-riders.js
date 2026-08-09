@@ -5,7 +5,7 @@ Page({
     riders: [],
     loading: true,
     showAdd: false,
-    form: { name: '', phone: '', plateNo: '' }
+    form: { name: '', phone: '' }
   },
 
   onLoad() {
@@ -55,7 +55,7 @@ Page({
   },
 
   onShowAdd() {
-    this.setData({ showAdd: true, form: { name: '', phone: '', plateNo: '' } });
+    this.setData({ showAdd: true, form: { name: '', phone: '' } });
   },
 
   closeAdd() { this.setData({ showAdd: false }); },
@@ -68,13 +68,13 @@ Page({
   },
 
   async confirmAdd() {
-    const { name, phone, plateNo } = this.data.form;
+    const { name, phone } = this.data.form;
     if (!name.trim() || !phone.trim()) {
       wx.showToast({ title: '姓名和手机号必填', icon: 'none' });
       return;
     }
     try {
-      await api.adminAddRider({ name: name.trim(), phone: phone.trim(), plateNo: plateNo.trim() });
+      await api.adminAddRider({ name: name.trim(), phone: phone.trim() });
       wx.showToast({ title: '添加成功', icon: 'success' });
       this.closeAdd();
       this.loadRiders();
