@@ -17,10 +17,10 @@
       </view>
       <view class="order-rider" wx:if="{{item.riderName}}">回收专员：{{item.riderName}} {{item.riderPhone}}</view>
       <view class="order-actions">
-        <button wx:if="{{item.status === 1}}" class="btn btn-blue" size="mini" data-id="{{item.id}}" bindtap="onAssign">派单</button>
-        <button wx:if="{{item.status === 2}}" class="btn btn-gray" size="mini" data-id="{{item.id}}" data-status="3" bindtap="onUpdateStatus">已取件</button>
-        <button wx:if="{{item.status === 3}}" class="btn btn-green" size="mini" data-id="{{item.id}}" bindtap="onComplete">完成</button>
-        <button wx:if="{{item.status === 1}}" class="btn btn-gray" size="mini" data-id="{{item.id}}" data-status="5" bindtap="onUpdateStatus">取消</button>
+        <button wx:if="{{item.status === 1}}" class="order-btn order-btn-blue" size="mini" data-id="{{item.id}}" bindtap="onAssign">派单</button>
+        <button wx:if="{{item.status === 2}}" class="order-btn order-btn-gray" size="mini" data-id="{{item.id}}" data-status="3" bindtap="onUpdateStatus">已取件</button>
+        <button wx:if="{{item.status === 3}}" class="order-btn order-btn-green" size="mini" data-id="{{item.id}}" bindtap="onComplete">完成</button>
+        <button wx:if="{{item.status === 1}}" class="order-btn order-btn-gray" size="mini" data-id="{{item.id}}" data-status="5" bindtap="onUpdateStatus">取消</button>
       </view>
     </view>
   </view>
@@ -36,8 +36,8 @@
         <view class="picker">{{riders[riderIndex] ? riders[riderIndex].label : '请选择回收专员'}}</view>
       </picker>
       <view class="modal-actions">
-        <button class="btn btn-gray" bindtap="closeAssign">取消</button>
-        <button class="btn btn-green" bindtap="confirmAssign">确认派单</button>
+        <button class="modal-btn modal-btn-gray" bindtap="closeAssign">取消</button>
+        <button class="modal-btn modal-btn-green" bindtap="confirmAssign">确认派单</button>
       </view>
     </view>
   </view>
@@ -52,8 +52,8 @@
       </view>
       <view class="input-hint">用户将获得积分 = 品类基础分 + 金额×5%</view>
       <view class="modal-actions">
-        <button class="btn btn-gray" bindtap="closeComplete">取消</button>
-        <button class="btn btn-green" bindtap="confirmComplete">确认完成</button>
+        <button class="modal-btn modal-btn-gray" bindtap="closeComplete">取消</button>
+        <button class="modal-btn modal-btn-green" bindtap="confirmComplete">确认完成</button>
       </view>
     </view>
   </view>

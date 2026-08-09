@@ -7,7 +7,7 @@
         <view class="rider-meta">{{item.phone}} · {{item.plateNo || '无车牌'}}</view>
         <view class="rider-stats">评分 {{item.rating}} · 服务 {{item.serviceCnt}} 次</view>
       </view>
-      <button class="btn {{item.status === 1 ? 'btn-gray' : 'btn-green'}}" size="mini" data-id="{{item.id}}" data-status="{{item.status}}" bindtap="onToggleStatus">{{item.status === 1 ? '离职' : '复职'}}</button>
+      <button class="rider-btn {{item.status === 1 ? '' : 'rider-btn-active'}}" size="mini" data-id="{{item.id}}" data-status="{{item.status}}" bindtap="onToggleStatus">{{item.status === 1 ? '离职' : '复职'}}</button>
     </view>
   </view>
 
@@ -34,8 +34,8 @@
         <input class="input" value="{{form.plateNo}}" bindinput="onInput" data-field="plateNo" placeholder="沪A8862" maxlength="20" />
       </view>
       <view class="modal-actions">
-        <button class="btn btn-gray" bindtap="closeAdd">取消</button>
-        <button class="btn btn-green" bindtap="confirmAdd">添加</button>
+        <button class="modal-btn modal-btn-gray" bindtap="closeAdd">取消</button>
+        <button class="modal-btn modal-btn-green" bindtap="confirmAdd">添加</button>
       </view>
     </view>
   </view>
