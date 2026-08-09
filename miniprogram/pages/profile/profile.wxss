@@ -140,6 +140,17 @@
   border-radius: 24rpx;
   overflow: hidden;
 }
+.admin-section {
+  margin-top: 16rpx;
+  border-top: 1px solid #F3F4F6;
+  padding-top: 16rpx;
+}
+.admin-title {
+  font-size: 22rpx;
+  color: #9CA3AF;
+  padding: 0 32rpx 8rpx;
+}
+}
 .list-row {
   padding: 28rpx 24rpx;
   display: flex;

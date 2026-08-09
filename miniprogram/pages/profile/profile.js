@@ -9,6 +9,7 @@ Page({
     vipLevel: '绿V1',
     orderDesc: '已回收 0 次',
     verified: true,
+    isAdmin: false,
     points: 0,
     pointsText: '0',
     carbonKg: 0,
@@ -64,6 +65,8 @@ Page({
         addressCountText: String(u.addressCount || 0)
       });
       app.globalData.userInfo = u;
+      // 检查是否管理员
+      this.checkAdmin();
     } catch (err) {
       // 使用 mock 数据（与原型一致）
       this.setData({
@@ -115,6 +118,15 @@ Page({
   goPoints() { wx.navigateTo({ url: '/pages/points/points' }); },
   goExchange() { wx.navigateTo({ url: '/pages/exchange/exchange' }); },
   goInvite() { wx.navigateTo({ url: '/pages/invite/invite' }); },
+  goAdminOrders() { wx.navigateTo({ url: '/pages/admin-orders/admin-orders' }); },
+  goAdminRiders() { wx.navigateTo({ url: '/pages/admin-riders/admin-riders' }); },
+
+  async checkAdmin() {
+    try {
+      const res = await api.isAdmin();
+      this.setData({ isAdmin: res.data.isAdmin });
+    } catch (e) {}
+  },
   goService() {
     // 优先尝试官方客服会话，失败后退到 modal
     if (wx.openCustomerServiceChat) {

@@ -19,7 +19,9 @@
     "pages/login/login",
     "pages/join-us/join-us",
     "pages/exchange/exchange",
-    "pages/exchange-history/exchange-history"
+    "pages/exchange-history/exchange-history",
+    "pages/admin-orders/admin-orders",
+    "pages/admin-riders/admin-riders"
   ],
   "window": {
     "navigationBarBackgroundColor": "#07C160",

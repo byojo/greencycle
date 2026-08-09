@@ -15,6 +15,9 @@ module.exports = {
   // 获取用户信息
   getUserInfo: () => get('/user/info'),
 
+  // 判断是否管理员
+  isAdmin: () => get('/user/is-admin'),
+
   // 更新用户信息
   updateUserInfo: (data) => put('/user/info', data),
 
@@ -101,5 +104,14 @@ module.exports = {
   exchangeItem: (data) => post('/exchange', data, { showLoading: true, loadingText: '兑换中...' }),
 
   // 用户兑换记录
-  getExchangeHistory: (params) => get('/exchange/history', params)
+  getExchangeHistory: (params) => get('/exchange/history', params),
+
+  // ========== 管理端 ==========
+  adminGetOrders: (params) => get('/admin/orders', params, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' } }),
+  adminGetRiders: () => get('/admin/riders', {}, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' } }),
+  adminAddRider: (data) => post('/admin/riders', data, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' }, showLoading: true }),
+  adminUpdateRider: (id, data) => put(`/admin/riders/${id}`, data, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' } }),
+  adminAssignOrder: (id, data) => post(`/admin/orders/${id}/assign`, data, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' }, showLoading: true, loadingText: '派单中...' }),
+  adminUpdateOrderStatus: (id, data) => put(`/admin/orders/${id}/status`, data, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' } }),
+  adminCompleteOrder: (id, data) => post(`/admin/orders/${id}/complete`, data, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' }, showLoading: true, loadingText: '处理中...' })
 };

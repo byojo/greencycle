@@ -42,7 +42,7 @@
     </view>
   </view>
 
-  <!-- 功能列表（我的订单已隐藏：去掉 即可恢复） -->
+  <!-- 功能列表 -->
   <view class="menu-list">
     <view class="list-row" bindtap="goOrders">
       <view class="row-icon" style="background:#DBEAFE;color:#2563EB">📦</view>
@@ -68,6 +68,22 @@
       <view class="row-extra">得 50 积分</view>
       <view class="row-arrow">›</view>
     </view>
+
+    <!-- 管理员入口（仅管理员可见） -->
+    <view class="admin-section" wx:if="{{isAdmin}}">
+      <view class="admin-title">管理后台</view>
+      <view class="list-row" bindtap="goAdminOrders">
+        <view class="row-icon" style="background:#FEF3C7;color:#D97706">📋</view>
+        <view class="row-label">订单管理</view>
+        <view class="row-arrow">›</view>
+      </view>
+      <view class="list-row" bindtap="goAdminRiders">
+        <view class="row-icon" style="background:#E0E7FF;color:#4F46E5">🚴</view>
+        <view class="row-label">骑手管理</view>
+        <view class="row-arrow">›</view>
+      </view>
+    </view>
+
     <view class="list-row" bindtap="goService">
       <view class="row-icon" style="background:#E0E7FF;color:#4F46E5">💬</view>
       <view class="row-label">联系客服</view>

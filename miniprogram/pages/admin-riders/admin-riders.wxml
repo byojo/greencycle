@@ -1,0 +1,42 @@
+<view class="page">
+  <view class="rider-list" wx:if="{{riders.length > 0}}">
+    <view class="rider-card" wx:for="{{riders}}" wx:key="id">
+      <view class="rider-avatar">{{item.name[0]}}</view>
+      <view class="rider-info">
+        <view class="rider-name">{{item.name}}</view>
+        <view class="rider-meta">{{item.phone}} · {{item.plateNo || '无车牌'}}</view>
+        <view class="rider-stats">评分 {{item.rating}} · 服务 {{item.serviceCnt}} 次</view>
+      </view>
+      <button class="btn {{item.status === 1 ? 'btn-gray' : 'btn-green'}}" size="mini" data-id="{{item.id}}" data-status="{{item.status}}" bindtap="onToggleStatus">{{item.status === 1 ? '离职' : '复职'}}</button>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{!loading && riders.length === 0}}">暂无骑手</view>
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+
+  <!-- 添加骑手按钮 -->
+  <view class="fab" bindtap="onShowAdd">+</view>
+
+  <!-- 添加骑手弹窗 -->
+  <view class="modal-mask" wx:if="{{showAdd}}" bindtap="closeAdd">
+    <view class="modal" catchtap="">
+      <view class="modal-title">🚴 添加骑手</view>
+      <view class="input-group">
+        <text class="input-label">姓名</text>
+        <input class="input" value="{{form.name}}" bindinput="onInput" data-field="name" placeholder="如：张师傅" />
+      </view>
+      <view class="input-group">
+        <text class="input-label">手机号</text>
+        <input class="input" type="number" value="{{form.phone}}" bindinput="onInput" data-field="phone" placeholder="如：13800138000" />
+      </view>
+      <view class="input-group">
+        <text class="input-label">车牌号（选填）</text>
+        <input class="input" value="{{form.plateNo}}" bindinput="onInput" data-field="plateNo" placeholder="如：沪A8862" />
+      </view>
+      <view class="modal-actions">
+        <button class="btn btn-gray" bindtap="closeAdd">取消</button>
+        <button class="btn btn-green" bindtap="confirmAdd">添加</button>
+      </view>
+    </view>
+  </view>
+</view>
