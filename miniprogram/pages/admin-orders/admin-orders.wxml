@@ -6,7 +6,7 @@
 
   <!-- 订单列表 -->
   <view class="order-list" wx:if="{{orders.length > 0}}">
-    <view class="order-card" wx:for="{{orders}}" wx:key="id">
+    <view class="order-card" wx:for="{{orders}}" wx:key="id" data-id="{{item.id}}" bindtap="onViewDetail">
       <view class="order-top">
         <text class="order-no">{{item.orderNo}}</text>
         <view class="status-badge status-{{item.status}}">{{statusMap[item.status]}}</view>
@@ -16,11 +16,12 @@
         <text class="order-addr">📍 {{item.pickupAddr}}</text>
       </view>
       <view class="order-rider" wx:if="{{item.riderName}}">回收专员：{{item.riderName}} {{item.riderPhone}}</view>
-      <view class="order-actions">
+      <view class="order-actions" catchtap="stopPropagation">
         <button wx:if="{{item.status === 1}}" class="order-btn order-btn-blue" size="mini" data-id="{{item.id}}" bindtap="onAssign">派单</button>
-        <button wx:if="{{item.status === 2}}" class="order-btn order-btn-gray" size="mini" data-id="{{item.id}}" data-status="3" bindtap="onUpdateStatus">已取件</button>
-        <button wx:if="{{item.status === 3}}" class="order-btn order-btn-green" size="mini" data-id="{{item.id}}" bindtap="onComplete">完成</button>
-        <button wx:if="{{item.status === 1}}" class="order-btn order-btn-gray" size="mini" data-id="{{item.id}}" data-status="5" bindtap="onUpdateStatus">取消</button>
+        <button wx:if="{{item.status === 2}}" class="order-btn order-btn-gray" size="mini" data-id="{{item.id}}" data-status="3" bindtap="onUpdateStatus">标记取件</button>
+        <button wx:if="{{item.status === 3}}" class="order-btn order-btn-green" size="mini" data-id="{{item.id}}" bindtap="onComplete">完成回收</button>
+        <button wx:if="{{item.status === 1}}" class="order-btn order-btn-gray" size="mini" data-id="{{item.id}}" data-status="5" bindtap="onUpdateStatus">取消订单</button>
+        <view class="detail-link">查看详情 ›</view>
       </view>
     </view>
   </view>

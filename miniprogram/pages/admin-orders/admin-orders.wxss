@@ -16,7 +16,8 @@
 .order-item { display: block; font-size: 30rpx; font-weight: 600; color: #1F2937; }
 .order-addr { display: block; font-size: 26rpx; color: #6B7280; margin-top: 8rpx; }
 .order-rider { font-size: 26rpx; color: #2563EB; margin-bottom: 16rpx; }
-.order-actions { display: flex; gap: 16rpx; flex-wrap: wrap; }
+.order-actions { display: flex; gap: 16rpx; flex-wrap: wrap; align-items: center; }
+.detail-link { font-size: 24rpx; color: #07C160; padding: 8rpx 0 8rpx 16rpx; }
 .empty, .loading { text-align: center; padding: 120rpx 0; color: #9CA3AF; font-size: 28rpx; }
 
 /* 列表内小按钮 */

@@ -135,6 +135,11 @@ Page({
 
   stopPropagation() {},
 
+  onViewDetail(e) {
+    const id = e.currentTarget.dataset.id;
+    wx.navigateTo({ url: `/pages/order-detail/order-detail?id=${id}` });
+  },
+
   async confirmAssign() {
     const rider = this.data.riders[this.data.riderIndex];
     if (!rider) { wx.showToast({ title: '请选择回收专员', icon: 'none' }); return; }
