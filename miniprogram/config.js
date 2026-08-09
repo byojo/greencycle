@@ -1,18 +1,12 @@
 // miniprogram/config.js
-// 配置文件：根据运行环境自动切换 API 地址
+// 配置文件：API 地址
 
-// 开发环境 API（本地调试）
-const DEV_API = 'http://localhost:8080/api/v1';
 // 生产环境 API（微信云托管）
 const PROD_API = 'https://golang-ox8i-275614-7-1448098353.sh.run.tcloudbase.com/api/v1';
+// 本地开发 API（需要本地跑后端时改为这个）
+// const DEV_API = 'http://localhost:8080/api/v1';
 
-// 根据小程序运行环境自动切换
-let envVersion = 'release';
-try {
-  envVersion = wx.getAccountInfoSync().miniProgram.envVersion;
-} catch (e) {}
-
-const apiBase = envVersion === 'develop' ? DEV_API : PROD_API;
+const apiBase = PROD_API;
 
 module.exports = {
   // ====== 基础配置 ======
@@ -46,5 +40,5 @@ module.exports = {
 
   // ====== 开关 ======
   useMock: false,
-  enableConsole: envVersion === 'develop'
+  enableConsole: true
 };
