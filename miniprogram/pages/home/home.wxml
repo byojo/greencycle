@@ -2,7 +2,7 @@
 <view class="page">
   <!-- 顶部 Banner -->
   <view class="banner">
-    <view class="location">
+    <view class="location" bindtap="loadLocation">
       <text class="loc-icon">📍</text>
       <text>{{location}}</text>
       <text class="arrow">▾</text>

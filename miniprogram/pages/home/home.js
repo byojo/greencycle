@@ -60,19 +60,37 @@ Page({
   // 获取微信定位并解析城市名
   async loadLocation() {
     try {
-      const { latitude, longitude } = await wx.getLocation({ type: 'gcj02' });
-      const res = await wx.request({
-        url: `https://apis.map.qq.com/ws/geocoder/v1/`,
-        data: {
-          location: `${latitude},${longitude}`,
-          key: 'SVSBZ-RGUCB-ZQTUS-NZRUU-4U6WZ-CQFQD'
-        }
+      const { latitude, longitude } = await new Promise((resolve, reject) => {
+        wx.getLocation({ type: 'gcj02', success: resolve, fail: reject });
       });
-      const city = res.data?.result?.ad_info?.city || '未定位';
-      this.setData({ location: city });
+
+      // 尝试逆地理编码获取城市名
+      try {
+        const res = await new Promise((resolve, reject) => {
+          wx.request({
+            url: 'https://apis.map.qq.com/ws/geocoder/v1/',
+            data: {
+              location: `${latitude},${longitude}`,
+              key: 'SVSBZ-RGUCB-ZQTUS-NZRUU-4U6WZ-CQFQD'
+            },
+            success: resolve,
+            fail: reject
+          });
+        });
+        const city = res.data?.result?.ad_info?.city || res.data?.result?.address_component?.city;
+        if (city) {
+          this.setData({ location: city });
+          return;
+        }
+      } catch (e) {
+        console.warn('逆地理编码失败', e);
+      }
+
+      // 逆地理编码失败，显示已定位
+      this.setData({ location: '当前位置' });
     } catch (err) {
       console.warn('定位失败', err);
-      this.setData({ location: '定位失败' });
+      this.setData({ location: '点击定位' });
     }
   },
 
