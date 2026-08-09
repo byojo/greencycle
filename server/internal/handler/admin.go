@@ -19,6 +19,50 @@ func (h *Handler) AdminTestNotify(c *gin.Context) {
 	response.Success(c, gin.H{"message": "测试消息已发送"})
 }
 
+// ========== 加盟申请管理 ==========
+
+// AdminApplicationList 加盟申请列表
+func (h *Handler) AdminApplicationList(c *gin.Context) {
+	status, _ := strconv.Atoi(c.DefaultQuery("status", "-1"))
+	list, err := h.Svc.Partner.ListApplications(c.Request.Context(), status)
+	if err != nil {
+		response.ServerError(c, err.Error())
+		return
+	}
+	response.Success(c, gin.H{"list": list})
+}
+
+// AdminApproveApplication 审批申请 → 通过则自动创建回收专员
+func (h *Handler) AdminApproveApplication(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		response.BadRequest(c, "申请 ID 错误")
+		return
+	}
+
+	var req struct {
+		Action string `json:"action" binding:"required"` // approve / reject
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.BadRequest(c, "参数错误")
+		return
+	}
+
+	if req.Action == "reject" {
+		_ = h.Svc.Partner.UpdateStatus(c.Request.Context(), id, 2)
+		response.Success(c, gin.H{"message": "已拒绝"})
+		return
+	}
+
+	// 通过 → 创建回收专员
+	err = h.Svc.Partner.ApproveApplication(c.Request.Context(), id)
+	if err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
+	response.Success(c, gin.H{"message": "已通过，回收专员已创建"})
+}
+
 // ========== 回收专员管理 ==========
 
 // AdminRiderList 回收专员列表（仅在职）

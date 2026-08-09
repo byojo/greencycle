@@ -107,6 +107,7 @@ Page({
   goAdminOrders() { wx.navigateTo({ url: '/pages/admin-orders/admin-orders' }); },
   goAdminRiders() { wx.navigateTo({ url: '/pages/admin-riders/admin-riders' }); },
   goRiderOrders() { wx.navigateTo({ url: '/pages/rider-orders/rider-orders' }); },
+  goAdminApplications() { wx.navigateTo({ url: '/pages/admin-applications/admin-applications' }); },
 
   async checkAdmin() {
     try {

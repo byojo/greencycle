@@ -1,0 +1,23 @@
+.page { min-height: 100vh; background: #F7F8FA; }
+.filters { display: flex; white-space: nowrap; padding: 16rpx 24rpx; gap: 12rpx; background: #fff; border-bottom: 1rpx solid #F3F4F6; }
+.filter { display: inline-block; padding: 8rpx 24rpx; border-radius: 32rpx; font-size: 26rpx; color: #666; background: #F3F4F6; }
+.filter.active { background: #07C160; color: #fff; }
+.app-list { padding: 0 24rpx; }
+.app-card { background: #fff; border-radius: 16rpx; padding: 24rpx; margin-bottom: 20rpx; }
+.app-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12rpx; }
+.app-name { font-size: 32rpx; font-weight: 600; color: #1F2937; }
+.status-badge { padding: 4rpx 16rpx; border-radius: 20rpx; font-size: 22rpx; }
+.status-0 { background: #FEF3C7; color: #D97706; }
+.status-1 { background: #D1FAE5; color: #059669; }
+.status-2 { background: #FEE2E2; color: #DC2626; }
+.app-info { margin-bottom: 12rpx; }
+.app-phone { display: block; font-size: 28rpx; color: #6B7280; }
+.app-area { display: block; font-size: 26rpx; color: #9CA3AF; margin-top: 6rpx; }
+.app-remark { display: block; font-size: 26rpx; color: #9CA3AF; margin-top: 6rpx; }
+.app-time { font-size: 22rpx; color: #D1D5DB; margin-bottom: 12rpx; }
+.app-actions { display: flex; gap: 16rpx; }
+.action-btn { font-size: 28rpx; padding: 0 40rpx; height: 72rpx; line-height: 72rpx; border-radius: 36rpx; text-align: center; border: none; color: #fff; }
+.action-btn::after { border: none; }
+.action-green { background: #07C160; }
+.action-gray { background: #F3F4F6; color: #6B7280; }
+.empty, .loading { text-align: center; padding: 120rpx 0; color: #9CA3AF; font-size: 28rpx; }

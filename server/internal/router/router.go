@@ -90,6 +90,10 @@ func Register(h *handler.Handler) *gin.Engine {
 		admin.POST("/orders/:id/assign", h.AdminAssignOrder)
 		admin.POST("/orders/:id/complete", h.AdminCompleteOrder)
 
+		// 加盟申请管理
+		admin.GET("/applications", h.AdminApplicationList)
+		admin.POST("/applications/:id", h.AdminApproveApplication)
+
 		// 测试
 		admin.POST("/test-notify", h.AdminTestNotify)
 	}

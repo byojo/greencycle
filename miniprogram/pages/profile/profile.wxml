@@ -91,6 +91,11 @@
         <view class="row-label">回收专员管理</view>
         <view class="row-arrow">›</view>
       </view>
+      <view class="list-row" bindtap="goAdminApplications">
+        <view class="row-icon" style="background:#FCE7F3;color:#DB2777">📝</view>
+        <view class="row-label">加盟申请</view>
+        <view class="row-arrow">›</view>
+      </view>
     </view>
 
     <view class="list-row" bindtap="goService">

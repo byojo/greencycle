@@ -22,7 +22,8 @@
     "pages/exchange-history/exchange-history",
     "pages/admin-orders/admin-orders",
     "pages/admin-riders/admin-riders",
-    "pages/rider-orders/rider-orders"
+    "pages/rider-orders/rider-orders",
+    "pages/admin-applications/admin-applications"
   ],
   "window": {
     "navigationBarBackgroundColor": "#07C160",

@@ -1,0 +1,27 @@
+<view class="page">
+  <scroll-view scroll-x class="filters">
+    <view class="filter {{currentFilter === item.value ? 'active' : ''}}" wx:for="{{filters}}" wx:key="value" data-value="{{item.value}}" bindtap="onFilter">{{item.label}}</view>
+  </scroll-view>
+
+  <view class="app-list" wx:if="{{filteredApps.length > 0}}">
+    <view class="app-card" wx:for="{{filteredApps}}" wx:key="id">
+      <view class="app-top">
+        <view class="app-name">{{item.name}}</view>
+        <view class="status-badge status-{{item.status}}">{{statusMap[item.status]}}</view>
+      </view>
+      <view class="app-info">
+        <text class="app-phone">📞 {{item.phone}}</text>
+        <text class="app-area" wx:if="{{item.district}}">📍 {{item.district}}</text>
+        <text class="app-remark" wx:if="{{item.remark}}">💬 {{item.remark}}</text>
+      </view>
+      <view class="app-time">提交于 {{item.createdAtText}}</view>
+      <view class="app-actions" wx:if="{{item.status === 0}}">
+        <button class="action-btn action-green" data-id="{{item.id}}" bindtap="onApprove">通过</button>
+        <button class="action-btn action-gray" data-id="{{item.id}}" bindtap="onReject">拒绝</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{!loading && filteredApps.length === 0}}">暂无申请</view>
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+</view>
