@@ -150,7 +150,6 @@
   color: #9CA3AF;
   padding: 0 32rpx 8rpx;
 }
-}
 .list-row {
   padding: 28rpx 24rpx;
   display: flex;
