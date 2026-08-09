@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
+	"time"
 
 	"gorm.io/gorm"
 
@@ -42,6 +43,17 @@ func (r *RiderRepository) SetUserID(ctx context.Context, riderID uint, userID ui
 	return r.db.WithContext(ctx).Model(&model.Rider{}).
 		Where("id = ?", riderID).
 		Update("user_id", userID).Error
+}
+
+// UpdateLocation 更新专员实时位置
+func (r *RiderRepository) UpdateLocation(ctx context.Context, riderID uint, lat, lng float64, at *time.Time) error {
+	return r.db.WithContext(ctx).Model(&model.Rider{}).
+		Where("id = ?", riderID).
+		Updates(map[string]interface{}{
+			"lat":              lat,
+			"lng":              lng,
+			"last_location_at": at,
+		}).Error
 }
 
 // GetByID 根据 ID 获取

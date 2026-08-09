@@ -139,6 +139,34 @@ func (h *Handler) AdminRiderUpdate(c *gin.Context) {
 	response.Success(c, nil)
 }
 
+// AdminNearestRiders 获取距离订单最近的专员
+func (h *Handler) AdminNearestRiders(c *gin.Context) {
+	orderID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		response.BadRequest(c, "订单 ID 错误")
+		return
+	}
+
+	order, err := h.Svc.Order.GetByID(c.Request.Context(), orderID)
+	if err != nil {
+		response.BadRequest(c, "订单不存在")
+		return
+	}
+
+	if order.PickupLat == 0 || order.PickupLng == 0 {
+		response.BadRequest(c, "订单地址无坐标，无法匹配")
+		return
+	}
+
+	riders, err := h.Svc.Rider.NearestRiders(c.Request.Context(), order.PickupLat, order.PickupLng, 10)
+	if err != nil {
+		response.ServerError(c, err.Error())
+		return
+	}
+
+	response.Success(c, gin.H{"list": riders})
+}
+
 // ========== 订单管理 ==========
 
 // AdminOrderList 管理端订单列表（不按用户过滤）

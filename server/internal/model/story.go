@@ -24,19 +24,20 @@ func (Story) TableName() string {
 
 // Rider 回收专员（回收员）
 type Rider struct {
-	ID         uint      `gorm:"primaryKey" json:"id"`
-	UserID     *uint     `gorm:"index" json:"userId"` // 关联用户ID
-	Name       string    `gorm:"size:32;not null" json:"name"`
-	Phone      string    `gorm:"size:20;not null" json:"phone"`
-	IDCard     string    `gorm:"size:20" json:"idCard"`
-	PlateNo    string    `gorm:"size:20" json:"plateNo"`
-	Rating     float64   `gorm:"type:decimal(3,2);default:5.00" json:"rating"`
-	ServiceCnt int       `gorm:"column:service_count;default:0" json:"serviceCnt"`
-	Status     int       `gorm:"default:1" json:"status"` // 1在职 0离职
-	Lat        float64   `json:"lat"`
-	Lng        float64   `json:"lng"`
-	CreatedAt  time.Time `json:"createdAt"`
-	UpdatedAt  time.Time `json:"updatedAt"`
+	ID             uint       `gorm:"primaryKey" json:"id"`
+	UserID         *uint      `gorm:"index" json:"userId"`
+	Name           string     `gorm:"size:32;not null" json:"name"`
+	Phone          string     `gorm:"size:20;not null" json:"phone"`
+	IDCard         string     `gorm:"size:20" json:"idCard"`
+	PlateNo        string     `gorm:"size:20" json:"plateNo"`
+	Rating         float64    `gorm:"type:decimal(3,2);default:5.00" json:"rating"`
+	ServiceCnt     int        `gorm:"column:service_count;default:0" json:"serviceCnt"`
+	Status         int        `gorm:"default:1" json:"status"` // 1在职 0离职
+	Lat            float64    `json:"lat"`
+	Lng            float64    `json:"lng"`
+	LastLocationAt *time.Time `json:"lastLocationAt"`
+	CreatedAt      time.Time  `json:"createdAt"`
+	UpdatedAt      time.Time  `json:"updatedAt"`
 }
 
 func (Rider) TableName() string {

@@ -4,19 +4,22 @@ const api = require('../../services/api.js');
 
 Page({
   data: {
-    isEdit: false,           // 是否编辑模式
-    editId: null,            // 编辑时的地址 ID
+    isEdit: false,
+    editId: null,
     tagOptions: ['家', '公司', '学校', '其他'],
     customItem: '请选择',
-    regionValue: [],         // picker 选中的省市区代码数组
+    regionValue: [],
     form: {
       name: '',
       phone: '',
-      region: '',            // 拼好的省市区字符串（如"上海市 上海市 浦东新区"）
+      region: '',
       detail: '',
       tag: '',
       isDefault: false
     },
+    lat: 0,
+    lng: 0,
+    locationText: '',
     submitting: false
   },
 
@@ -47,7 +50,10 @@ Page({
             tag: addr.tag || '',
             isDefault: !!addr.isDefault
           },
-          regionValue: regionArr
+          regionValue: regionArr,
+          lat: addr.lat || 0,
+          lng: addr.lng || 0,
+          locationText: (addr.lat && addr.lng) ? '已定位' : ''
         });
       }
     } catch (err) {
@@ -68,7 +74,10 @@ Page({
             tag: addr.tag || '',
             isDefault: !!addr.isDefault
           },
-          regionValue: regionArr
+          regionValue: regionArr,
+          lat: addr.lat || 0,
+          lng: addr.lng || 0,
+          locationText: (addr.lat && addr.lng) ? '已定位' : ''
         });
       }
     }
@@ -99,6 +108,25 @@ Page({
   onTagSelect(e) {
     const tag = e.currentTarget.dataset.tag;
     this.setData({ 'form.tag': tag });
+  },
+
+  onChooseLocation() {
+    wx.chooseLocation({
+      success: (res) => {
+        this.setData({
+          lat: res.latitude,
+          lng: res.longitude,
+          locationText: res.address || res.name || '已定位'
+        });
+        // 如果详细地址为空，自动填充
+        if (!this.data.form.detail && res.address) {
+          this.setData({ 'form.detail': res.address });
+        }
+      },
+      fail: () => {
+        wx.showToast({ title: '未选择位置', icon: 'none' });
+      }
+    });
   },
 
   validate() {
@@ -139,7 +167,9 @@ Page({
       district: parts[2] || '',
       detail: f.detail,
       tag: f.tag || '',
-      isDefault: !!f.isDefault
+      isDefault: !!f.isDefault,
+      lat: this.data.lat,
+      lng: this.data.lng
     };
 
     try {

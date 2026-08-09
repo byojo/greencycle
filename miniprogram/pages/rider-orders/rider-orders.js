@@ -19,9 +19,33 @@ Page({
     finalAmount: ''
   },
 
-  onLoad() { this.loadOrders(); },
-  onShow() { this.loadOrders(); },
+  onLoad() { this.loadOrders(); this.startLocationReport(); },
+  onShow() { this.loadOrders(); this.startLocationReport(); },
+  onHide() { this.stopLocationReport(); },
+  onUnload() { this.stopLocationReport(); },
   onPullDownRefresh() { this.loadOrders().finally(() => wx.stopPullDownRefresh()); },
+
+  // 定时上报位置
+  startLocationReport() {
+    this.reportLocation();
+    this._locationTimer = setInterval(() => this.reportLocation(), 30000);
+  },
+
+  stopLocationReport() {
+    if (this._locationTimer) {
+      clearInterval(this._locationTimer);
+      this._locationTimer = null;
+    }
+  },
+
+  async reportLocation() {
+    try {
+      const res = await new Promise((resolve, reject) => {
+        wx.getLocation({ type: 'gcj02', success: resolve, fail: reject });
+      });
+      await api.riderUpdateLocation(res.latitude, res.longitude);
+    } catch (e) {}
+  },
 
   async loadOrders() {
     try {

@@ -8,6 +8,31 @@ import (
 	"github.com/greencycle/server/pkg/response"
 )
 
+// RiderUpdateLocation 专员上报实时位置
+func (h *Handler) RiderUpdateLocation(c *gin.Context) {
+	riderID := h.getRiderID(c)
+	if riderID == 0 {
+		response.BadRequest(c, "您不是回收专员")
+		return
+	}
+
+	var req struct {
+		Lat float64 `json:"lat" binding:"required"`
+		Lng float64 `json:"lng" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.BadRequest(c, "参数错误")
+		return
+	}
+
+	if err := h.Svc.Rider.UpdateLocation(c.Request.Context(), riderID, req.Lat, req.Lng); err != nil {
+		response.ServerError(c, err.Error())
+		return
+	}
+
+	response.Success(c, nil)
+}
+
 // RiderOrders 获取分配给当前专员的工单
 func (h *Handler) RiderOrders(c *gin.Context) {
 	riderID := h.getRiderID(c)

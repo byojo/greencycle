@@ -73,6 +73,7 @@ func Register(h *handler.Handler) *gin.Engine {
 		auth.GET("/rider/orders", h.RiderOrders)
 		auth.PUT("/rider/orders/:id/pick", h.RiderPickOrder)
 		auth.POST("/rider/orders/:id/complete", h.RiderCompleteOrder)
+		auth.PUT("/rider/location", h.RiderUpdateLocation)
 	}
 
 	// ========== 管理端（X-Admin-Key 鉴权）==========
@@ -83,6 +84,7 @@ func Register(h *handler.Handler) *gin.Engine {
 		admin.GET("/riders", h.AdminRiderList)
 		admin.POST("/riders", h.AdminRiderCreate)
 		admin.PUT("/riders/:id", h.AdminRiderUpdate)
+		admin.GET("/orders/:id/nearest-riders", h.AdminNearestRiders)
 
 		// 订单管理
 		admin.GET("/orders", h.AdminOrderList)

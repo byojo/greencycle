@@ -118,5 +118,7 @@ module.exports = {
   riderGetOrders: (opts) => get('/rider/orders', {}, opts),
   riderCheckIsRider: () => get('/rider/orders', {}, { silent: true }),
   riderPickOrder: (id) => put(`/rider/orders/${id}/pick`),
-  riderCompleteOrder: (id, data) => post(`/rider/orders/${id}/complete`, data, { showLoading: true, loadingText: '处理中...' })
+  riderCompleteOrder: (id, data) => post(`/rider/orders/${id}/complete`, data, { showLoading: true, loadingText: '处理中...' }),
+  riderUpdateLocation: (lat, lng) => put('/rider/location', { lat, lng }, { silent: true }),
+  adminNearestRiders: (orderId) => get(`/admin/orders/${orderId}/nearest-riders`, {}, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' } })
 };

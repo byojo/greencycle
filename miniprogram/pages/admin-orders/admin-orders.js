@@ -103,11 +103,22 @@ Page({
   async onAssign(e) {
     const orderId = e.currentTarget.dataset.id;
     try {
-      const res = await api.adminGetRiders();
-      const riders = (res.data.list || []).filter(r => r.status === 1).map(r => ({
-        id: r.id,
-        label: `${r.name} · ${r.phone} · 评分${r.rating}`
-      }));
+      // 优先获取距离最近的专员
+      let riders = [];
+      try {
+        const nearestRes = await api.adminNearestRiders(orderId);
+        riders = (nearestRes.data.list || []).map(r => ({
+          id: r.id,
+          label: `${r.name} · ${r.phone} · ${r.distanceText}${r.online ? ' · 在线' : ''}`
+        }));
+      } catch (e) {
+        // 订单无坐标时退回普通列表
+        const res = await api.adminGetRiders();
+        riders = (res.data.list || []).filter(r => r.status === 1).map(r => ({
+          id: r.id,
+          label: `${r.name} · ${r.phone} · 评分${r.rating}`
+        }));
+      }
       this.setData({ showAssign: true, assignOrderId: orderId, riders, riderIndex: 0 });
     } catch (err) {
       wx.showToast({ title: '获取回收专员列表失败', icon: 'none' });
