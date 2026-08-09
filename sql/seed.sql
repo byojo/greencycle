@@ -73,33 +73,33 @@ INSERT INTO `category_fields` (`category_id`, `field_key`, `field_label`, `field
 INSERT INTO `stories` (`title`, `desc`, `cover`, `type`, `view_count`, `like_count`, `author`, `enabled`) VALUES
 ('300 件旧衣改造的亲子礼服，背后是她对女儿的承诺',
  '用 30 个家庭的旧衣物，做成亲子礼服。每一件衣服都值得被温柔告别...',
- 'https://cdn.greencycle.com/stories/story1.jpg',
+ '',
  'video', 124000, 86000, '故事官阿琳', 1),
 
 ('iPhone 回收后的"第二人生"：拆解、检测、重生的全过程',
  '跟随镜头走进我们合作的环保工厂，看一台手机的再生之旅...',
- 'https://cdn.greencycle.com/stories/story2.jpg',
+ '',
  'image', 86000, 52000, '数码专栏', 1),
 
 ('女儿小学时的毛绒玩具，去向让人泪目',
  '500 个旧玩偶，消毒、修复后送到了山区幼儿园，孩子们的笑脸比什么都值...',
- 'https://cdn.greencycle.com/stories/story3.jpg',
+ '',
  'image', 51000, 38000, '用户投稿', 1),
 
 ('3 万本旧书，跨越 2000 公里，到达这所村小',
  '用户@甜甜圈 一家三口整理了 3 年的旧书，我们全程直播送往云南...',
- 'https://cdn.greencycle.com/stories/story4.jpg',
+ '',
  'image', 42000, 29000, '用户投稿', 1),
 
 ('旧笔记本翻新记：送给乡村学校的编程课',
  '翻新 200 台旧电脑，每台成本不到 200 元，让山里孩子也能学编程...',
- 'https://cdn.greencycle.com/stories/story5.jpg',
+ '',
  'image', 38000, 26000, '志愿者', 1);
 
 -- -----------------------------------------------------
 -- 10. 骑手示例数据
 -- -----------------------------------------------------
-INSERT INTO `riders` (`name`, `phone`, `id_card`, `plate_no`, `rating`, `service_cnt`, `status`) VALUES
+INSERT INTO `riders` (`name`, `phone`, `id_card`, `plate_no`, `rating`, `service_count`, `status`) VALUES
 ('张师傅',  '13800138001', '310115199001011234', '沪A·8862', 4.95, 268, 1),
 ('李师傅',  '13800138002', '310115199002022345', '沪A·8863', 4.88, 192, 1),
 ('王师傅',  '13800138003', '310115199003033456', '沪A·8864', 4.92, 234, 1),

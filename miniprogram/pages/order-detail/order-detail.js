@@ -110,9 +110,8 @@ Page({
       }
     }
 
-    // 2. 兜底：mock 数据
-    const category = options.category || app.globalData.currentCategory || 'phone';
-    this.renderFromMock(category, MOCK_ORDER_DATA[category]);
+    this.setData({ loading: false });
+    wx.showToast({ title: '订单加载失败', icon: 'none' });
   },
 
   renderFromServer(order) {

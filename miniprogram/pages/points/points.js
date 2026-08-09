@@ -94,18 +94,7 @@ Page({
   },
 
   onSignIn() {
-    api.signIn()
-      .then(() => {
-        wx.showToast({ title: '签到成功 +5', icon: 'success' });
-        this.loadData();
-      })
-      .catch(err => {
-        if (err && err.code === 400) {
-          wx.showToast({ title: '今日已签到', icon: 'none' });
-        } else {
-          wx.showToast({ title: '签到失败', icon: 'none' });
-        }
-      });
+    wx.showToast({ title: '签到功能开发中', icon: 'none' });
   },
 
   onWithdraw() {

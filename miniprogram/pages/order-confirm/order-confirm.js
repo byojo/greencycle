@@ -140,14 +140,7 @@ Page({
         this.setData({ address: defaultAddr });
       }
     } catch (err) {
-      // mock 数据兜底
-      this.setData({
-        address: {
-          name: '林小满',
-          phone: '138****6688',
-          fullAddr: '上海市浦东新区张江高科 · 博云路 2 号 28 楼'
-        }
-      });
+      wx.showToast({ title: '加载地址失败', icon: 'none' });
     }
   },
 
@@ -204,9 +197,16 @@ Page({
       const pending = app.globalData.pendingOrder;
       const addr = this.data.address;
       const fullAddr = [addr.province, addr.city, addr.district, addr.detail].filter(Boolean).join('');
+      const fd = pending.formData || {};
+      const itemName = [
+        this.data.info?.name || '',
+        fd.model || fd.deviceType || fd.homeType || fd.bookType || fd.metalType || '',
+        fd.condition || '',
+        fd.weight ? fd.weight + 'kg' : ''
+      ].filter(Boolean).join(' · ') || this.data.info.item;
       const res = await api.createOrder({
         categoryCode: pending.category,
-        itemName: pending.formData?.itemName || this.data.info.item,
+        itemName,
         itemDesc: this.data.info.desc,
         photoKeys: pending.photoKeys,
         formData: JSON.stringify(pending.formData || {}),

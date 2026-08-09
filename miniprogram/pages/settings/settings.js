@@ -35,12 +35,7 @@ Page({
         version: u.version || '1.0.0'
       });
     } catch (err) {
-      // mock 数据
-      this.setData({
-        phoneText: '138****8888',
-        verified: true,
-        verifiedText: '已认证'
-      });
+      wx.showToast({ title: '加载失败', icon: 'none' });
     }
 
     // 从本地缓存读取推送设置
