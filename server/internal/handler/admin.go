@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/greencycle/server/internal/model"
 	"github.com/greencycle/server/pkg/response"
 	"github.com/greencycle/server/pkg/wecom"
 )
