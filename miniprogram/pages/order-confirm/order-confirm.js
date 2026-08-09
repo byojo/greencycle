@@ -188,7 +188,10 @@ Page({
     // 请求订阅消息授权（用户同意后才能收到订单通知）
     try {
       await wx.requestSubscribeMessage({
-        tmplIds: ['REPLACE_WITH_YOUR_TEMPLATE_ID']
+        tmplIds: [
+          'j4dcmYkCBav2QZ8OZQZZjK69Xu4IhUbd-iYt5UG1N-M',
+          'C78o2a0-IRT5hDU520LrS7E29_CXyPLR3YdRa4PI6yI'
+        ]
       });
     } catch (e) {
       // 用户拒绝订阅不影响下单流程

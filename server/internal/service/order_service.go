@@ -237,18 +237,18 @@ func (s *OrderService) notifyOrderAssigned(order *model.Order, rider *model.Ride
 		return
 	}
 
-	// 模板 ID（替换为你自己的）
-	const tplID = "REPLACE_WITH_YOUR_TEMPLATE_ID"
+	// 模板 ID：订单状态通知
+	const tplID = "j4dcmYkCBav2QZ8OZQZZjK69Xu4IhUbd-iYt5UG1N-M"
 
 	msg := wechat.SubscribeMessage{
 		Touser:     user.OpenID,
 		TemplateID: tplID,
 		Page:       fmt.Sprintf("pages/order-detail/order-detail?id=%d", order.ID),
 		Data: map[string]interface{}{
-			"thing1": map[string]string{"value": order.ItemName},           // 物品名称
-			"phrase1": map[string]string{"value": "已派单，即将上门"},          // 当前状态
-			"thing2":  map[string]string{"value": rider.Name},              // 回收员
-			"phone_number1": map[string]string{"value": rider.Phone},       // 联系电话
+			"thing1":        map[string]string{"value": order.ItemName},        // 物品名称
+			"phrase1":       map[string]string{"value": "已派单，即将上门"},        // 当前状态
+			"thing2":        map[string]string{"value": rider.Name},            // 回收员
+			"phone_number1": map[string]string{"value": rider.Phone},           // 联系电话
 		},
 	}
 
@@ -436,7 +436,7 @@ func (s *OrderService) notifyOrderCompleted(order *model.Order, points int, open
 		return
 	}
 
-	const tplID = "REPLACE_WITH_YOUR_TEMPLATE_ID"
+	const tplID = "C78o2a0-IRT5hDU520LrS7E29_CXyPLR3YdRa4PI6yI"
 
 	msg := wechat.SubscribeMessage{
 		Touser:     openID,
