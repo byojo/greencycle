@@ -3,11 +3,13 @@
   <!-- 顶部用户卡 -->
   <view class="header">
     <view class="user-row">
-      <view class="avatar">{{avatarText}}</view>
+      <view class="avatar">
+        <image wx:if="{{avatarUrl}}" src="{{avatarUrl}}" mode="aspectFill" class="avatar-img"></image>
+        <text wx:else>{{avatarText}}</text>
+      </view>
       <view class="user-info">
         <view class="name-row">
           <text class="nickname">{{nickname}}</text>
-          <text wx:if="{{verified}}" class="verified">已认证</text>
         </view>
         <view class="level">
           <text class="vip">🌳 {{vipLevel}}</text>

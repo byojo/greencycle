@@ -40,6 +40,14 @@
   align-items: center;
   justify-content: center;
   font-size: 48rpx;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
   font-weight: 700;
   border: 4rpx solid rgba(255, 255, 255, 0.3);
   flex-shrink: 0;

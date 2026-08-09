@@ -52,6 +52,7 @@ func (s *OrderService) Create(ctx context.Context, p CreateOrderParams) (*model.
 		PickupAddr:   p.PickupAddr,
 		PickupLat:    p.PickupLat,
 		PickupLng:    p.PickupLng,
+		Remark:       p.Remark,
 	}
 
 	images := make([]model.OrderImage, len(p.PhotoKeys))
@@ -260,6 +261,28 @@ func (s *OrderService) notifyOrderAssigned(order *model.Order, rider *model.Ride
 
 // AdminUpdateStatus 管理端更新订单状态
 func (s *OrderService) AdminUpdateStatus(ctx context.Context, orderID uint64, status int, riderID *uint, riderName, riderPhone string) error {
+	// 查当前订单状态
+	order, err := s.repo.Order.FindByID(ctx, orderID)
+	if err != nil {
+		return errors.New("订单不存在")
+	}
+
+	// 校验状态流转合法性
+	valid := false
+	switch status {
+	case model.OrderStatusAssigned:
+		valid = order.Status == model.OrderStatusPending
+	case model.OrderStatusPicked:
+		valid = order.Status == model.OrderStatusAssigned
+	case model.OrderStatusCompleted:
+		valid = order.Status == model.OrderStatusPicked
+	case model.OrderStatusCancelled:
+		valid = order.Status <= model.OrderStatusPicked
+	}
+	if !valid {
+		return errors.New("订单当前状态不允许变更为该状态")
+	}
+
 	updates := map[string]interface{}{
 		"status": status,
 	}
@@ -331,6 +354,11 @@ func (s *OrderService) Complete(ctx context.Context, orderID uint64, finalAmount
 	order, err := s.repo.Order.FindByID(ctx, orderID)
 	if err != nil {
 		return fmt.Errorf("订单不存在: %w", err)
+	}
+
+	// 校验订单状态：只有已取件(3)的订单才能完成
+	if order.Status != model.OrderStatusPicked {
+		return errors.New("订单当前状态不允许完成")
 	}
 
 	points := calculateCarbonPoints(order.CategoryCode, finalAmount)

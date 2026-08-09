@@ -105,9 +105,13 @@
       <text class="info-key">回收地址</text>
       <text class="info-val">{{pickupAddr}}</text>
     </view>
-    <view class="info-row" wx:if="{{status >= 2 && status <= 4}}">
+    <view class="info-row" wx:if="{{status >= 2 && status <= 4 && riderName}}">
       <text class="info-key">回收员</text>
-      <text class="info-val">{{rider.name}} {{rider.phone}}</text>
+      <text class="info-val">{{riderName}} {{riderPhone}}</text>
+    </view>
+    <view class="info-row" wx:if="{{estimatedAt}}">
+      <text class="info-key">预约时间</text>
+      <text class="info-val">{{estimatedAtText}}</text>
     </view>
     <view class="info-row">
       <text class="info-key">支付方式</text>
@@ -115,9 +119,17 @@
     </view>
   </view>
 
+  <!-- 物品照片 -->
+  <view class="section" wx:if="{{photos.length > 0}}">
+    <view class="section-title">物品照片</view>
+    <view class="photo-grid">
+      <image wx:for="{{photos}}" wx:key="index" src="{{item.url || item}}" mode="aspectFill" class="photo-item" bindtap="onPreviewPhoto" data-url="{{item.url || item}}"></image>
+    </view>
+  </view>
+
   <!-- 操作按钮 -->
   <view class="actions safe-area-bottom">
-    <button class="btn-ghost" bindtap="onApplyAfterSale" wx:if="{{status === 4}}">申请售后</button>
+    <button class="btn-ghost" bindtap="onCancelOrder" wx:if="{{status < 4}}">取消订单</button>
     <button class="btn-primary" bindtap="onAgain">{{againText}}</button>
   </view>
 </view>

@@ -4,6 +4,10 @@
   background: #F7F8FA;
 }
 
+.status-tabs { display: flex; white-space: nowrap; padding: 16rpx 24rpx; gap: 12rpx; }
+.status-tabs .tab { display: inline-block; padding: 8rpx 24rpx; border-radius: 32rpx; font-size: 26rpx; color: #666; background: #fff; }
+.status-tabs .tab.active { background: #07C160; color: #fff; }
+
 /* ============ 顶部导航 ============ */
 .nav {
   display: flex;

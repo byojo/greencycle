@@ -14,6 +14,16 @@
     <text class="hint-more" bindtap="onMore">查看更早 ›</text>
   </view>
 
+  <!-- 状态筛选 -->
+  <scroll-view scroll-x class="status-tabs">
+    <view class="tab {{status === 0 ? 'active' : ''}}" data-status="0" bindtap="onStatusChange">全部</view>
+    <view class="tab {{status === 1 ? 'active' : ''}}" data-status="1" bindtap="onStatusChange">待评估</view>
+    <view class="tab {{status === 2 ? 'active' : ''}}" data-status="2" bindtap="onStatusChange">已派单</view>
+    <view class="tab {{status === 3 ? 'active' : ''}}" data-status="3" bindtap="onStatusChange">已取件</view>
+    <view class="tab {{status === 4 ? 'active' : ''}}" data-status="4" bindtap="onStatusChange">已完成</view>
+    <view class="tab {{status === 5 ? 'active' : ''}}" data-status="5" bindtap="onStatusChange">已取消</view>
+  </scroll-view>
+
   <!-- 加载状态 -->
   <view wx:if="{{loading}}" class="loading-state">
     <view class="loading-icon"></view>

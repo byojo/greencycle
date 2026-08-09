@@ -23,7 +23,7 @@ type Order struct {
 	CategoryCode  string         `gorm:"size:32;index;not null" json:"categoryCode"`
 	ItemName      string         `gorm:"size:128;not null" json:"itemName"`
 	ItemDesc      string         `gorm:"size:255" json:"itemDesc"`
-	FormData      string         `gorm:"type:json" json:"formDataJSON"`
+	FormData      string         `gorm:"type:json" json:"formData"`
 	Status        int            `gorm:"index;default:1" json:"status"`
 	EstimatedAt   *time.Time     `json:"estimatedAt"`
 	RiderID       *uint          `gorm:"index" json:"riderId"`
@@ -35,6 +35,7 @@ type Order struct {
 	FinalAmount   int            `gorm:"default:0" json:"finalAmount"`   // 分
 	CarbonPoints  int            `gorm:"default:0" json:"carbonPoints"`
 	CancelReason  string         `gorm:"size:255" json:"cancelReason"`
+	Remark        string         `gorm:"size:255" json:"remark"`
 	CompletedAt   *time.Time     `json:"completedAt"`
 	CreatedAt     time.Time      `json:"createdAt"`
 	UpdatedAt     time.Time      `json:"updatedAt"`

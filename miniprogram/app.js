@@ -84,8 +84,17 @@ App({
       // 1. wx.login 获取 code
       const { code } = await this.wxLogin();
 
-      // 2. 调服务端登录接口，换取 token
-      const res = await api.login(code);
+      // 2. 尝试获取用户信息（不强制，用户可能未授权）
+      let userInfo = null;
+      try {
+        const res = await wx.getUserProfile({ desc: '用于完善用户资料' });
+        userInfo = res.userInfo;
+      } catch (e) {
+        // 用户拒绝授权不影响登录
+      }
+
+      // 3. 调服务端登录接口，换取 token
+      const res = await api.login(code, userInfo);
       const { token, user } = res.data;
 
       this.globalData.token = token;

@@ -79,18 +79,14 @@ Page({
     catText: '',
     createdAt: '',
     completedAt: '',
-    pickupAt: '',
+    estimatedAtText: '',
     pickupAddr: '',
     cancelReason: '',
-    rider: {
-      name: '张师傅',
-      phone: '138****8862',
-      distance: '1.2km',
-      dispatchedAt: ''
-    },
-    carbonKg: '1.8',
-    carbonPoints: 128,
-    treeCount: '0.1',
+    riderName: '',
+    riderPhone: '',
+    carbonKg: '0',
+    carbonPoints: 0,
+    treeCount: '0',
     againText: '再次回收',
     loading: true
   },
@@ -128,22 +124,23 @@ Page({
     this.setData({
       category,
       status: order.status,
-      statusText: order.statusText || cfg.text,
+      statusText: cfg.text,
       statusIcon: cfg.icon,
       statusBarBg: cfg.bg,
       info: detail,
-      photos: order.photoKeys || [],
+      photos: order.images || [],
       amount: order.finalAmount || 0,
       amountText: order.status === 4 ? formatMoney(order.finalAmount) + ' 已到账' : '',
       priceText: order.status === 4 ? '¥' + (Math.round((order.finalAmount || 0) / 100)).toLocaleString() : '',
-      orderNo: order.orderNo || order.id || '',
-      catText: categoryName(category) + ' · ' + (order.itemName || detail.item),
+      orderNo: order.orderNo || String(order.id || ''),
+      catText: order.itemName || detail.item,
       createdAt: order.createdAt ? formatDate(order.createdAt, 'YYYY-MM-DD HH:mm') : '',
       completedAt: order.completedAt ? formatDate(order.completedAt, 'YYYY-MM-DD HH:mm') : '',
-      pickupAt: order.pickupAt ? formatDate(order.pickupAt, 'YYYY-MM-DD HH:mm') : '',
-      pickupAddr: order.pickupAddr || '上海市浦东新区张江高科 · 博云路 2 号',
+      estimatedAtText: order.estimatedAt ? formatDate(order.estimatedAt, 'YYYY-MM-DD HH:mm') : '',
+      pickupAddr: order.pickupAddr || '',
       cancelReason: order.cancelReason || '',
-      rider: order.rider || this.data.rider,
+      riderName: order.riderName || '',
+      riderPhone: order.riderPhone || '',
       carbonKg: carbon.kg,
       carbonPoints: carbon.points,
       treeCount: carbon.trees,
@@ -208,18 +205,33 @@ Page({
   },
 
   onApplyAfterSale() {
+    wx.showToast({ title: '售后功能开发中', icon: 'none' });
+  },
+
+  onCancelOrder() {
     wx.showModal({
-      title: '申请售后',
-      content: '请描述您遇到的问题',
-      editable: true,
-      placeholderText: '请输入问题描述',
-      success: (res) => {
-        if (res.confirm && res.content && this.data.orderId) {
-          api.applyAfterSale(this.data.orderId, { reason: res.content })
-            .then(() => wx.showToast({ title: '已提交' }))
-            .catch(() => wx.showToast({ title: '提交失败', icon: 'none' }));
+      title: '取消订单',
+      content: '确定要取消这个回收订单吗？',
+      confirmColor: '#EF4444',
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            await api.cancelOrder(this.data.orderId, '用户主动取消');
+            wx.showToast({ title: '已取消', icon: 'success' });
+            setTimeout(() => this.loadOrder(), 500);
+          } catch (err) {
+            wx.showToast({ title: err.message || '取消失败', icon: 'none' });
+          }
         }
       }
+    });
+  },
+
+  onPreviewPhoto(e) {
+    const url = e.currentTarget.dataset.url;
+    wx.previewImage({
+      current: url,
+      urls: this.data.photos.map(p => p.url || p)
     });
   },
 

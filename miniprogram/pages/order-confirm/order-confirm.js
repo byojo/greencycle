@@ -202,16 +202,18 @@ Page({
 
     try {
       const pending = app.globalData.pendingOrder;
+      const addr = this.data.address;
+      const fullAddr = [addr.province, addr.city, addr.district, addr.detail].filter(Boolean).join('');
       const res = await api.createOrder({
         categoryCode: pending.category,
-        itemName: this.data.info.item,
+        itemName: pending.formData?.itemName || this.data.info.item,
         itemDesc: this.data.info.desc,
         photoKeys: pending.photoKeys,
         formData: JSON.stringify(pending.formData || {}),
         estimatedAt: this.buildEstimateTime(),
-        pickupAddr: this.data.address.fullAddr || this.data.address.detail,
-        pickupLat: this.data.address.lat,
-        pickupLng: this.data.address.lng,
+        pickupAddr: fullAddr || addr.detail,
+        pickupLat: addr.lat,
+        pickupLng: addr.lng,
         remark: this.data.remark
       });
 

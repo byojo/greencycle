@@ -48,11 +48,11 @@ Page({
       const orderCount = u.orderCount || 0;
       const inUse = u.inUseCount || 0;
       this.setData({
-        avatarText: u.avatar || (u.nickname ? u.nickname.charAt(0) : '林'),
+        avatarUrl: (u.avatar && u.avatar.startsWith('http')) ? u.avatar : '',
+        avatarText: (u.avatar && u.avatar.startsWith('http')) ? '' : (u.nickname ? u.nickname.charAt(0) : '林'),
         nickname: u.nickname || '绿友',
         vipLevel: '绿V' + (u.level || 1),
         orderDesc: '已回收 ' + orderCount + ' 次',
-        verified: u.verified !== false,
         points,
         pointsText: this.formatNumber(points),
         carbonKg,
