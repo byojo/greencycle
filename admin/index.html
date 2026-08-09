@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>纸飞机管理后台</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f0f2f5; color: #333; }
+.header { background: #07C160; color: #fff; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.header h1 { font-size: 20px; font-weight: 600; }
+.header .key-input { background: rgba(255,255,255,0.2); border: none; color: #fff; padding: 6px 12px; border-radius: 6px; width: 280px; font-size: 13px; }
+.header .key-input::placeholder { color: rgba(255,255,255,0.6); }
+.tabs { display: flex; gap: 0; background: #fff; border-bottom: 1px solid #e8e8e8; padding: 0 24px; }
+.tab { padding: 14px 24px; cursor: pointer; font-size: 15px; color: #666; border-bottom: 2px solid transparent; transition: all 0.2s; }
+.tab.active { color: #07C160; border-bottom-color: #07C160; font-weight: 600; }
+.content { max-width: 1200px; margin: 24px auto; padding: 0 24px; }
+.card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.card-title { font-size: 17px; font-weight: 600; }
+.filters { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.filter-btn { padding: 6px 16px; border-radius: 20px; border: 1px solid #d9d9d9; background: #fff; cursor: pointer; font-size: 13px; color: #666; transition: all 0.2s; }
+.filter-btn.active { background: #07C160; color: #fff; border-color: #07C160; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 12px 8px; font-size: 13px; color: #999; font-weight: 500; border-bottom: 1px solid #f0f0f0; }
+td { padding: 12px 8px; font-size: 14px; border-bottom: 1px solid #f5f5f5; }
+tr:hover { background: #fafafa; }
+.status-badge { padding: 2px 10px; border-radius: 10px; font-size: 12px; font-weight: 500; }
+.status-1 { background: #FEF3C7; color: #D97706; }
+.status-2 { background: #DBEAFE; color: #2563EB; }
+.status-3 { background: #E0E7FF; color: #4F46E5; }
+.status-4 { background: #D1FAE5; color: #059669; }
+.status-5 { background: #FEE2E2; color: #DC2626; }
+.btn { padding: 6px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+.btn-primary { background: #07C160; color: #fff; }
+.btn-primary:hover { background: #06AD56; }
+.btn-sm { padding: 4px 12px; font-size: 12px; }
+.btn-blue { background: #2563EB; color: #fff; }
+.btn-blue:hover { background: #1D4ED8; }
+.btn-gray { background: #f5f5f5; color: #666; }
+.btn-gray:hover { background: #e8e8e8; }
+.modal-mask { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.45); z-index: 1000; display: none; }
+.modal-mask.show { display: flex; align-items: center; justify-content: center; }
+.modal { background: #fff; border-radius: 12px; padding: 24px; width: 480px; max-width: 90%; }
+.modal h3 { font-size: 18px; margin-bottom: 20px; }
+.modal .form-group { margin-bottom: 16px; }
+.modal label { display: block; font-size: 13px; color: #666; margin-bottom: 6px; }
+.modal input, .modal select { width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px; }
+.modal .actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; }
+.empty { text-align: center; padding: 60px 20px; color: #999; font-size: 15px; }
+.loading { text-align: center; padding: 40px; color: #999; }
+.toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 10px 24px; border-radius: 8px; z-index: 2000; font-size: 14px; display: none; }
+.toast.show { display: block; }
+.rider-card { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f5f5f5; }
+.rider-info { display: flex; align-items: center; gap: 12px; }
+.rider-avatar { width: 40px; height: 40px; border-radius: 50%; background: #07C160; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.rider-name { font-size: 15px; font-weight: 500; }
+.rider-meta { font-size: 12px; color: #999; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>♻️ 纸飞机管理后台</h1>
+  <input class="key-input" id="adminKey" type="password" placeholder="输入 Admin Key" value="">
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('orders')">📦 订单管理</div>
+  <div class="tab" onclick="switchTab('riders')">🚴 骑手管理</div>
+</div>
+
+<div class="content">
+  <!-- 订单管理 -->
+  <div id="ordersTab">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">订单列表</div>
+        <button class="btn btn-gray btn-sm" onclick="loadOrders()">🔄 刷新</button>
+      </div>
+      <div class="filters">
+        <div class="filter-btn active" onclick="filterOrders(0, this)">全部</div>
+        <div class="filter-btn" onclick="filterOrders(1, this)">待评估</div>
+        <div class="filter-btn" onclick="filterOrders(2, this)">已派单</div>
+        <div class="filter-btn" onclick="filterOrders(3, this)">已取件</div>
+        <div class="filter-btn" onclick="filterOrders(4, this)">已完成</div>
+        <div class="filter-btn" onclick="filterOrders(5, this)">已取消</div>
+      </div>
+      <div id="ordersList"><div class="loading">加载中...</div></div>
+    </div>
+  </div>
+
+  <!-- 骑手管理 -->
+  <div id="ridersTab" style="display:none">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">骑手列表</div>
+        <div style="display:flex;gap:12px">
+          <button class="btn btn-gray btn-sm" onclick="loadRiders()">🔄 刷新</button>
+          <button class="btn btn-primary btn-sm" onclick="showAddRider()">➕ 添加骑手</button>
+        </div>
+      </div>
+      <div id="ridersList"><div class="loading">加载中...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 派单弹窗 -->
+<div class="modal-mask" id="assignModal">
+  <div class="modal">
+    <h3>📋 派单</h3>
+    <div class="form-group">
+      <label>选择骑手</label>
+      <select id="riderSelect"></select>
+    </div>
+    <div class="actions">
+      <button class="btn btn-gray" onclick="closeModal('assignModal')">取消</button>
+      <button class="btn btn-primary" onclick="confirmAssign()">确认派单</button>
+    </div>
+  </div>
+</div>
+
+<!-- 完成订单弹窗 -->
+<div class="modal-mask" id="completeModal">
+  <div class="modal">
+    <h3>✅ 完成订单</h3>
+    <div class="form-group">
+      <label>回收金额（元）</label>
+      <input type="number" id="finalAmount" placeholder="如：50" value="0">
+    </div>
+    <p style="font-size:13px;color:#999;margin-bottom:16px">用户将获得积分 = 品类基础分 + 金额×5%</p>
+    <div class="actions">
+      <button class="btn btn-gray" onclick="closeModal('completeModal')">取消</button>
+      <button class="btn btn-primary" onclick="confirmComplete()">确认完成</button>
+    </div>
+  </div>
+</div>
+
+<!-- 添加骑手弹窗 -->
+<div class="modal-mask" id="riderModal">
+  <div class="modal">
+    <h3>🚴 添加骑手</h3>
+    <div class="form-group">
+      <label>姓名</label>
+      <input type="text" id="riderName" placeholder="如：张师傅">
+    </div>
+    <div class="form-group">
+      <label>手机号</label>
+      <input type="tel" id="riderPhone" placeholder="如：13800138000">
+    </div>
+    <div class="form-group">
+      <label>车牌号（选填）</label>
+      <input type="text" id="riderPlate" placeholder="如：沪A8862">
+    </div>
+    <div class="actions">
+      <button class="btn btn-gray" onclick="closeModal('riderModal')">取消</button>
+      <button class="btn btn-primary" onclick="confirmAddRider()">添加</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API_BASE = location.origin + '/api/v1';
+let currentOrderFilter = 0;
+let currentAssignOrderId = null;
+let currentCompleteOrderId = null;
+let ridersCache = [];
+
+function getKey() { return document.getElementById('adminKey').value; }
+function api(path, method, data) {
+  const opts = { method: method || 'GET', headers: { 'X-Admin-Key': getKey(), 'Content-Type': 'application/json' } };
+  if (data) opts.body = JSON.stringify(data);
+  return fetch(API_BASE + path, opts).then(r => r.json());
+}
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('ordersTab').style.display = tab === 'orders' ? '' : 'none';
+  document.getElementById('ridersTab').style.display = tab === 'riders' ? '' : 'none';
+  if (tab === 'orders') loadOrders();
+  if (tab === 'riders') loadRiders();
+}
+
+const STATUS_TEXT = {1:'待评估',2:'已派单',3:'已取件',4:'已完成',5:'已取消'};
+
+function filterOrders(status, el) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  currentOrderFilter = status;
+  loadOrders();
+}
+
+async function loadOrders() {
+  const path = currentOrderFilter > 0 ? '/admin/orders?status=' + currentOrderFilter : '/admin/orders';
+  try {
+    const res = await api(path);
+    const orders = res.data?.list || [];
+    const el = document.getElementById('ordersList');
+    if (orders.length === 0) { el.innerHTML = '<div class="empty">暂无订单</div>'; return; }
+    el.innerHTML = '<table><thead><tr><th>订单号</th><th>物品</th><th>地址</th><th>状态</th><th>骑手</th><th>操作</th></tr></thead><tbody>' +
+      orders.map(o => `<tr>
+        <td style="font-size:12px;color:#999">${o.orderNo}</td>
+        <td>${o.itemName}</td>
+        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${o.pickupAddr}</td>
+        <td><span class="status-badge status-${o.status}">${STATUS_TEXT[o.status]}</span></td>
+        <td>${o.riderName || '-'}</td>
+        <td style="white-space:nowrap">
+          ${o.status === 1 ? `<button class="btn btn-blue btn-sm" onclick="showAssign(${o.id})">派单</button>` : ''}
+          ${o.status === 2 ? `<button class="btn btn-gray btn-sm" onclick="updateStatus(${o.id},3)">已取件</button>` : ''}
+          ${o.status === 3 ? `<button class="btn btn-primary btn-sm" onclick="showComplete(${o.id})">完成</button>` : ''}
+          ${o.status === 1 ? `<button class="btn btn-gray btn-sm" onclick="updateStatus(${o.id},5)">取消</button>` : ''}
+        </td>
+      </tr>`).join('') + '</tbody></table>';
+  } catch(e) { toast('加载失败'); }
+}
+
+async function loadRiders() {
+  try {
+    const res = await api('/admin/riders');
+    ridersCache = res.data?.list || [];
+    const el = document.getElementById('ridersList');
+    if (ridersCache.length === 0) { el.innerHTML = '<div class="empty">暂无骑手，点击右上角添加</div>'; return; }
+    el.innerHTML = ridersCache.map(r => `<div class="rider-card">
+      <div class="rider-info">
+        <div class="rider-avatar">${r.name.charAt(0)}</div>
+        <div>
+          <div class="rider-name">${r.name}</div>
+          <div class="rider-meta">${r.phone} · ${r.plateNo || '无车牌'} · 评分 ${r.rating} · 服务 ${r.serviceCnt} 次</div>
+        </div>
+      </div>
+      <button class="btn btn-gray btn-sm" onclick="toggleRiderStatus(${r.id}, ${r.status})">${r.status === 1 ? '离职' : '复职'}</button>
+    </div>`).join('');
+  } catch(e) { toast('加载失败'); }
+}
+
+function showAssign(orderId) {
+  currentAssignOrderId = orderId;
+  const select = document.getElementById('riderSelect');
+  select.innerHTML = ridersCache.filter(r => r.status === 1).map(r => `<option value="${r.id}">${r.name} · ${r.phone} · 评分${r.rating}</option>`).join('');
+  document.getElementById('assignModal').classList.add('show');
+}
+
+async function confirmAssign() {
+  const riderId = parseInt(document.getElementById('riderSelect').value);
+  try {
+    const res = await api('/admin/orders/' + currentAssignOrderId + '/assign', 'POST', { riderId });
+    if (res.code === 0) { toast('派单成功'); closeModal('assignModal'); loadOrders(); }
+    else { toast(res.message); }
+  } catch(e) { toast('操作失败'); }
+}
+
+function showComplete(orderId) {
+  currentCompleteOrderId = orderId;
+  document.getElementById('finalAmount').value = '0';
+  document.getElementById('completeModal').classList.add('show');
+}
+
+async function confirmComplete() {
+  const amount = Math.round(parseFloat(document.getElementById('finalAmount').value || 0) * 100);
+  try {
+    const res = await api('/admin/orders/' + currentCompleteOrderId + '/complete', 'POST', { finalAmount: amount });
+    if (res.code === 0) { toast('订单已完成'); closeModal('completeModal'); loadOrders(); }
+    else { toast(res.message); }
+  } catch(e) { toast('操作失败'); }
+}
+
+async function updateStatus(orderId, status) {
+  const text = status === 3 ? '确认标记为已取件？' : '确认取消订单？';
+  if (!confirm(text)) return;
+  try {
+    const res = await api('/admin/orders/' + orderId + '/status', 'PUT', { status });
+    if (res.code === 0) { toast('操作成功'); loadOrders(); }
+    else { toast(res.message); }
+  } catch(e) { toast('操作失败'); }
+}
+
+function showAddRider() {
+  ['riderName','riderPhone','riderPlate'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('riderModal').classList.add('show');
+}
+
+async function confirmAddRider() {
+  const name = document.getElementById('riderName').value.trim();
+  const phone = document.getElementById('riderPhone').value.trim();
+  const plateNo = document.getElementById('riderPlate').value.trim();
+  if (!name || !phone) { toast('姓名和手机号必填'); return; }
+  try {
+    const res = await api('/admin/riders', 'POST', { name, phone, plateNo });
+    if (res.code === 0) { toast('添加成功'); closeModal('riderModal'); loadRiders(); }
+    else { toast(res.message); }
+  } catch(e) { toast('操作失败'); }
+}
+
+async function toggleRiderStatus(id, currentStatus) {
+  const newStatus = currentStatus === 1 ? 0 : 1;
+  try {
+    const res = await api('/admin/riders/' + id, 'PUT', { status: newStatus });
+    if (res.code === 0) { toast('操作成功'); loadRiders(); }
+    else { toast(res.message); }
+  } catch(e) { toast('操作失败'); }
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+// 初始化
+loadOrders();
+</script>
+</body>
+</html>

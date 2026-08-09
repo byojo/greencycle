@@ -19,6 +19,7 @@ RUN apk add --no-cache tzdata ca-certificates curl &&     cp /usr/share/zoneinfo
 WORKDIR /app
 
 COPY --from=builder /build/server /app/server
+COPY admin/index.html /app/admin/index.html
 
 ENV PORT=80
 EXPOSE 80

@@ -26,6 +26,9 @@ func Register(h *handler.Handler) *gin.Engine {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
 
+	// 管理后台页面
+	r.StaticFile("/admin", "./admin/index.html")
+
 	api := r.Group("/api/v1")
 
 	// ========== 不需要鉴权 ==========
