@@ -115,7 +115,7 @@
     </view>
     <view class="info-row">
       <text class="info-key">支付方式</text>
-      <text class="info-val">微信钱包</text>
+      <text class="info-val">线下支付</text>
     </view>
   </view>
 
