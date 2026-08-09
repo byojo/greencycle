@@ -1,15 +1,11 @@
 package handler
 
 import (
-	"errors"
 	"os"
 	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
-
-	"github.com/greencycle/server/internal/model"
 )
 
 // getRiderID 获取当前用户关联的回收专员ID
