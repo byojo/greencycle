@@ -9,11 +9,9 @@ Page({
   },
 
   onLoad() {
-    if (!wx.getStorageSync('adminKey')) {
-      this.inputAdminKey();
-    } else {
-      this.loadRiders();
-    }
+    // 每次进入清除旧 Key，强制重新输入
+    wx.removeStorageSync('adminKey');
+    this.inputAdminKey();
   },
   onShow() { if (wx.getStorageSync('adminKey')) this.loadRiders(); },
   onPullDownRefresh() { this.loadRiders().finally(() => wx.stopPullDownRefresh()); },

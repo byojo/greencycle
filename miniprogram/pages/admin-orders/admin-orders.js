@@ -25,13 +25,9 @@ Page({
   },
 
   onLoad() {
-    // 检查是否已配置 Admin Key
-    if (!wx.getStorageSync('adminKey')) {
-      this.setData({ needKey: true });
-      this.inputAdminKey();
-    } else {
-      this.loadOrders();
-    }
+    // 每次进入清除旧 Key，强制重新输入
+    wx.removeStorageSync('adminKey');
+    this.inputAdminKey();
   },
 
   inputAdminKey() {
