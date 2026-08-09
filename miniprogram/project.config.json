@@ -49,7 +49,9 @@
     "localPlugins": false,
     "condition": false,
     "swc": false,
-    "disableSWC": true
+    "disableSWC": true,
+    "lazyCodeLoading": true,
+    "useLazyLoad": true
   },
   "compileType": "miniprogram",
   "libVersion": "2.32.3",
