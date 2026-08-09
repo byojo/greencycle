@@ -300,7 +300,7 @@ func (s *OrderService) AdminUpdateStatus(ctx context.Context, orderID uint64, st
 		updates["rider_phone"] = riderPhone
 	}
 
-	err := s.repo.Order.AdminUpdateStatus(ctx, orderID, updates)
+	err = s.repo.Order.AdminUpdateStatus(ctx, orderID, updates)
 	if err != nil {
 		return err
 	}
