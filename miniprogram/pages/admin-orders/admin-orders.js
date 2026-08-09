@@ -39,7 +39,7 @@ Page({
       title: '管理密钥',
       content: '请输入 Admin Key',
       editable: true,
-      placeholderText: 'c7b3f90c...',
+      placeholderText: '请输入管理密钥',
       success: (res) => {
         if (res.confirm && res.content) {
           wx.setStorageSync('adminKey', res.content.trim());
@@ -50,6 +50,29 @@ Page({
         }
       }
     });
+  },
+
+  // API 调用失败时检查是否权限问题
+  checkAdminError(err) {
+    if (err && (err.code === 403 || (err.message && err.message.includes('无管理权限')))) {
+      wx.removeStorageSync('adminKey');
+      wx.showModal({
+        title: '密钥已失效',
+        content: '请重新输入 Admin Key',
+        editable: true,
+        placeholderText: '请输入管理密钥',
+        success: (res) => {
+          if (res.confirm && res.content) {
+            wx.setStorageSync('adminKey', res.content.trim());
+            this.loadOrders();
+          } else {
+            wx.navigateBack();
+          }
+        }
+      });
+      return true;
+    }
+    return false;
   },
 
   onShow() {
@@ -72,7 +95,9 @@ Page({
       const res = await api.adminGetOrders(params);
       this.setData({ orders: res.data.list || [], loading: false });
     } catch (err) {
-      wx.showToast({ title: err.message || '加载失败', icon: 'none' });
+      if (!this.checkAdminError(err)) {
+        wx.showToast({ title: err.message || '加载失败', icon: 'none' });
+      }
       this.setData({ loading: false });
     }
   },

@@ -10,19 +10,7 @@ Page({
 
   onLoad() {
     if (!wx.getStorageSync('adminKey')) {
-      wx.showModal({
-        title: '管理密钥',
-        content: '请输入 Admin Key',
-        editable: true,
-        success: (res) => {
-          if (res.confirm && res.content) {
-            wx.setStorageSync('adminKey', res.content.trim());
-            this.loadRiders();
-          } else {
-            wx.navigateBack();
-          }
-        }
-      });
+      this.inputAdminKey();
     } else {
       this.loadRiders();
     }
@@ -30,12 +18,40 @@ Page({
   onShow() { if (wx.getStorageSync('adminKey')) this.loadRiders(); },
   onPullDownRefresh() { this.loadRiders().finally(() => wx.stopPullDownRefresh()); },
 
+  inputAdminKey() {
+    wx.showModal({
+      title: '管理密钥',
+      content: '请输入 Admin Key',
+      editable: true,
+      placeholderText: '请输入管理密钥',
+      success: (res) => {
+        if (res.confirm && res.content) {
+          wx.setStorageSync('adminKey', res.content.trim());
+          this.loadRiders();
+        } else {
+          wx.navigateBack();
+        }
+      }
+    });
+  },
+
+  checkAdminError(err) {
+    if (err && (err.code === 403 || (err.message && err.message.includes('无管理权限')))) {
+      wx.removeStorageSync('adminKey');
+      this.inputAdminKey();
+      return true;
+    }
+    return false;
+  },
+
   async loadRiders() {
     try {
       const res = await api.adminGetRiders();
       this.setData({ riders: res.data.list || [], loading: false });
     } catch (err) {
-      wx.showToast({ title: err.message || '加载失败', icon: 'none' });
+      if (!this.checkAdminError(err)) {
+        wx.showToast({ title: err.message || '加载失败', icon: 'none' });
+      }
       this.setData({ loading: false });
     }
   },
