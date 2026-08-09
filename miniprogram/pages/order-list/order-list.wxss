@@ -14,13 +14,15 @@
   align-items: center;
   background: #FFFFFF;
   border-bottom: 1rpx solid #F3F4F6;
-  padding-top: calc(env(safe-area-inset-top) + 8rpx);
+  padding-top: calc(env(safe-area-inset-top) + 12rpx);
 }
 .nav-inner {
   height: 88rpx;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  width: 100%;
 }
 .nav-back {
   position: absolute;
@@ -37,6 +39,8 @@
   font-size: 34rpx;
   font-weight: 600;
   color: #1F2937;
+  text-align: center;
+  flex: 1;
 }
 
 /* ============ 筛选 chips ============ */
