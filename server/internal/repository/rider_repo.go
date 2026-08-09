@@ -27,6 +27,23 @@ func (r *RiderRepository) List(ctx context.Context) ([]model.Rider, error) {
 	return riders, err
 }
 
+// FindByUserID 根据用户ID查找专员
+func (r *RiderRepository) FindByUserID(ctx context.Context, userID uint) (*model.Rider, error) {
+	var rider model.Rider
+	err := r.db.WithContext(ctx).Where("user_id = ? AND status = 1", userID).First(&rider).Error
+	if err != nil {
+		return nil, err
+	}
+	return &rider, nil
+}
+
+// SetUserID 设置专员的关联用户ID
+func (r *RiderRepository) SetUserID(ctx context.Context, riderID uint, userID uint) error {
+	return r.db.WithContext(ctx).Model(&model.Rider{}).
+		Where("id = ?", riderID).
+		Update("user_id", userID).Error
+}
+
 // GetByID 根据 ID 获取
 func (r *RiderRepository) GetByID(ctx context.Context, id uint) (*model.Rider, error) {
 	var rider model.Rider

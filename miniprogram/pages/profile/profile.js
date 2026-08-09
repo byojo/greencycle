@@ -68,7 +68,6 @@ Page({
       app.globalData.userInfo = u;
       // 检查是否管理员
       this.checkAdmin();
-      this.checkRider();
     } catch (err) {
       this.setData({ loading: false });
       wx.showToast({ title: '加载失败，请下拉刷新', icon: 'none' });
@@ -112,14 +111,7 @@ Page({
   async checkAdmin() {
     try {
       const res = await api.isAdmin();
-      this.setData({ isAdmin: res.data.isAdmin });
-    } catch (e) {}
-  },
-
-  async checkRider() {
-    try {
-      const res = await api.riderCheckIsRider();
-      if (res.code === 0) this.setData({ isRider: true });
+      this.setData({ isAdmin: res.data.isAdmin, isRider: res.data.isRider });
     } catch (e) {}
   },
   goService() {

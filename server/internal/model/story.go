@@ -25,6 +25,7 @@ func (Story) TableName() string {
 // Rider 回收专员（回收员）
 type Rider struct {
 	ID         uint      `gorm:"primaryKey" json:"id"`
+	UserID     *uint     `gorm:"index" json:"userId"` // 关联用户ID
 	Name       string    `gorm:"size:32;not null" json:"name"`
 	Phone      string    `gorm:"size:20;not null" json:"phone"`
 	IDCard     string    `gorm:"size:20" json:"idCard"`

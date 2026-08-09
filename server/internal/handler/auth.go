@@ -69,7 +69,8 @@ func (h *Handler) IsAdmin(c *gin.Context) {
 	}
 
 	isAdmin := checkAdmin(userID)
-	response.Success(c, gin.H{"isAdmin": isAdmin})
+	isRider := isRiderUser(userID)
+	response.Success(c, gin.H{"isAdmin": isAdmin, "isRider": isRider})
 }
 
 // InviteList 邀请记录
