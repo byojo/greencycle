@@ -11,9 +11,9 @@
 .empty, .loading { text-align: center; padding: 120rpx 0; color: #9CA3AF; font-size: 28rpx; }
 .fab { position: fixed; right: 40rpx; bottom: 60rpx; width: 100rpx; height: 100rpx; background: #07C160; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 56rpx; box-shadow: 0 8rpx 24rpx rgba(7,193,96,0.4); }
 .modal-mask { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.45); z-index: 999; display: flex; align-items: center; justify-content: center; }
-.modal { background: #fff; border-radius: 24rpx; padding: 48rpx; width: 660rpx; box-sizing: border-box; }
+.modal { background: #fff; border-radius: 24rpx; padding: 40rpx; width: 700rpx; box-sizing: border-box; }
 .modal-title { font-size: 34rpx; font-weight: 600; margin-bottom: 30rpx; }
 .input-group { margin-bottom: 24rpx; }
 .input-label { display: block; font-size: 26rpx; color: #6B7280; margin-bottom: 12rpx; }
-.input { width: 100%; padding: 20rpx; background: #F3F4F6; border-radius: 12rpx; font-size: 28rpx; box-sizing: border-box; }
+.input { width: 100%; padding: 20rpx 24rpx; background: #F3F4F6; border-radius: 12rpx; font-size: 28rpx; box-sizing: border-box; overflow: hidden; text-overflow: ellipsis; }
 .modal-actions { display: flex; gap: 20rpx; justify-content: flex-end; margin-top: 30rpx; }
