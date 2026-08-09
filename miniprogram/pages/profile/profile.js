@@ -117,7 +117,7 @@ Page({
 
   async checkRider() {
     try {
-      const res = await api.riderGetOrders();
+      const res = await api.riderCheckIsRider();
       if (res.code === 0) this.setData({ isRider: true });
     } catch (e) {}
   },
