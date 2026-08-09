@@ -137,7 +137,7 @@
       <view class="cell" bindtap="onAbout">
         <view class="cell-left">
           <text class="cell-icon">✈️</text>
-          <text class="cell-label">关于纸飞机</text>
+          <text class="cell-label">关于叮当回收</text>
         </view>
         <view class="cell-right">
           <text class="cell-value">v{{version}}</text>

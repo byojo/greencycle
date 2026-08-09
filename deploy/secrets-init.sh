@@ -22,7 +22,7 @@ if [ -f ".env" ]; then
 fi
 
 echo ""
-echo -e "${GREEN}==== 纸飞机 · 密钥配置向导 ====${NC}"
+echo -e "${GREEN}==== 叮当回收 · 密钥配置向导 ====${NC}"
 echo "请依次输入（输入不会显示，直接粘贴即可）："
 echo ""
 
@@ -64,7 +64,7 @@ V_API=${V_API:-https://sxyrgy.cn}
 
 # ===== 写入 .env =====
 cat > .env <<EOF
-# ===== 纸飞机 · 运行时配置 =====
+# ===== 叮当回收 · 运行时配置 =====
 # ⚠️  WARNING: 此文件包含敏感密钥，已在 .gitignore 中
 # ⚠️  请勿提交到 Git / 截图 / 公开分享
 # 生成时间: $(date '+%Y-%m-%d %H:%M:%S')

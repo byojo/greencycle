@@ -11,7 +11,7 @@ import (
 
 // AdminTestNotify 测试企业微信群通知
 func (h *Handler) AdminTestNotify(c *gin.Context) {
-	err := wecom.SendMarkdown("## 🧪 测试通知\n\n> 这是一条来自纸飞机服务端的测试消息\n> 收到说明群机器人配置成功 ✅")
+	err := wecom.SendMarkdown("## 🧪 测试通知\n\n> 这是一条来自叮当回收服务端的测试消息\n> 收到说明群机器人配置成功 ✅")
 	if err != nil {
 		response.ServerError(c, "发送失败: "+err.Error())
 		return

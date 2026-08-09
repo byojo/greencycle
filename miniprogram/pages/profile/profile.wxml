@@ -108,7 +108,7 @@
   <!-- 底部 logo + 版本 -->
   <view class="footer">
     <view class="footer-logo">✈️</view>
-    <view class="footer-name">纸飞机</view>
+    <view class="footer-name">叮当回收</view>
     <view class="footer-version">v{{version}}</view>
     <view class="footer-slogan">让每一件旧物，都值得被温柔对待 ✈️</view>
   </view>

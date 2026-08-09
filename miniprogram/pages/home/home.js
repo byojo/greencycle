@@ -165,7 +165,7 @@ Page({
   // 分享
   onShareAppMessage() {
     return {
-      title: '纸飞机 - 让每一件旧物都值得被温柔对待',
+      title: '叮当回收 - 让每一件旧物都值得被温柔对待',
       path: '/pages/home/home',
       imageUrl: ''
     };

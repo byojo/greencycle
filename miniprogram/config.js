@@ -20,7 +20,7 @@ module.exports = {
   envVersion,
 
   // ====== 业务配置 ======
-  appName: '纸飞机',
+  appName: '叮当回收',
   appVersion: '1.0.0',
 
   // 上传 COS 桶配置

@@ -1,4 +1,4 @@
-// 纸飞机服务端入口（适配微信云托管）
+// 叮当回收服务端入口（适配微信云托管）
 package main
 
 import (
@@ -77,7 +77,7 @@ func main() {
 	}
 
 	go func() {
-		log.Printf("🚀 纸飞机服务已启动 [addr=%s]", cfg.Server.Addr)
+		log.Printf("🚀 叮当回收服务已启动 [addr=%s]", cfg.Server.Addr)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("服务异常退出: %v", err)
 		}

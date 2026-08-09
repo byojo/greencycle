@@ -1,4 +1,4 @@
-# 纸飞机部署指南（域名：sxyrgy.cn）
+# 叮当回收部署指南（域名：sxyrgy.cn）
 
 > 适用生产环境：CentOS 7+ / Ubuntu 20+ / Debian 11+
 > 目标架构：Nginx (HTTPS) → Go API → MySQL + Redis

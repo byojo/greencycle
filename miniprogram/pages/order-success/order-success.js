@@ -68,7 +68,7 @@ Page({
 
   onShareAppMessage() {
     return {
-      title: '我刚刚在纸飞机回收了闲置物品，你也来试试吧！',
+      title: '我刚刚在叮当回收回收了闲置物品，你也来试试吧！',
       path: '/pages/home/home'
     };
   }

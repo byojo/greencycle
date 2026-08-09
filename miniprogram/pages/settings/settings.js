@@ -147,7 +147,7 @@ Page({
   onAgreement() {
     wx.showModal({
       title: '用户协议',
-      content: '请前往「纸飞机」官方查看完整协议\n\nhttps://sxyrgy.cn/agreement',
+      content: '请前往「叮当回收」官方查看完整协议\n\nhttps://sxyrgy.cn/agreement',
       showCancel: false
     });
   },
@@ -155,14 +155,14 @@ Page({
   onPrivacy() {
     wx.showModal({
       title: '隐私政策',
-      content: '请前往「纸飞机」官方查看完整隐私政策\n\nhttps://sxyrgy.cn/privacy',
+      content: '请前往「叮当回收」官方查看完整隐私政策\n\nhttps://sxyrgy.cn/privacy',
       showCancel: false
     });
   },
 
   onAbout() {
     wx.showModal({
-      title: '纸飞机 ✈️',
+      title: '叮当回收 ✈️',
       content: '让每一件旧物，都值得被温柔对待\n\nv' + this.data.version + '\n\n微信小程序版',
       showCancel: false
     });

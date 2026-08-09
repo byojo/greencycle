@@ -177,7 +177,7 @@ Page({
         // 4. 主标题
         ctx.fillStyle = '#FFFFFF';
         ctx.font = 'bold 56px sans-serif';
-        ctx.fillText('纸飞机', width / 2, 320);
+        ctx.fillText('叮当回收', width / 2, 320);
 
         // 5. 副标题
         ctx.font = '28px sans-serif';
@@ -253,7 +253,7 @@ Page({
         ctx.fillStyle = '#9CA3AF';
         ctx.font = '22px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('扫码 · 加入纸飞机', width / 2, qrY + qrSize + 60);
+        ctx.fillText('扫码 · 加入叮当回收', width / 2, qrY + qrSize + 60);
 
         // 导出图片
         wx.canvasToTempFilePath({
@@ -315,14 +315,14 @@ Page({
 
   onShareAppMessage() {
     return {
-      title: `纸飞机 · 邀你一起环保，最高得 50 积分`,
+      title: `叮当回收 · 邀你一起环保，最高得 50 积分`,
       path: `/pages/home/home?inviteCode=${this.data.inviteCode}`
     };
   },
 
   onShareTimeline() {
     return {
-      title: '纸飞机 · 邀你一起环保，旧物回收最高得 50 积分'
+      title: '叮当回收 · 邀你一起环保，旧物回收最高得 50 积分'
     };
   }
 });

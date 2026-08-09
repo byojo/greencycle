@@ -146,7 +146,7 @@ Page({
 
   onShareAppMessage() {
     return {
-      title: '纸飞机改造故事',
+      title: '叮当回收改造故事',
       path: '/pages/story/story'
     };
   }

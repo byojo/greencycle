@@ -73,7 +73,7 @@
 
   <!-- 分享提示 -->
   <view class="share-tip">
-    分享纸飞机，让更多人参与环保 ♻️
+    分享叮当回收，让更多人参与环保 ♻️
   </view>
   <button class="share-btn" open-type="share">分享给好友</button>
 </view>
