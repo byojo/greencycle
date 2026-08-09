@@ -17,8 +17,11 @@ Page({
   },
 
   onLoad() {
-    wx.removeStorageSync('adminKey');
-    this.inputAdminKey();
+    if (!wx.getStorageSync('adminKey')) {
+      this.inputAdminKey();
+    } else {
+      this.loadApps();
+    }
   },
 
   inputAdminKey() {
