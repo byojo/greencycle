@@ -188,7 +188,7 @@ func (s *AuthService) processInviteReward(ctx context.Context, newUserID uint, i
 // GetInviteList 获取邀请记录
 func (s *AuthService) GetInviteList(ctx context.Context, userID uint) ([]map[string]interface{}, error) {
 	// 查询所有 Type=2 的积分流水（邀请奖励）
-	logs, _, err := s.repo.Point.ListByUser(ctx, userID, 1, 100)
+	logs, _, err := s.repo.Point.HistoryByUser(ctx, userID, 1, 100)
 	if err != nil {
 		return nil, err
 	}
