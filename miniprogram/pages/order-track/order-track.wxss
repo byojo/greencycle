@@ -367,6 +367,9 @@
   color: #1F2937;
   font-weight: 500;
   text-align: right;
+  max-width: 60%;
+  overflow: hidden;
+  word-break: break-all;
 }
 .info-val.highlight {
   color: #07C160;

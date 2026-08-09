@@ -55,8 +55,13 @@
   font-weight: 700;
   color: #FFFFFF;
   line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 400rpx;
 }
 .verified {
+  flex-shrink: 0;
   background: rgba(255, 255, 255, 0.2);
   color: #FFFFFF;
   font-size: 20rpx;

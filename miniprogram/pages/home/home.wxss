@@ -40,8 +40,10 @@
   font-size: 28rpx;
   font-weight: 500;
   margin-top: 16rpx;
+  overflow: hidden;
 }
 .location .arrow {
+  flex-shrink: 0;
   font-size: 22rpx;
   opacity: 0.8;
   margin-left: 4rpx;

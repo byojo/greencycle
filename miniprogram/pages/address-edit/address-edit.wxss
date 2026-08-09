@@ -83,9 +83,13 @@
 }
 .form-picker-value {
   flex: 1;
+  min-width: 0;
   font-size: 28rpx;
   color: #1F2937;
   line-height: 44rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .form-picker-value.placeholder {
   color: #9CA3AF;
@@ -96,6 +100,7 @@
   font-weight: 300;
   line-height: 1;
   margin-left: 8rpx;
+  flex-shrink: 0;
 }
 .form-label {
   font-size: 28rpx;

@@ -54,7 +54,7 @@
       <view class="form-label">所在区域</view>
       <input
         class="form-input"
-        placeholder="如：上海市浦东新区"
+        placeholder="上海市浦东新区"
         value="{{district}}"
         data-key="district"
         bindinput="onInput"

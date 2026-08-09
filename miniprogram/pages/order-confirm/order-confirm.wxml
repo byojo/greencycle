@@ -92,7 +92,7 @@
     </view>
     <textarea
       class="form-textarea"
-      placeholder="如有特殊说明请告诉我们，如：零件缺失、需要特别处理..."
+      placeholder="如有特殊说明请告诉我们,例如零件缺失、需要特别处理..."
       value="{{remark}}"
       bindinput="onRemarkInput"
       maxlength="100"
