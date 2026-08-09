@@ -21,7 +21,7 @@ Page({
       orderId,
       category,
       categoryName: categoryName(category),
-      estimatedAt: this.formatEstimate()
+      estimatedAt: ''  // 等 API 返回真实时间
     });
 
     if (orderId) {
@@ -47,7 +47,7 @@ Page({
         categoryName: categoryName(order.categoryCode || this.data.category),
         estimatedAt: order.estimatedAt
           ? formatDate(order.estimatedAt, 'MM-DD HH:mm')
-          : this.data.estimatedAt,
+          : '',
         loading: false
       });
     } catch (err) {

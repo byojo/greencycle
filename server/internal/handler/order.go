@@ -11,6 +11,8 @@ import (
 	"github.com/greencycle/server/pkg/response"
 )
 
+var shanghaiLoc, _ = time.LoadLocation("Asia/Shanghai")
+
 type CreateOrderRequest struct {
 	CategoryCode string   `json:"categoryCode" binding:"required"`
 	ItemName     string   `json:"itemName" binding:"required"`
@@ -38,7 +40,7 @@ func (h *Handler) CreateOrder(c *gin.Context) {
 		return
 	}
 
-	estimatedAt, err := time.Parse("2006-01-02 15:04:05", req.EstimatedAt)
+	estimatedAt, err := time.ParseInLocation("2006-01-02 15:04:05", req.EstimatedAt, shanghaiLoc)
 	if err != nil {
 		response.BadRequest(c, "时间格式错误")
 		return
