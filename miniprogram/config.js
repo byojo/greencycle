@@ -11,7 +11,6 @@ const apiBase = PROD_API;
 module.exports = {
   // ====== 基础配置 ======
   apiBase,
-  envVersion,
 
   // ====== 业务配置 ======
   appName: '叮当回收',
