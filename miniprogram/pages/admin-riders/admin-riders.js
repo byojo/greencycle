@@ -62,6 +62,8 @@ Page({
 
   closeAdd() { this.setData({ showAdd: false }); },
 
+  stopPropagation() {},
+
   onInput(e) {
     const field = e.currentTarget.dataset.field;
     this.setData({ [`form.${field}`]: e.detail.value });

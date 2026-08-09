@@ -30,7 +30,7 @@
 
   <!-- 派单弹窗 -->
   <view class="modal-mask" wx:if="{{showAssign}}" bindtap="closeAssign">
-    <view class="modal" catchtap="">
+    <view class="modal" catchtap="stopPropagation">
       <view class="modal-title">📋 派单</view>
       <picker bindchange="onRiderPick" value="{{riderIndex}}" range="{{riders}}" range-key="label">
         <view class="picker">{{riders[riderIndex] ? riders[riderIndex].label : '请选择回收专员'}}</view>
@@ -44,7 +44,7 @@
 
   <!-- 完成弹窗 -->
   <view class="modal-mask" wx:if="{{showComplete}}" bindtap="closeComplete">
-    <view class="modal" catchtap="">
+    <view class="modal" catchtap="stopPropagation">
       <view class="modal-title">✅ 完成订单</view>
       <view class="input-group">
         <text class="input-label">回收金额（元）</text>

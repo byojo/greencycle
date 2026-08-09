@@ -124,6 +124,8 @@ Page({
     this.setData({ showAssign: false, assignOrderId: null });
   },
 
+  stopPropagation() {},
+
   async confirmAssign() {
     const rider = this.data.riders[this.data.riderIndex];
     if (!rider) { wx.showToast({ title: '请选择回收专员', icon: 'none' }); return; }

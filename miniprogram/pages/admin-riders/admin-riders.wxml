@@ -19,7 +19,7 @@
 
   <!-- 添加回收专员弹窗 -->
   <view class="modal-mask" wx:if="{{showAdd}}" bindtap="closeAdd">
-    <view class="modal" catchtap="">
+    <view class="modal" catchtap="stopPropagation">
       <view class="modal-title">🚴 添加回收专员</view>
       <view class="input-group">
         <text class="input-label">姓名</text>
