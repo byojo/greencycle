@@ -18,7 +18,8 @@
 .order-meta { font-size: 24rpx; color: #9CA3AF; margin-bottom: 12rpx; }
 .order-photos { display: flex; gap: 12rpx; margin-bottom: 16rpx; }
 .photo-thumb { width: 120rpx; height: 120rpx; border-radius: 12rpx; background: #F3F4F6; }
-.order-actions { display: flex; gap: 16rpx; }
+.order-actions { display: flex; gap: 16rpx; align-items: center; }
+.detail-link { font-size: 24rpx; color: #07C160; padding: 8rpx 0 8rpx 16rpx; }
 .action-btn { font-size: 28rpx; padding: 0 40rpx; height: 72rpx; line-height: 72rpx; border-radius: 36rpx; text-align: center; border: none; color: #fff; }
 .action-btn::after { border: none; }
 .action-green { background: #07C160; }

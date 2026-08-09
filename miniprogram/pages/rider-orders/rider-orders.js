@@ -99,6 +99,11 @@ Page({
   closeComplete() { this.setData({ showComplete: false, completeOrderId: null }); },
   stopPropagation() {},
 
+  onViewDetail(e) {
+    const id = e.currentTarget.dataset.id;
+    wx.navigateTo({ url: `/pages/order-detail/order-detail?id=${id}` });
+  },
+
   onAmountInput(e) { this.setData({ finalAmount: e.detail.value }); },
 
   async confirmComplete() {
