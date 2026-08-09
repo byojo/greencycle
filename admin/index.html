@@ -67,7 +67,7 @@ tr:hover { background: #fafafa; }
 
 <div class="tabs">
   <div class="tab active" onclick="switchTab('orders')">📦 订单管理</div>
-  <div class="tab" onclick="switchTab('riders')">🚴 骑手管理</div>
+  <div class="tab" onclick="switchTab('riders')">🚴 回收专员管理</div>
 </div>
 
 <div class="content">
@@ -90,14 +90,14 @@ tr:hover { background: #fafafa; }
     </div>
   </div>
 
-  <!-- 骑手管理 -->
+  <!-- 回收专员管理 -->
   <div id="ridersTab" style="display:none">
     <div class="card">
       <div class="card-header">
-        <div class="card-title">骑手列表</div>
+        <div class="card-title">回收专员列表</div>
         <div style="display:flex;gap:12px">
           <button class="btn btn-gray btn-sm" onclick="loadRiders()">🔄 刷新</button>
-          <button class="btn btn-primary btn-sm" onclick="showAddRider()">➕ 添加骑手</button>
+          <button class="btn btn-primary btn-sm" onclick="showAddRider()">➕ 添加回收专员</button>
         </div>
       </div>
       <div id="ridersList"><div class="loading">加载中...</div></div>
@@ -110,7 +110,7 @@ tr:hover { background: #fafafa; }
   <div class="modal">
     <h3>📋 派单</h3>
     <div class="form-group">
-      <label>选择骑手</label>
+      <label>选择回收专员</label>
       <select id="riderSelect"></select>
     </div>
     <div class="actions">
@@ -136,10 +136,10 @@ tr:hover { background: #fafafa; }
   </div>
 </div>
 
-<!-- 添加骑手弹窗 -->
+<!-- 添加回收专员弹窗 -->
 <div class="modal-mask" id="riderModal">
   <div class="modal">
-    <h3>🚴 添加骑手</h3>
+    <h3>🚴 添加回收专员</h3>
     <div class="form-group">
       <label>姓名</label>
       <input type="text" id="riderName" placeholder="如：张师傅">
@@ -205,7 +205,7 @@ async function loadOrders() {
     const orders = res.data?.list || [];
     const el = document.getElementById('ordersList');
     if (orders.length === 0) { el.innerHTML = '<div class="empty">暂无订单</div>'; return; }
-    el.innerHTML = '<table><thead><tr><th>订单号</th><th>物品</th><th>地址</th><th>状态</th><th>骑手</th><th>操作</th></tr></thead><tbody>' +
+    el.innerHTML = '<table><thead><tr><th>订单号</th><th>物品</th><th>地址</th><th>状态</th><th>回收专员</th><th>操作</th></tr></thead><tbody>' +
       orders.map(o => `<tr>
         <td style="font-size:12px;color:#999">${esc(o.orderNo)}</td>
         <td>${esc(o.itemName)}</td>
@@ -227,7 +227,7 @@ async function loadRiders() {
     const res = await api('/admin/riders');
     ridersCache = res.data?.list || [];
     const el = document.getElementById('ridersList');
-    if (ridersCache.length === 0) { el.innerHTML = '<div class="empty">暂无骑手，点击右上角添加</div>'; return; }
+    if (ridersCache.length === 0) { el.innerHTML = '<div class="empty">暂无回收专员，点击右上角添加</div>'; return; }
     el.innerHTML = ridersCache.map(r => `<div class="rider-card">
       <div class="rider-info">
         <div class="rider-avatar">${r.name.charAt(0)}</div>

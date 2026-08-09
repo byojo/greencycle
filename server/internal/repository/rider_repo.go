@@ -17,7 +17,7 @@ func NewRiderRepository(db *gorm.DB) *RiderRepository {
 	return &RiderRepository{db: db}
 }
 
-// List 骑手列表（仅在职）
+// List 回收专员列表（仅在职）
 func (r *RiderRepository) List(ctx context.Context) ([]model.Rider, error) {
 	var riders []model.Rider
 	err := r.db.WithContext(ctx).
@@ -40,12 +40,12 @@ func (r *RiderRepository) GetByID(ctx context.Context, id uint) (*model.Rider, e
 	return &rider, nil
 }
 
-// Create 创建骑手
+// Create 创建回收专员
 func (r *RiderRepository) Create(ctx context.Context, rider *model.Rider) error {
 	return r.db.WithContext(ctx).Create(rider).Error
 }
 
-// Update 更新骑手
+// Update 更新回收专员
 func (r *RiderRepository) Update(ctx context.Context, id uint, updates map[string]interface{}) error {
 	return r.db.WithContext(ctx).
 		Model(&model.Rider{}).

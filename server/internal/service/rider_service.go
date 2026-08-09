@@ -16,12 +16,12 @@ func NewRiderService(repo *repository.Repository) *RiderService {
 	return &RiderService{repo: repo}
 }
 
-// List 在职骑手列表
+// List 在职回收专员列表
 func (s *RiderService) List(ctx context.Context) ([]model.Rider, error) {
 	return s.repo.Rider.List(ctx)
 }
 
-// Create 创建骑手
+// Create 创建回收专员
 func (s *RiderService) Create(ctx context.Context, name, phone, idCard, plateNo string) error {
 	rider := &model.Rider{
 		Name:    name,
@@ -34,7 +34,7 @@ func (s *RiderService) Create(ctx context.Context, name, phone, idCard, plateNo 
 	return s.repo.Rider.Create(ctx, rider)
 }
 
-// Update 更新骑手
+// Update 更新回收专员
 func (s *RiderService) Update(ctx context.Context, id uint, updates map[string]interface{}) error {
 	if len(updates) == 0 {
 		return errors.New("无更新内容")

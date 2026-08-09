@@ -87,7 +87,7 @@ Page({
       }));
       this.setData({ showAssign: true, assignOrderId: orderId, riders, riderIndex: 0 });
     } catch (err) {
-      wx.showToast({ title: '获取骑手列表失败', icon: 'none' });
+      wx.showToast({ title: '获取回收专员列表失败', icon: 'none' });
     }
   },
 
@@ -101,7 +101,7 @@ Page({
 
   async confirmAssign() {
     const rider = this.data.riders[this.data.riderIndex];
-    if (!rider) { wx.showToast({ title: '请选择骑手', icon: 'none' }); return; }
+    if (!rider) { wx.showToast({ title: '请选择回收专员', icon: 'none' }); return; }
     try {
       await api.adminAssignOrder(this.data.assignOrderId, { riderId: rider.id });
       wx.showToast({ title: '派单成功', icon: 'success' });

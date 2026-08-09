@@ -45,7 +45,7 @@ Page({
     },
     eta: 8,
     distance: '1.2km',
-    stateText: '🚴 骑手正在前往',
+    stateText: '🚴 回收专员正在前往',
     etaTitle: '预计 14:30 到达',
     timeline: [],
     progress: 2,
@@ -146,10 +146,10 @@ Page({
 
   getStateText(progress) {
     if (progress === 0) return '⏳ 等待回收员接单';
-    if (progress === 1) return '🚴 骑手已接单';
-    if (progress === 2) return '🚴 骑手正在前往';
+    if (progress === 1) return '🚴 回收专员已接单';
+    if (progress === 2) return '🚴 回收专员正在前往';
     if (progress === 3) return '✅ 订单已完成';
-    return '🚴 骑手正在前往';
+    return '🚴 回收专员正在前往';
   },
   getEtaTitle(progress) {
     if (progress === 0) return '提交订单成功';

@@ -15,7 +15,7 @@
         <text class="order-item">{{item.itemName}}</text>
         <text class="order-addr">📍 {{item.pickupAddr}}</text>
       </view>
-      <view class="order-rider" wx:if="{{item.riderName}}">骑手：{{item.riderName}} {{item.riderPhone}}</view>
+      <view class="order-rider" wx:if="{{item.riderName}}">回收专员：{{item.riderName}} {{item.riderPhone}}</view>
       <view class="order-actions">
         <button wx:if="{{item.status === 1}}" class="btn btn-blue" size="mini" data-id="{{item.id}}" bindtap="onAssign">派单</button>
         <button wx:if="{{item.status === 2}}" class="btn btn-gray" size="mini" data-id="{{item.id}}" data-status="3" bindtap="onUpdateStatus">已取件</button>
@@ -33,7 +33,7 @@
     <view class="modal" catchtap="">
       <view class="modal-title">📋 派单</view>
       <picker bindchange="onRiderPick" value="{{riderIndex}}" range="{{riders}}" range-key="label">
-        <view class="picker">{{riders[riderIndex] ? riders[riderIndex].label : '请选择骑手'}}</view>
+        <view class="picker">{{riders[riderIndex] ? riders[riderIndex].label : '请选择回收专员'}}</view>
       </picker>
       <view class="modal-actions">
         <button class="btn btn-gray" bindtap="closeAssign">取消</button>

@@ -73,7 +73,7 @@ func Register(h *handler.Handler) *gin.Engine {
 	admin := api.Group("/admin")
 	admin.Use(middleware.AdminAuth())
 	{
-		// 骑手管理
+		// 回收专员管理
 		admin.GET("/riders", h.AdminRiderList)
 		admin.POST("/riders", h.AdminRiderCreate)
 		admin.PUT("/riders/:id", h.AdminRiderUpdate)

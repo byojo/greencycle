@@ -22,7 +22,7 @@ func (Story) TableName() string {
 	return "stories"
 }
 
-// Rider 骑手（回收员）
+// Rider 回收专员（回收员）
 type Rider struct {
 	ID         uint      `gorm:"primaryKey" json:"id"`
 	Name       string    `gorm:"size:32;not null" json:"name"`

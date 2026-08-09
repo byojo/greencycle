@@ -19,9 +19,9 @@ func (h *Handler) AdminTestNotify(c *gin.Context) {
 	response.Success(c, gin.H{"message": "测试消息已发送"})
 }
 
-// ========== 骑手管理 ==========
+// ========== 回收专员管理 ==========
 
-// AdminRiderList 骑手列表（仅在职）
+// AdminRiderList 回收专员列表（仅在职）
 func (h *Handler) AdminRiderList(c *gin.Context) {
 	riders, err := h.Svc.Rider.List(c.Request.Context())
 	if err != nil {
@@ -31,7 +31,7 @@ func (h *Handler) AdminRiderList(c *gin.Context) {
 	response.Success(c, gin.H{"list": riders})
 }
 
-// AdminRiderCreate 创建骑手
+// AdminRiderCreate 创建回收专员
 func (h *Handler) AdminRiderCreate(c *gin.Context) {
 	var req struct {
 		Name    string `json:"name" binding:"required,min=2,max=32"`
@@ -51,11 +51,11 @@ func (h *Handler) AdminRiderCreate(c *gin.Context) {
 	response.Success(c, nil)
 }
 
-// AdminRiderUpdate 更新骑手
+// AdminRiderUpdate 更新回收专员
 func (h *Handler) AdminRiderUpdate(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		response.BadRequest(c, "骑手 ID 错误")
+		response.BadRequest(c, "回收专员 ID 错误")
 		return
 	}
 
@@ -82,7 +82,7 @@ func (h *Handler) AdminRiderUpdate(c *gin.Context) {
 	}
 	if req.Status != nil {
 		if *req.Status != 0 && *req.Status != 1 {
-			response.BadRequest(c, "骑手状态只能为 0(离职) 或 1(在职)")
+			response.BadRequest(c, "回收专员状态只能为 0(离职) 或 1(在职)")
 			return
 		}
 		updates["status"] = *req.Status
@@ -122,7 +122,7 @@ func (h *Handler) AdminOrderList(c *gin.Context) {
 	})
 }
 
-// AdminAssignOrder 派单（从骑手列表中选择骑手分配给订单）
+// AdminAssignOrder 派单（从回收专员列表中选择回收专员分配给订单）
 // body: { "riderId": 1 }
 func (h *Handler) AdminAssignOrder(c *gin.Context) {
 	orderID, err := strconv.ParseUint(c.Param("id"), 10, 64)

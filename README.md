@@ -151,7 +151,7 @@ mysql -uroot -p greencycle < sql/seed.sql
 | `carbon_reductions` | 碳减排记录 |
 | `addresses` | 用户地址 |
 | `stories` | 改造故事 |
-| `riders` | 骑手（回收员） |
+| `riders` | 回收专员（回收员） |
 | `feedbacks` | 反馈意见 |
 
 ## 🚢 部署

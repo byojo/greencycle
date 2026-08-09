@@ -14,7 +14,7 @@
       <text class="state-text">{{stateText}}</text>
     </view>
     <view class="eta-title">{{etaTitle}}</view>
-    <view class="eta-info">骑手距您 {{distance}} · 预计 {{eta}} 分钟</view>
+    <view class="eta-info">回收专员距您 {{distance}} · 预计 {{eta}} 分钟</view>
   </view>
 
   <!-- 地图 mock -->

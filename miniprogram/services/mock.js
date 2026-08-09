@@ -248,7 +248,7 @@ const mockRouter = {
       },
       timeline: [
         { time: order.createdAt, status: '订单已创建' },
-        { time: '2026-06-28 11:30', status: '骑手已接单' },
+        { time: '2026-06-28 11:30', status: '回收专员已接单' },
         { time: '待更新', status: '上门评估' },
         { time: '待更新', status: '完成回收' }
       ]
@@ -260,7 +260,7 @@ const mockRouter = {
   'GET /orders/:id/timeline': (params) => delay({
     list: [
       { time: '2026-06-28 11:20', status: '订单已创建' },
-      { time: '2026-06-28 11:30', status: '骑手已接单' },
+      { time: '2026-06-28 11:30', status: '回收专员已接单' },
       { time: '待更新', status: '上门评估' },
       { time: '待更新', status: '完成回收' }
     ]

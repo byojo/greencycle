@@ -11,16 +11,16 @@
     </view>
   </view>
 
-  <view class="empty" wx:if="{{!loading && riders.length === 0}}">暂无骑手</view>
+  <view class="empty" wx:if="{{!loading && riders.length === 0}}">暂无回收专员</view>
   <view class="loading" wx:if="{{loading}}">加载中...</view>
 
-  <!-- 添加骑手按钮 -->
+  <!-- 添加回收专员按钮 -->
   <view class="fab" bindtap="onShowAdd">+</view>
 
-  <!-- 添加骑手弹窗 -->
+  <!-- 添加回收专员弹窗 -->
   <view class="modal-mask" wx:if="{{showAdd}}" bindtap="closeAdd">
     <view class="modal" catchtap="">
-      <view class="modal-title">🚴 添加骑手</view>
+      <view class="modal-title">🚴 添加回收专员</view>
       <view class="input-group">
         <text class="input-label">姓名</text>
         <input class="input" value="{{form.name}}" bindinput="onInput" data-field="name" placeholder="张师傅" maxlength="20" />

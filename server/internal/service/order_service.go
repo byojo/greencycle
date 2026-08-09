@@ -156,18 +156,18 @@ func (s *OrderService) AdminListByUser(ctx context.Context, page, size int, stat
 	return s.repo.Order.AdminList(ctx, page, size, status)
 }
 
-// AssignRider 派单：从骑手表读取骑手信息，关联到订单
+// AssignRider 派单：从回收专员表读取回收专员信息，关联到订单
 func (s *OrderService) AssignRider(ctx context.Context, orderID uint64, riderID uint) error {
-	// 1. 查骑手是否存在且在职
+	// 1. 查回收专员是否存在且在职
 	rider, err := s.repo.Rider.GetByID(ctx, riderID)
 	if err != nil {
-		return errors.New("骑手查询失败")
+		return errors.New("回收专员查询失败")
 	}
 	if rider == nil {
-		return errors.New("骑手不存在")
+		return errors.New("回收专员不存在")
 	}
 	if rider.Status != 1 {
-		return errors.New("该骑手已离职")
+		return errors.New("该回收专员已离职")
 	}
 
 	// 2. 查订单是否存在
@@ -179,7 +179,7 @@ func (s *OrderService) AssignRider(ctx context.Context, orderID uint64, riderID 
 		return errors.New("订单当前状态不允许派单")
 	}
 
-	// 3. 更新订单：状态改为已派单 + 写入骑手信息
+	// 3. 更新订单：状态改为已派单 + 写入回收专员信息
 	updates := map[string]interface{}{
 		"status":      model.OrderStatusAssigned,
 		"rider_id":    rider.ID,
@@ -196,9 +196,9 @@ func (s *OrderService) AssignRider(ctx context.Context, orderID uint64, riderID 
 		fmt.Printf("⚠️ 创建派单时间线失败: %v\n", err)
 	}
 
-	// 5. 骑手服务次数 +1
+	// 5. 回收专员服务次数 +1
 	if err := s.repo.Rider.IncrementServiceCount(ctx, riderID); err != nil {
-		fmt.Printf("⚠️ 骑手服务次数递增失败: %v\n", err)
+		fmt.Printf("⚠️ 回收专员服务次数递增失败: %v\n", err)
 	}
 
 	// 6. 发送订阅消息通知用户
