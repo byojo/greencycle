@@ -63,7 +63,7 @@
         <view class="dot {{status >= 3 ? 'done' : ''}}"></view>
         <view class="info">
           <view class="title">上门回收</view>
-          <view class="time">{{pickupAt || (status >= 3 ? rider.name + ' 已到达' : '等待中')}}</view>
+          <view class="time">{{pickupAt || (status >= 3 ? (riderName || '回收员') + ' 已到达' : '等待中')}}</view>
         </view>
       </view>
       <view class="timeline-item">

@@ -36,6 +36,7 @@ type Order struct {
 	CarbonPoints  int            `gorm:"default:0" json:"carbonPoints"`
 	CancelReason  string         `gorm:"size:255" json:"cancelReason"`
 	Remark        string         `gorm:"size:255" json:"remark"`
+	PickupAt      *time.Time     `json:"pickupAt"` // 专员取件时间
 	CompletedAt   *time.Time     `json:"completedAt"`
 	CreatedAt     time.Time      `json:"createdAt"`
 	UpdatedAt     time.Time      `json:"updatedAt"`

@@ -135,6 +135,7 @@ Page({
       catText: order.itemName || detail.item,
       createdAt: order.createdAt ? formatDate(order.createdAt, 'YYYY-MM-DD HH:mm') : '',
       completedAt: order.completedAt ? formatDate(order.completedAt, 'YYYY-MM-DD HH:mm') : '',
+      pickupAt: order.pickupAt ? formatDate(order.pickupAt, 'YYYY-MM-DD HH:mm') : '',
       estimatedAtText: order.estimatedAt ? formatDate(order.estimatedAt, 'YYYY-MM-DD HH:mm') : '',
       pickupAddr: order.pickupAddr || '',
       cancelReason: order.cancelReason || '',

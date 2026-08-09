@@ -140,7 +140,10 @@ func (s *RiderService) PickOrder(ctx context.Context, orderID uint64, riderID ui
 		return errors.New("订单当前状态不允许取件")
 	}
 
-	updates := map[string]interface{}{"status": model.OrderStatusPicked}
+	updates := map[string]interface{}{
+		"status":    model.OrderStatusPicked,
+		"pickup_at": time.Now(),
+	}
 	if err := s.repo.Order.AdminUpdateStatus(ctx, orderID, updates); err != nil {
 		return errors.New("更新状态失败")
 	}
