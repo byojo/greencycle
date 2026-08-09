@@ -128,5 +128,9 @@ Page({
         }
       }
     });
+  },
+
+  onBack() {
+    wx.navigateBack({ fail: () => wx.switchTab({ url: '/pages/home/home' }) });
   }
 });

@@ -1,8 +1,9 @@
 <!--pages/pick-category/pick-category.wxml-->
 <view class="page">
-  <!-- 顶部导航（小白条 · 居中标题） -->
+  <!-- 顶部导航 -->
   <view class="nav">
     <view class="nav-inner">
+      <view class="nav-back" bindtap="onBack">‹</view>
       <view class="nav-title">选择回收品类</view>
     </view>
   </view>
