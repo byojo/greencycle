@@ -92,6 +92,7 @@ func (c *Client) GetFullURL(key string) string {
 // GetSignedURL 获取带签名的读取 URL（私有桶用，有效期 1 小时）
 func (c *Client) GetSignedURL(key string) string {
 	if c.client == nil {
+		fmt.Println("⚠️ COS client is nil, returning unsigned URL")
 		return c.GetFullURL(key)
 	}
 	signedURL, err := c.client.Object.GetPresignedURL(
@@ -104,6 +105,7 @@ func (c *Client) GetSignedURL(key string) string {
 		nil,
 	)
 	if err != nil {
+		fmt.Printf("⚠️ COS GetPresignedURL failed: %v\n", err)
 		return c.GetFullURL(key)
 	}
 	return signedURL.String()
