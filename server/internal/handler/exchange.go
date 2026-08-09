@@ -29,10 +29,39 @@ func (h *Handler) ExchangeDo(c *gin.Context) {
 
 	err := h.Svc.Exchange.Exchange(c.Request.Context(), userID, &req)
 	if err != nil {
-		response.BadRequest(c, err.Error())
+		// 业务错误返回 BadRequest，系统错误返回 ServerError
+		msg := err.Error()
+		if isBusinessError(msg) {
+			response.BadRequest(c, msg)
+		} else {
+			response.ServerError(c, "兑换失败，请稍后重试")
+		}
 		return
 	}
 	response.Success(c, nil)
+}
+
+// isBusinessError 判断是否为业务错误（用户可见的错误信息）
+func isBusinessError(msg string) bool {
+	knownErrors := []string{
+		"该商品每人限兑", "您已", "积分不足", "库存不足", "商品已下架",
+		"地址不属于", "限兑检查失败", "商品不存在", "用户信息获取失败",
+	}
+	for _, e := range knownErrors {
+		if msg == e || len(msg) > 0 && containsStr(msg, e) {
+			return true
+		}
+	}
+	return false
+}
+
+func containsStr(s, substr string) bool {
+	for i := 0; i <= len(s)-len(substr); i++ {
+		if s[i:i+len(substr)] == substr {
+			return true
+		}
+	}
+	return false
 }
 
 // ExchangeHistory 用户兑换记录

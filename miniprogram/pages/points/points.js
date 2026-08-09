@@ -64,18 +64,8 @@ Page({
         loading: false
       });
     } catch (err) {
-      // 兜底 mock（与原型一致）
-      const balance = 1286;
-      const carbonKg = 12.6;
-      this.setData({
-        balance,
-        balanceText: this.formatNumber(balance),
-        carbonKg,
-        carbonKgText: this.formatNumber(carbonKg, 1),
-        treeCount: 3,
-        logs: this.getMockLogs(),
-        loading: false
-      });
+      this.setData({ loading: false });
+      wx.showToast({ title: '加载失败，请下拉刷新', icon: 'none' });
     }
   },
 

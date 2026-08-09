@@ -68,24 +68,8 @@ Page({
       // 检查是否管理员
       this.checkAdmin();
     } catch (err) {
-      // 使用 mock 数据（与原型一致）
-      this.setData({
-        avatarText: '林',
-        nickname: '林小满',
-        vipLevel: '绿V2',
-        orderDesc: '已回收 12 次',
-        verified: true,
-        points: 1286,
-        pointsText: '1,286',
-        carbonKg: 12.6,
-        carbonText: '12.6',
-        orderCount: 12,
-        orderCountText: '12',
-        inUse: 0,
-        inUseText: '0',
-        addressCount: 2,
-        addressCountText: '2'
-      });
+      this.setData({ loading: false });
+      wx.showToast({ title: '加载失败，请下拉刷新', icon: 'none' });
     }
   },
 

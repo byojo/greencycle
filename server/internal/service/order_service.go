@@ -191,11 +191,15 @@ func (s *OrderService) AssignRider(ctx context.Context, orderID uint64, riderID 
 	}
 
 	// 4. 创建时间线
-	_ = s.repo.Order.CreateTimelineWithDetails(ctx, orderID, model.OrderStatusAssigned,
-		"已派单，回收员 "+rider.Name+" 即将上门", "管理员")
+	if err := s.repo.Order.CreateTimelineWithDetails(ctx, orderID, model.OrderStatusAssigned,
+		"已派单，回收员 "+rider.Name+" 即将上门", "管理员"); err != nil {
+		fmt.Printf("⚠️ 创建派单时间线失败: %v\n", err)
+	}
 
 	// 5. 骑手服务次数 +1
-	_ = s.repo.Rider.IncrementServiceCount(ctx, riderID)
+	if err := s.repo.Rider.IncrementServiceCount(ctx, riderID); err != nil {
+		fmt.Printf("⚠️ 骑手服务次数递增失败: %v\n", err)
+	}
 
 	// 6. 发送订阅消息通知用户
 	s.notifyOrderAssigned(order, rider)
@@ -317,7 +321,9 @@ func (s *OrderService) AdminUpdateStatus(ctx context.Context, orderID uint64, st
 	case model.OrderStatusCancelled:
 		timeline.Content = "订单已取消"
 	}
-	_ = s.repo.Order.CreateTimelineWithDetails(ctx, orderID, timeline.Status, timeline.Content, timeline.Operator)
+	if err := s.repo.Order.CreateTimelineWithDetails(ctx, orderID, timeline.Status, timeline.Content, timeline.Operator); err != nil {
+		fmt.Printf("⚠️ 创建状态变更时间线失败: %v\n", err)
+	}
 
 	return nil
 }

@@ -1,9 +1,23 @@
 // miniprogram/config.js
-// 配置文件：切换环境时只改这里
+// 配置文件：根据运行环境自动切换 API 地址
+
+// 开发环境 API（本地调试）
+const DEV_API = 'http://localhost:8080/api/v1';
+// 生产环境 API（微信云托管）
+const PROD_API = 'https://golang-ox8i-275614-7-1448098353.sh.run.tcloudbase.com/api/v1';
+
+// 根据小程序运行环境自动切换
+let envVersion = 'release';
+try {
+  envVersion = wx.getAccountInfoSync().miniProgram.envVersion;
+} catch (e) {}
+
+const apiBase = envVersion === 'develop' ? DEV_API : PROD_API;
+
 module.exports = {
   // ====== 基础配置 ======
-  // 后端 API 地址（微信云托管）
-  apiBase: 'https://golang-ox8i-275614-7-1448098353.sh.run.tcloudbase.com/api/v1',
+  apiBase,
+  envVersion,
 
   // ====== 业务配置 ======
   appName: '纸飞机',
@@ -14,7 +28,7 @@ module.exports = {
     bucket: 'greencycle-1258888888',
     region: 'ap-shanghai',
     prefix: 'orders/',
-    cdnDomain: ''  // CDN 域名，配置后图片走 CDN 加速
+    cdnDomain: ''
   },
 
   // 客服配置
@@ -31,6 +45,6 @@ module.exports = {
   },
 
   // ====== 开关 ======
-  useMock: false,        // 已关闭 Mock，使用真实 API
-  enableConsole: true   // 是否打印调试日志
+  useMock: false,
+  enableConsole: envVersion === 'develop'
 };

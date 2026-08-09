@@ -53,14 +53,8 @@ module.exports = {
   // 订单详情
   getOrderDetail: (id) => get(`/orders/${id}`),
 
-  // 订单时间线
-  getOrderTimeline: (id) => get(`/orders/${id}/timeline`),
-
   // 取消订单
   cancelOrder: (id, reason) => post(`/orders/${id}/cancel`, { reason }),
-
-  // 申请售后
-  applyAfterSale: (id, data) => post(`/orders/${id}/after-sale`, data),
 
   // ========== 碳积分 ==========
   // 积分概览

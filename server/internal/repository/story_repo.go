@@ -22,7 +22,9 @@ func (r *StoryRepository) List(ctx context.Context, page, size int) ([]model.Sto
 	var total int64
 
 	tx := r.db.WithContext(ctx).Model(&model.Story{}).Where("enabled = ?", true)
-	tx.Count(&total)
+	if err := tx.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
 
 	err := tx.Order("created_at DESC").
 		Offset((page - 1) * size).

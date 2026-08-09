@@ -46,18 +46,8 @@ Page({
         loading: false
       });
     } catch (err) {
-      // 兜底 mock 数据
-      const items = this.getMockItems().map((item, index) => ({
-        ...item,
-        icon: this.getItemIcon(index),
-        bgColor: this.getItemBgColor(index),
-        imageError: false
-      }));
-      this.setData({
-        items,
-        myPoints: 1286,
-        loading: false
-      });
+      this.setData({ loading: false });
+      wx.showToast({ title: '加载失败，请下拉刷新', icon: 'none' });
     }
   },
 

@@ -33,7 +33,9 @@ func (r *PointRepository) HistoryByUser(ctx context.Context, userID uint, page, 
 	var total int64
 
 	tx := r.db.WithContext(ctx).Model(&model.CarbonPointLog{}).Where("user_id = ?", userID)
-	tx.Count(&total)
+	if err := tx.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
 
 	err := tx.Order("created_at DESC").
 		Offset((page - 1) * size).

@@ -25,14 +25,14 @@ Page({
   },
 
   onReachBottom() {
-    if (this.data.hasMore && !this.data.loading) {
+    if (this.data.hasMore && !this.data.loading && !this.data.loadError) {
       this.loadData();
     }
   },
 
   async loadData() {
     if (this.data.loading === false && !this.data.hasMore) return;
-    this.setData({ loading: true });
+    this.setData({ loading: true, loadError: false });
 
     try {
       const res = await api.getExchangeHistory({ page: this.data.page, size: 20 });
@@ -46,12 +46,13 @@ Page({
       this.setData({
         records: allRecords,
         loading: false,
+        loadError: false,
         hasMore: allRecords.length < total,
         page: this.data.page + 1
       });
     } catch (err) {
       console.warn('加载兑换记录失败', err);
-      this.setData({ loading: false });
+      this.setData({ loading: false, loadError: true });
     }
   },
 

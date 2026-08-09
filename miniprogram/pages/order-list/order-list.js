@@ -63,10 +63,8 @@ Page({
       });
     } catch (err) {
       console.warn('加载订单失败', err);
-      this.setData({
-        loading: false,
-        groupedOrders: this.getMockGroupedOrders()
-      });
+      this.setData({ loading: false });
+      wx.showToast({ title: '加载失败，请下拉刷新', icon: 'none' });
     }
   },
 
