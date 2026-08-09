@@ -110,5 +110,10 @@ module.exports = {
   adminUpdateRider: (id, data) => put(`/admin/riders/${id}`, data, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' } }),
   adminAssignOrder: (id, data) => post(`/admin/orders/${id}/assign`, data, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' }, showLoading: true, loadingText: '派单中...' }),
   adminUpdateOrderStatus: (id, data) => put(`/admin/orders/${id}/status`, data, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' } }),
-  adminCompleteOrder: (id, data) => post(`/admin/orders/${id}/complete`, data, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' }, showLoading: true, loadingText: '处理中...' })
+  adminCompleteOrder: (id, data) => post(`/admin/orders/${id}/complete`, data, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' }, showLoading: true, loadingText: '处理中...' }),
+
+  // ========== 回收专员工单 ==========
+  riderGetOrders: () => get('/rider/orders'),
+  riderPickOrder: (id) => put(`/rider/orders/${id}/pick`),
+  riderCompleteOrder: (id, data) => post(`/rider/orders/${id}/complete`, data, { showLoading: true, loadingText: '处理中...' })
 };

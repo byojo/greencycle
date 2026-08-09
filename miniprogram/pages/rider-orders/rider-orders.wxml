@@ -1,0 +1,47 @@
+<view class="page">
+  <!-- 筛选 -->
+  <scroll-view scroll-x class="filters">
+    <view class="filter {{currentFilter === item.value ? 'active' : ''}}" wx:for="{{filters}}" wx:key="value" data-value="{{item.value}}" bindtap="onFilter">{{item.label}}</view>
+  </scroll-view>
+
+  <!-- 工单列表 -->
+  <view class="order-list" wx:if="{{filteredOrders.length > 0}}">
+    <view class="order-card" wx:for="{{filteredOrders}}" wx:key="id">
+      <view class="order-top">
+        <text class="order-no">{{item.orderNo}}</text>
+        <view class="status-badge status-{{item.status}}">{{statusMap[item.status]}}</view>
+      </view>
+      <view class="order-info">
+        <text class="order-item">{{item.itemName}}</text>
+        <text class="order-addr">📍 {{item.pickupAddr}}</text>
+      </view>
+      <view class="order-meta" wx:if="{{item.estimatedAt}}">预约：{{item.estimatedAtText}}</view>
+      <view class="order-photos" wx:if="{{item.images && item.images.length > 0}}">
+        <image wx:for="{{item.images}}" wx:for-item="img" wx:key="id" src="{{img.url}}" mode="aspectFill" class="photo-thumb" bindtap="onPreviewPhoto" data-urls="{{item.images}}" data-current="{{img.url}}"></image>
+      </view>
+      <view class="order-actions">
+        <button wx:if="{{item.status === 2}}" class="action-btn action-blue" bindtap="onPick" data-id="{{item.id}}">已取件</button>
+        <button wx:if="{{item.status === 3}}" class="action-btn action-green" bindtap="onShowComplete" data-id="{{item.id}}">完成回收</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{!loading && filteredOrders.length === 0}}">暂无工单</view>
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+
+  <!-- 完成订单弹窗 -->
+  <view class="modal-mask" wx:if="{{showComplete}}" bindtap="closeComplete">
+    <view class="modal" catchtap="stopPropagation">
+      <view class="modal-title">✅ 完成回收</view>
+      <view class="input-group">
+        <text class="input-label">回收金额（元）</text>
+        <input type="digit" class="input" value="{{finalAmount}}" bindinput="onAmountInput" placeholder="50" />
+      </view>
+      <view class="input-hint">用户将获得积分 = 品类基础分 + 金额×5%</view>
+      <view class="modal-actions">
+        <button class="modal-btn modal-btn-gray" bindtap="closeComplete">取消</button>
+        <button class="modal-btn modal-btn-green" bindtap="confirmComplete">确认完成</button>
+      </view>
+    </view>
+  </view>
+</view>

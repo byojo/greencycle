@@ -71,6 +71,13 @@
       <view class="row-arrow">›</view>
     </view>
 
+    <!-- 回收专员工单入口 -->
+    <view class="list-row" wx:if="{{isRider}}" bindtap="goRiderOrders">
+      <view class="row-icon" style="background:#FEF3C7;color:#D97706">📋</view>
+      <view class="row-label">我的工单</view>
+      <view class="row-arrow">›</view>
+    </view>
+
     <!-- 管理员入口（仅管理员可见） -->
     <view class="admin-section" wx:if="{{isAdmin}}">
       <view class="admin-title">管理后台</view>

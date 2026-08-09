@@ -3,9 +3,14 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
+	"time"
+
+	"gorm.io/gorm"
 
 	"github.com/greencycle/server/internal/model"
 	"github.com/greencycle/server/internal/repository"
+	"github.com/greencycle/server/pkg/wecom"
 )
 
 type RiderService struct {
@@ -40,4 +45,135 @@ func (s *RiderService) Update(ctx context.Context, id uint, updates map[string]i
 		return errors.New("无更新内容")
 	}
 	return s.repo.Rider.Update(ctx, id, updates)
+}
+
+// GetOrdersByRiderID 获取分配给专员的订单
+func (s *RiderService) GetOrdersByRiderID(ctx context.Context, riderID uint) ([]model.Order, error) {
+	return s.repo.Order.FindByRiderID(ctx, riderID)
+}
+
+// PickOrder 专员标记已取件
+func (s *RiderService) PickOrder(ctx context.Context, orderID uint64, riderID uint) error {
+	order, err := s.repo.Order.FindByID(ctx, orderID)
+	if err != nil {
+		return errors.New("订单不存在")
+	}
+	if order.RiderID == nil || *order.RiderID != riderID {
+		return errors.New("该订单未分配给您")
+	}
+	if order.Status != model.OrderStatusAssigned {
+		return errors.New("订单当前状态不允许取件")
+	}
+
+	updates := map[string]interface{}{"status": model.OrderStatusPicked}
+	if err := s.repo.Order.AdminUpdateStatus(ctx, orderID, updates); err != nil {
+		return errors.New("更新状态失败")
+	}
+
+	// 创建时间线
+	s.repo.Order.CreateTimelineWithDetails(ctx, orderID, model.OrderStatusPicked,
+		"回收专员已取件", "回收专员")
+
+	return nil
+}
+
+// CompleteOrder 专员完成订单（输入金额）
+func (s *RiderService) CompleteOrder(ctx context.Context, orderID uint64, riderID uint, finalAmount int) error {
+	order, err := s.repo.Order.FindByID(ctx, orderID)
+	if err != nil {
+		return errors.New("订单不存在")
+	}
+	if order.RiderID == nil || *order.RiderID != riderID {
+		return errors.New("该订单未分配给您")
+	}
+	if order.Status != model.OrderStatusPicked {
+		return errors.New("订单当前状态不允许完成")
+	}
+
+	// 调用 OrderService.Complete 完成订单（积分+减碳+通知）
+	// 但这里需要 riderID 权限校验，所以直接复用 order service 的逻辑
+	return s.completeOrderInternal(ctx, order, finalAmount)
+}
+
+func (s *RiderService) completeOrderInternal(ctx context.Context, order *model.Order, finalAmount int) error {
+	points := calculateCarbonPoints(order.CategoryCode, finalAmount)
+	carbonKg := calculateCarbonKg(order.CategoryCode, finalAmount)
+	treeCount := carbonKg / 18.0
+
+	now := time.Now()
+	err := s.repo.Order.Transaction(ctx, func(tx *gorm.DB) error {
+		// 1. 更新订单
+		if err := tx.Model(order).Updates(map[string]interface{}{
+			"status":        model.OrderStatusCompleted,
+			"final_amount":  finalAmount,
+			"carbon_points": points,
+			"completed_at":  &now,
+		}).Error; err != nil {
+			return err
+		}
+
+		// 2. 增加用户积分
+		if err := s.repo.User.IncrementPoints(ctx, tx, order.UserID, points); err != nil {
+			return err
+		}
+
+		// 3. 记录积分流水
+		var updatedUser model.User
+		if err := tx.First(&updatedUser, order.UserID).Error; err != nil {
+			return err
+		}
+		log := &model.CarbonPointLog{
+			UserID:  order.UserID,
+			OrderID: &order.ID,
+			Type:    1,
+			Amount:  points,
+			Balance: updatedUser.Points,
+			Remark:  fmt.Sprintf("回收 %s 奖励", order.ItemName),
+		}
+		if err := s.repo.Point.CreateLog(ctx, tx, log); err != nil {
+			return err
+		}
+
+		// 4. 记录减碳
+		red := &model.CarbonReduction{
+			UserID:       order.UserID,
+			OrderID:      order.ID,
+			CategoryCode: order.CategoryCode,
+			CarbonKg:     carbonKg,
+			TreeCount:    treeCount,
+		}
+		if err := s.repo.Point.CreateReduction(ctx, tx, red); err != nil {
+			return err
+		}
+
+		// 5. 记录完成时间线
+		timeline := &model.OrderTimeline{
+			OrderID:  order.ID,
+			Status:   model.OrderStatusCompleted,
+			Content:  fmt.Sprintf("订单完成，奖励 %d 积分", points),
+			Operator: "回收专员",
+		}
+		return tx.Create(timeline).Error
+	})
+
+	if err != nil {
+		return err
+	}
+
+	// 推送到企业微信群
+	go func() {
+		msg := fmt.Sprintf(`## ✅ 订单已完成
+
+**订单号：** %s
+**物品：** %s
+**获得积分：** %d
+**完成时间：** %s`,
+			order.OrderNo,
+			order.ItemName,
+			points,
+			time.Now().Format("2006-01-02 15:04"))
+		wecom.SendMarkdown(msg)
+	}()
+
+	return nil
 }

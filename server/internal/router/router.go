@@ -68,6 +68,11 @@ func Register(h *handler.Handler) *gin.Engine {
 		auth.GET("/exchange/items", h.ExchangeList)
 		auth.POST("/exchange", h.ExchangeDo)
 		auth.GET("/exchange/history", h.ExchangeHistory)
+
+		// 回收专员工单
+		auth.GET("/rider/orders", h.RiderOrders)
+		auth.PUT("/rider/orders/:id/pick", h.RiderPickOrder)
+		auth.POST("/rider/orders/:id/complete", h.RiderCompleteOrder)
 	}
 
 	// ========== 管理端（X-Admin-Key 鉴权）==========

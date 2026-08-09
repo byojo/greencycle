@@ -10,6 +10,7 @@ Page({
     orderDesc: '已回收 0 次',
     verified: true,
     isAdmin: false,
+    isRider: false,
     points: 0,
     pointsText: '0',
     carbonKg: 0,
@@ -67,6 +68,7 @@ Page({
       app.globalData.userInfo = u;
       // 检查是否管理员
       this.checkAdmin();
+      this.checkRider();
     } catch (err) {
       this.setData({ loading: false });
       wx.showToast({ title: '加载失败，请下拉刷新', icon: 'none' });
@@ -104,11 +106,19 @@ Page({
   goInvite() { wx.navigateTo({ url: '/pages/invite/invite' }); },
   goAdminOrders() { wx.navigateTo({ url: '/pages/admin-orders/admin-orders' }); },
   goAdminRiders() { wx.navigateTo({ url: '/pages/admin-riders/admin-riders' }); },
+  goRiderOrders() { wx.navigateTo({ url: '/pages/rider-orders/rider-orders' }); },
 
   async checkAdmin() {
     try {
       const res = await api.isAdmin();
       this.setData({ isAdmin: res.data.isAdmin });
+    } catch (e) {}
+  },
+
+  async checkRider() {
+    try {
+      const res = await api.riderGetOrders();
+      if (res.code === 0) this.setData({ isRider: true });
     } catch (e) {}
   },
   goService() {

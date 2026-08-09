@@ -57,6 +57,17 @@ func (r *OrderRepository) FindByID(ctx context.Context, id uint64) (*model.Order
 	return &order, nil
 }
 
+// FindByRiderID 查询分配给专员的订单
+func (r *OrderRepository) FindByRiderID(ctx context.Context, riderID uint) ([]model.Order, error) {
+	var orders []model.Order
+	err := r.db.WithContext(ctx).
+		Preload("Images").
+		Where("rider_id = ?", riderID).
+		Order("created_at DESC").
+		Find(&orders).Error
+	return orders, err
+}
+
 // ListByUser 用户订单列表
 func (r *OrderRepository) ListByUser(ctx context.Context, userID uint, page, size int, status int) ([]model.Order, int64, error) {
 	var orders []model.Order
