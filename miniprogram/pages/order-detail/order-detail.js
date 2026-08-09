@@ -243,10 +243,6 @@ Page({
     wx.navigateTo({ url: `/pages/order-track/order-track?id=${this.data.orderId}` });
   },
 
-  onCert() {
-    wx.showToast({ title: '环保证书开发中', icon: 'none' });
-  },
-
   onBack() {
     wx.navigateBack();
   }

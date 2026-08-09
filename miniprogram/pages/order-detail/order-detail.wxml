@@ -83,7 +83,6 @@
       <view class="carbon-title">你为地球减碳 {{carbonKg}}kg</view>
       <view class="carbon-sub">已获得 {{carbonPoints}} 碳积分 · 已种下 {{treeCount}} 棵树</view>
     </view>
-    <view class="carbon-cert" bindtap="onCert">证书 ›</view>
   </view>
 
   <!-- 订单信息 -->
