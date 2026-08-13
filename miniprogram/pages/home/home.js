@@ -23,7 +23,9 @@ Page({
     points: 0,
     carbonKg: 0,
     stories: [],
-    searchKeyword: ''
+    searchKeyword: '',
+    // 用户手动选择过地址后加锁，避免 onShow 自动定位把它覆盖
+    locationLocked: false
   },
 
   onLoad() {
@@ -86,6 +88,8 @@ Page({
 
   // 进入页面自动定位（已授权则静默获取城市，未授权则显示“点击定位”）
   async loadLocation() {
+    // 用户已手动选过地址，不再用 GPS 自动覆盖
+    if (this.data.locationLocked) return;
     try {
       const { latitude, longitude } = await new Promise((resolve, reject) => {
         wx.getLocation({ type: 'gcj02', success: resolve, fail: reject });
@@ -103,6 +107,7 @@ Page({
     wx.chooseLocation({
       success: async (res) => {
         // res: { name, address, latitude, longitude } —— 用选点结果更新位置
+        this.setData({ locationLocked: true });
         await this.reverseGeocode(res.latitude, res.longitude, res.name, res.address);
       },
       fail: (err) => {
@@ -125,17 +130,19 @@ Page({
   async loadUserInfo() {
     try {
       const res = await api.getUserInfo();
-      this.setData({
-        userInfo: res.data,
-        location: res.data.city || '定位中...'
-      });
+      const patch = { userInfo: res.data };
+      // 仅当用户未手动选位时，用服务器城市兜底；否则保留手动选择的地址
+      if (!this.data.locationLocked) {
+        patch.location = res.data.city || '定位中...';
+      }
+      this.setData(patch);
       app.globalData.userInfo = res.data;
       wx.setStorageSync('userInfo', res.data);
-      // 异步获取微信定位覆盖城市
-      this.loadLocation();
+      // 异步获取微信定位覆盖城市（已手动选位则跳过）
+      if (!this.data.locationLocked) this.loadLocation();
     } catch (err) {
       console.warn('加载用户信息失败', err);
-      this.loadLocation();
+      if (!this.data.locationLocked) this.loadLocation();
     }
   },
 
