@@ -147,7 +147,7 @@ Page({
   onAgreement() {
     wx.showModal({
       title: '用户协议',
-      content: '请前往「叮当回收」官方查看完整协议\n\nhttps://sxyrkj.cn/agreement',
+      content: '请前往「叮当回收」官方查看完整协议\n\nhttps://sxyrgy.cn/agreement',
       showCancel: false
     });
   },
@@ -155,7 +155,7 @@ Page({
   onPrivacy() {
     wx.showModal({
       title: '隐私政策',
-      content: '请前往「叮当回收」官方查看完整隐私政策\n\nhttps://sxyrkj.cn/privacy',
+      content: '请前往「叮当回收」官方查看完整隐私政策\n\nhttps://sxyrgy.cn/privacy',
       showCancel: false
     });
   },
