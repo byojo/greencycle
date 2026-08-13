@@ -24,7 +24,7 @@ Page({
 
     this.setData({
       inviteCode: code,
-      inviteLink: `https://sxyrgy.cn?from=${code}`
+      inviteLink: `https://sxyrkj.cn?from=${code}`
     });
 
     try {
