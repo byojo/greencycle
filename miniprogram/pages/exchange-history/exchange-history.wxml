@@ -8,13 +8,40 @@
   <!-- 记录列表 -->
   <view class="list" wx:if="{{records.length > 0}}">
     <view class="card" wx:for="{{records}}" wx:key="id">
-      <image class="card-img" src="{{item.itemImage || ''}}" mode="aspectFill" />
-      <view class="card-body">
-        <view class="card-name">{{item.itemName}}</view>
-        <view class="card-points">-{{item.points}} 积分</view>
-        <view class="card-status status-{{item.status}}">{{statusMap[item.status]}}</view>
+      <view class="card-top">
+        <image class="card-img" src="{{item.itemImage || ''}}" mode="aspectFill" />
+        <view class="card-body">
+          <view class="card-name">{{item.itemName}}</view>
+          <view class="card-points">-{{item.points}} 积分</view>
+          <view class="card-status" style="color:{{statusColor[item.status]}}">{{statusMap[item.status]}}</view>
+        </view>
+        <view class="card-date">{{item.createdAtText}}</view>
       </view>
-      <view class="card-date">{{item.createdAtText}}</view>
+
+      <!-- 配送信息 -->
+      <view class="delivery-info" wx:if="{{item.deliveryAddr}}">
+        <view class="delivery-row">
+          <text class="delivery-label">收货人</text>
+          <text class="delivery-value">{{item.deliveryName}} {{item.deliveryPhone}}</text>
+        </view>
+        <view class="delivery-row">
+          <text class="delivery-label">收货地址</text>
+          <text class="delivery-value">{{item.deliveryAddr}}</text>
+        </view>
+        <view class="delivery-row" wx:if="{{item.riderName && item.status === 2}}">
+          <text class="delivery-label">配送员</text>
+          <text class="delivery-value">{{item.riderName}} {{item.riderPhone}}</text>
+        </view>
+        <view class="delivery-row" wx:if="{{item.status === 1}}">
+          <text class="delivery-hint">预计 7 个工作日内配送送达</text>
+        </view>
+        <view class="delivery-row" wx:if="{{item.status === 2}}">
+          <text class="delivery-hint" style="color:#3B82F6">配送员正在为您送达，请保持电话畅通</text>
+        </view>
+        <view class="delivery-row" wx:if="{{item.status === 3 && item.completedAt}}">
+          <text class="delivery-hint" style="color:#10B981">已于 {{item.completedAt}} 送达</text>
+        </view>
+      </view>
     </view>
   </view>
 

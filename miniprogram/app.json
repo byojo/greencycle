@@ -23,7 +23,8 @@
     "pages/admin-orders/admin-orders",
     "pages/admin-riders/admin-riders",
     "pages/rider-orders/rider-orders",
-    "pages/admin-applications/admin-applications"
+    "pages/admin-applications/admin-applications",
+    "pages/admin-exchange/admin-exchange"
   ],
   "window": {
     "navigationBarBackgroundColor": "#07C160",
@@ -56,7 +57,7 @@
   },
   "permission": {
     "scope.userLocation": {
-      "desc": "用于显示附近的回收服务"
+      "desc": "用于首页城市定位、取件地址选择和回收专员就近派单匹配"
     },
     "scope.writePhotosAlbum": {
       "desc": "用于保存邀请海报到相册"

@@ -135,9 +135,15 @@ Page({
               itemId: selectedItem.id,
               addressId: selectedAddress.id
             });
-            wx.showToast({ title: '兑换成功！', icon: 'success' });
             this.onCloseConfirm();
             this.loadData();
+            // 兑换成功提示
+            wx.showModal({
+              title: '🎉 兑换成功',
+              content: `「${selectedItem.name}」将在 7 个工作日内为您配送送达，请保持电话畅通，注意查收。`,
+              showCancel: false,
+              confirmText: '我知道了'
+            });
           } catch (err) {
             wx.showToast({ title: err.message || '兑换失败', icon: 'none' });
           }

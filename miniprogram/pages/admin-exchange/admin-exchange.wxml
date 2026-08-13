@@ -1,0 +1,105 @@
+<view class="page">
+  <!-- 导航栏 -->
+  <view class="nav">
+    <view class="nav-inner">
+      <view class="nav-back" bindtap="onBack">
+        <text class="back-icon">‹</text>
+      </view>
+      <view class="nav-title">兑换工单</view>
+    </view>
+  </view>
+
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <view
+      class="filter-item {{currentFilter === item.value ? 'active' : ''}}"
+      wx:for="{{filters}}"
+      wx:key="value"
+      data-value="{{item.value}}"
+      bindtap="onFilter"
+    >{{item.label}}</view>
+  </view>
+
+  <!-- 工单列表 -->
+  <view class="list" wx:if="{{!loading && records.length > 0}}">
+    <view class="card" wx:for="{{records}}" wx:key="id">
+      <view class="card-header">
+        <view class="card-no">工单 #{{item.id}}</view>
+        <view class="card-status" style="color:{{statusColor[item.status]}}">{{statusMap[item.status]}}</view>
+      </view>
+
+      <view class="card-body">
+        <image class="card-img" src="{{item.itemImage || ''}}" mode="aspectFill" />
+        <view class="card-info">
+          <view class="card-name">{{item.itemName}}</view>
+          <view class="card-points">-{{item.points}} 积分</view>
+          <view class="card-date">{{item.createdAtText}}</view>
+        </view>
+      </view>
+
+      <!-- 收货信息 -->
+      <view class="info-section">
+        <view class="info-row">
+          <text class="info-label">收货人</text>
+          <text class="info-value">{{item.deliveryName}} {{item.deliveryPhone}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">地址</text>
+          <text class="info-value">{{item.deliveryAddr}}</text>
+        </view>
+        <view class="info-row" wx:if="{{item.riderName}}">
+          <text class="info-label">配送员</text>
+          <text class="info-value">{{item.riderName}} {{item.riderPhone}}</text>
+        </view>
+        <view class="info-row" wx:if="{{item.shippedAtText}}">
+          <text class="info-label">分配时间</text>
+          <text class="info-value">{{item.shippedAtText}}</text>
+        </view>
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="card-actions" wx:if="{{item.status === 1}}">
+        <button class="btn-assign" data-id="{{item.id}}" bindtap="onAssign">分配配送员</button>
+        <button class="btn-cancel" data-id="{{item.id}}" bindtap="onCancel">取消</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty" wx:if="{{!loading && records.length === 0}}">
+    <text class="empty-icon">📦</text>
+    <text class="empty-text">暂无兑换工单</text>
+  </view>
+
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+
+  <!-- 分配配送员弹窗 -->
+  <view class="modal-mask" wx:if="{{showAssign}}" bindtap="closeAssign">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">选择配送员</text>
+        <view class="modal-close" bindtap="closeAssign">×</view>
+      </view>
+      <view class="rider-list">
+        <view
+          class="rider-item"
+          wx:for="{{riders}}"
+          wx:key="id"
+          data-id="{{item.id}}"
+          data-name="{{item.name}}"
+          bindtap="selectRider"
+        >
+          <view class="rider-info">
+            <text class="rider-name">{{item.name}}</text>
+            <text class="rider-phone">{{item.phone}}</text>
+          </view>
+          <text class="rider-arrow">›</text>
+        </view>
+        <view class="rider-empty" wx:if="{{riders.length === 0}}">
+          <text>暂无可用配送员，请先在专员管理中添加</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -33,10 +33,13 @@
   background: #fff;
   border-radius: 16rpx;
   padding: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+.card-top {
   display: flex;
   align-items: center;
   gap: 20rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
 }
 
 .card-img {
@@ -70,32 +73,46 @@
   padding: 4rpx 16rpx;
   border-radius: 8rpx;
   display: inline-block;
-}
-
-.status-1 {
-  background: #FEF3C7;
-  color: #D97706;
-}
-
-.status-2 {
-  background: #DBEAFE;
-  color: #2563EB;
-}
-
-.status-3 {
-  background: #D1FAE5;
-  color: #059669;
-}
-
-.status-4 {
-  background: #FEE2E2;
-  color: #DC2626;
+  font-weight: 500;
 }
 
 .card-date {
   font-size: 22rpx;
   color: #9CA3AF;
   flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.delivery-info {
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #F3F4F6;
+}
+
+.delivery-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10rpx;
+}
+
+.delivery-label {
+  font-size: 24rpx;
+  color: #9CA3AF;
+  width: 120rpx;
+  flex-shrink: 0;
+}
+
+.delivery-value {
+  font-size: 24rpx;
+  color: #4B5563;
+  flex: 1;
+  word-break: break-all;
+}
+
+.delivery-hint {
+  font-size: 24rpx;
+  color: #F59E0B;
+  flex: 1;
 }
 
 .loading {

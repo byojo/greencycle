@@ -3,8 +3,10 @@ const { formatDate } = require('../../utils/format.js');
 
 Page({
   data: {
+    currentTab: 0, // 0=回收工单, 1=配送任务
     orders: [],
     filteredOrders: [],
+    deliveries: [],
     loading: true,
     currentFilter: 0,
     filters: [
@@ -19,11 +21,20 @@ Page({
     finalAmount: ''
   },
 
-  onLoad() { this.loadOrders(); this.startLocationReport(); },
-  onShow() { this.loadOrders(); this.startLocationReport(); },
+  onLoad() { this.loadData(); this.startLocationReport(); },
+  onShow() { this.loadData(); this.startLocationReport(); },
   onHide() { this.stopLocationReport(); },
   onUnload() { this.stopLocationReport(); },
-  onPullDownRefresh() { this.loadOrders().finally(() => wx.stopPullDownRefresh()); },
+  onPullDownRefresh() { this.loadData().finally(() => wx.stopPullDownRefresh()); },
+
+  // 切换 Tab
+  onSwitchTab(e) {
+    const tab = parseInt(e.currentTarget.dataset.tab);
+    this.setData({ currentTab: tab });
+    if (tab === 1 && this.data.deliveries.length === 0) {
+      this.loadDeliveries();
+    }
+  },
 
   // 定时上报位置
   startLocationReport() {
@@ -47,6 +58,19 @@ Page({
     } catch (e) {}
   },
 
+  async loadData() {
+    this.setData({ loading: true });
+    try {
+      await Promise.all([
+        this.loadOrders(),
+        this.loadDeliveries()
+      ]);
+      this.setData({ loading: false });
+    } catch (err) {
+      this.setData({ loading: false });
+    }
+  },
+
   async loadOrders() {
     try {
       const res = await api.riderGetOrders();
@@ -54,11 +78,25 @@ Page({
         ...o,
         estimatedAtText: o.estimatedAt ? formatDate(o.estimatedAt, 'MM-DD HH:mm') : ''
       }));
-      this.setData({ orders, loading: false });
+      this.setData({ orders });
       this.applyFilter();
     } catch (err) {
-      this.setData({ loading: false });
-      wx.showToast({ title: err.message || '加载失败', icon: 'none' });
+      if (!err || err.statusCode !== 403) {
+        wx.showToast({ title: err.message || '加载工单失败', icon: 'none' });
+      }
+    }
+  },
+
+  async loadDeliveries() {
+    try {
+      const res = await api.riderGetDeliveries({ silent: true });
+      const deliveries = (res.data.list || []).map(d => ({
+        ...d,
+        completedAtText: d.completedAt ? formatDate(d.completedAt, 'MM-DD HH:mm') : ''
+      }));
+      this.setData({ deliveries });
+    } catch (err) {
+      // 非专员用户静默忽略
     }
   },
 
@@ -117,6 +155,25 @@ Page({
     } catch (err) {
       wx.showToast({ title: err.message || '操作失败', icon: 'none' });
     }
+  },
+
+  async onCompleteDelivery(e) {
+    const id = e.currentTarget.dataset.id;
+    wx.showModal({
+      title: '确认送达',
+      content: '确认已将商品送达收货人？',
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            await api.riderCompleteDelivery(id);
+            wx.showToast({ title: '已确认送达', icon: 'success' });
+            this.loadDeliveries();
+          } catch (err) {
+            wx.showToast({ title: err.message || '操作失败', icon: 'none' });
+          }
+        }
+      }
+    });
   },
 
   onPreviewPhoto(e) {

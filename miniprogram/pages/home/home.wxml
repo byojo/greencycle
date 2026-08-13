@@ -2,10 +2,10 @@
 <view class="page">
   <!-- 顶部 Banner -->
   <view class="banner">
-    <view class="location" bindtap="loadLocation">
+    <view class="location" bindtap="onLocationTap">
       <text class="loc-icon">📍</text>
       <text>{{location}}</text>
-      <text class="arrow">▾</text>
+      <text class="arrow">›</text>
     </view>
     <view class="greeting">
       <view class="hello">{{greeting}}</view>

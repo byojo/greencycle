@@ -4,37 +4,49 @@ import "time"
 
 // ExchangeItem 兑换商品
 type ExchangeItem struct {
-	ID            uint      `gorm:"primaryKey" json:"id"`
-	Name          string    `gorm:"size:128;not null" json:"name"`
-	Desc          string    `gorm:"size:500" json:"desc"`
-	Image         string    `gorm:"size:255;not null" json:"image"`
-	Points        int       `gorm:"not null" json:"points"`
-	Stock         int       `gorm:"not null;default:0" json:"stock"`
-	LimitPerUser  int       `gorm:"not null;default:0" json:"limitPerUser"`
-	Sort          int       `gorm:"not null;default:0" json:"sort"`
-	Enabled       bool      `gorm:"not null;default:true" json:"enabled"`
-	CreatedAt     time.Time `json:"createdAt"`
-	UpdatedAt     time.Time `json:"updatedAt"`
+	ID           uint      `gorm:"primaryKey" json:"id"`
+	Name         string    `gorm:"size:128;not null" json:"name"`
+	Desc         string    `gorm:"size:500" json:"desc"`
+	Image        string    `gorm:"size:255;not null" json:"image"`
+	Points       int       `gorm:"not null" json:"points"`
+	Stock        int       `gorm:"not null;default:0" json:"stock"`
+	LimitPerUser int       `gorm:"not null;default:0" json:"limitPerUser"`
+	Sort         int       `gorm:"not null;default:0" json:"sort"`
+	Enabled      bool      `gorm:"not null;default:true" json:"enabled"`
+	CreatedAt    time.Time `json:"createdAt"`
+	UpdatedAt    time.Time `json:"updatedAt"`
 }
 
 func (ExchangeItem) TableName() string {
 	return "exchange_items"
 }
 
-// ExchangeRecord 用户兑换记录
+// ExchangeRecord 用户兑换记录（兑换工单）
 type ExchangeRecord struct {
-	ID         uint      `gorm:"primaryKey" json:"id"`
-	UserID     uint      `gorm:"index:idx_user_item,priority:1;not null" json:"userId"`
-	ItemID     uint      `gorm:"index:idx_user_item;not null" json:"itemId"`
-	ItemName   string    `gorm:"size:128;not null" json:"itemName"`
-	ItemImage  string    `gorm:"size:255;not null" json:"itemImage"`
-	Points     int       `gorm:"not null" json:"points"`
-	Status     int       `gorm:"not null;default:1" json:"status"` // 1待发货 2已发货 3已完成 4已取消
-	AddressID  *uint64   `json:"addressId"`
-	ExpressNo  string    `gorm:"size:64" json:"expressNo"`
-	Remark     string    `gorm:"size:255" json:"remark"`
-	CreatedAt  time.Time `json:"createdAt"`
-	UpdatedAt  time.Time `json:"updatedAt"`
+	ID        uint    `gorm:"primaryKey" json:"id"`
+	UserID    uint    `gorm:"index:idx_user_item,priority:1;not null" json:"userId"`
+	ItemID    uint    `gorm:"index:idx_user_item;not null" json:"itemId"`
+	ItemName  string  `gorm:"size:128;not null" json:"itemName"`
+	ItemImage string  `gorm:"size:255;not null" json:"itemImage"`
+	Points    int     `gorm:"not null" json:"points"`
+	Status    int     `gorm:"not null;default:1" json:"status"` // 1待发货 2配送中 3已完成 4已取消
+	AddressID *uint64 `json:"addressId"`
+	// 收货地址快照
+	DeliveryName  string `gorm:"size:64" json:"deliveryName"`
+	DeliveryPhone string `gorm:"size:20" json:"deliveryPhone"`
+	DeliveryAddr  string `gorm:"size:500" json:"deliveryAddr"`
+	// 配送专员
+	RiderID    *uint  `gorm:"index" json:"riderId"`
+	RiderName  string `gorm:"size:64" json:"riderName"`
+	RiderPhone string `gorm:"size:20" json:"riderPhone"`
+	// 时间节点
+	ShippedAt   *time.Time `json:"shippedAt"`
+	CompletedAt *time.Time `json:"completedAt"`
+	// 其他
+	ExpressNo string    `gorm:"size:64" json:"expressNo"`
+	Remark    string    `gorm:"size:255" json:"remark"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 func (ExchangeRecord) TableName() string {

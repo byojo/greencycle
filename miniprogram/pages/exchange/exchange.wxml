@@ -99,7 +99,7 @@
       </view>
 
       <view class="modal-tip">
-        <text>扣除 {{selectedItem.points}} 积分，商品将尽快发货</text>
+        <text>扣除 {{selectedItem.points}} 积分，商品将在 7 个工作日内配送送达</text>
       </view>
 
       <button class="btn-exchange" bindtap="onExchange">确认兑换</button>

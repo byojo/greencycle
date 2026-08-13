@@ -1,10 +1,12 @@
 package handler
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 
-	"github.com/greencycle/server/pkg/response"
 	"github.com/greencycle/server/internal/service"
+	"github.com/greencycle/server/pkg/response"
 )
 
 // ExchangeList 商品列表
@@ -80,4 +82,95 @@ func (h *Handler) ExchangeHistory(c *gin.Context) {
 		"page":  page,
 		"size":  size,
 	})
+}
+
+// ========== 管理端：兑换工单管理 ==========
+
+// AdminExchangeList 管理端兑换工单列表
+func (h *Handler) AdminExchangeList(c *gin.Context) {
+	status, _ := strconv.Atoi(c.DefaultQuery("status", "0"))
+	records, err := h.Svc.Exchange.AdminList(c.Request.Context(), status)
+	if err != nil {
+		response.ServerError(c, err.Error())
+		return
+	}
+	response.Success(c, gin.H{"list": records})
+}
+
+// AdminExchangeAssign 分配配送专员
+// body: { "riderId": 1 }
+func (h *Handler) AdminExchangeAssign(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		response.BadRequest(c, "工单 ID 错误")
+		return
+	}
+
+	var req struct {
+		RiderID uint `json:"riderId" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.BadRequest(c, "参数错误")
+		return
+	}
+
+	if err := h.Svc.Exchange.AssignRider(c.Request.Context(), uint(id), req.RiderID); err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
+	response.Success(c, gin.H{"message": "已分配配送专员"})
+}
+
+// AdminExchangeCancel 取消兑换工单
+func (h *Handler) AdminExchangeCancel(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		response.BadRequest(c, "工单 ID 错误")
+		return
+	}
+
+	if err := h.Svc.Exchange.CancelRecord(c.Request.Context(), uint(id)); err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
+	response.Success(c, gin.H{"message": "已取消"})
+}
+
+// ========== 回收专员：配送任务 ==========
+
+// RiderDeliveries 获取分配给当前专员的配送任务
+func (h *Handler) RiderDeliveries(c *gin.Context) {
+	riderID := h.getRiderID(c)
+	if riderID == 0 {
+		response.BadRequest(c, "您不是回收专员")
+		return
+	}
+
+	records, err := h.Svc.Exchange.RiderDeliveries(c.Request.Context(), riderID)
+	if err != nil {
+		response.ServerError(c, err.Error())
+		return
+	}
+	response.Success(c, gin.H{"list": records})
+}
+
+// RiderCompleteDelivery 专员标记配送完成
+func (h *Handler) RiderCompleteDelivery(c *gin.Context) {
+	riderID := h.getRiderID(c)
+	if riderID == 0 {
+		response.BadRequest(c, "您不是回收专员")
+		return
+	}
+
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		response.BadRequest(c, "工单 ID 错误")
+		return
+	}
+
+	if err := h.Svc.Exchange.CompleteDelivery(c.Request.Context(), uint(id), riderID); err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
+	response.Success(c, gin.H{"message": "配送已完成"})
 }

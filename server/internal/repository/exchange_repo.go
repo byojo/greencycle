@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"time"
 
 	"gorm.io/gorm"
 
@@ -79,4 +80,74 @@ func (r *ExchangeRepository) UserExchangeHistory(ctx context.Context, userID uin
 		Find(&records).Error
 
 	return records, total, err
+}
+
+// AdminListRecords 管理端兑换工单列表（可选状态过滤）
+func (r *ExchangeRepository) AdminListRecords(ctx context.Context, status int) ([]model.ExchangeRecord, error) {
+	var records []model.ExchangeRecord
+	tx := r.db.WithContext(ctx).Model(&model.ExchangeRecord{})
+	if status > 0 {
+		tx = tx.Where("status = ?", status)
+	}
+	err := tx.Order("created_at DESC").Find(&records).Error
+	return records, err
+}
+
+// GetRecordByID 根据 ID 获取兑换记录
+func (r *ExchangeRepository) GetRecordByID(ctx context.Context, id uint) (*model.ExchangeRecord, error) {
+	var record model.ExchangeRecord
+	err := r.db.WithContext(ctx).First(&record, id).Error
+	if err != nil {
+		return nil, err
+	}
+	return &record, nil
+}
+
+// AssignRider 分配配送专员并更新状态为配送中
+func (r *ExchangeRepository) AssignRider(ctx context.Context, id uint, riderID uint, riderName, riderPhone string) error {
+	now := time.Now()
+	return r.db.WithContext(ctx).Model(&model.ExchangeRecord{}).
+		Where("id = ? AND status = ?", id, 1). // 仅待发货可分配
+		Updates(map[string]interface{}{
+			"rider_id":    riderID,
+			"rider_name":  riderName,
+			"rider_phone": riderPhone,
+			"status":      2, // 配送中
+			"shipped_at":  &now,
+		}).Error
+}
+
+// CompleteDelivery 标记配送完成
+func (r *ExchangeRepository) CompleteDelivery(ctx context.Context, id uint, riderID uint) error {
+	now := time.Now()
+	result := r.db.WithContext(ctx).Model(&model.ExchangeRecord{}).
+		Where("id = ? AND status = ? AND rider_id = ?", id, 2, riderID).
+		Updates(map[string]interface{}{
+			"status":       3, // 已完成
+			"completed_at": &now,
+		})
+	if result.Error != nil {
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+	return nil
+}
+
+// CancelRecord 取消兑换记录
+func (r *ExchangeRepository) CancelRecord(ctx context.Context, id uint) error {
+	return r.db.WithContext(ctx).Model(&model.ExchangeRecord{}).
+		Where("id = ? AND status = ?", id, 1). // 仅待发货可取消
+		Update("status", 4).Error
+}
+
+// FindDeliveriesByRiderID 获取分配给专员的配送任务
+func (r *ExchangeRepository) FindDeliveriesByRiderID(ctx context.Context, riderID uint) ([]model.ExchangeRecord, error) {
+	var records []model.ExchangeRecord
+	err := r.db.WithContext(ctx).
+		Where("rider_id = ? AND status IN ?", riderID, []int{2, 3}).
+		Order("created_at DESC").
+		Find(&records).Error
+	return records, err
 }

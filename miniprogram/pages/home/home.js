@@ -57,41 +57,69 @@ Page({
     this.setData({ greeting });
   },
 
-  // 获取微信定位并解析城市名
+  // 逆地理编码：经纬度 -> 城市/地址名（用于展示当前位置）
+  reverseGeocode(lat, lng, fallbackName, fallbackAddr) {
+    return new Promise((resolve) => {
+      wx.request({
+        url: 'https://apis.map.qq.com/ws/geocoder/v1/',
+        data: {
+          location: `${lat},${lng}`,
+          key: 'SVSBZ-RGUCB-ZQTUS-NZRUU-4U6WZ-CQFQD'
+        },
+        success: (res) => {
+          const r = res.data && res.data.result;
+          const city = (r && r.ad_info && r.ad_info.city) ||
+            (r && r.address_component && r.address_component.city);
+          const address = (r && r.address) || fallbackAddr || fallbackName;
+          const label = city || address || '当前位置';
+          this.setData({ location: label });
+          resolve(label);
+        },
+        fail: () => {
+          const label = fallbackName || fallbackAddr || '当前位置';
+          this.setData({ location: label });
+          resolve(label);
+        }
+      });
+    });
+  },
+
+  // 进入页面自动定位（已授权则静默获取城市，未授权则显示“点击定位”）
   async loadLocation() {
     try {
       const { latitude, longitude } = await new Promise((resolve, reject) => {
         wx.getLocation({ type: 'gcj02', success: resolve, fail: reject });
       });
-
-      // 尝试逆地理编码获取城市名
-      try {
-        const res = await new Promise((resolve, reject) => {
-          wx.request({
-            url: 'https://apis.map.qq.com/ws/geocoder/v1/',
-            data: {
-              location: `${latitude},${longitude}`,
-              key: 'SVSBZ-RGUCB-ZQTUS-NZRUU-4U6WZ-CQFQD'
-            },
-            success: resolve,
-            fail: reject
-          });
-        });
-        const city = res.data?.result?.ad_info?.city || res.data?.result?.address_component?.city;
-        if (city) {
-          this.setData({ location: city });
-          return;
-        }
-      } catch (e) {
-        console.warn('逆地理编码失败', e);
-      }
-
-      // 逆地理编码失败，显示已定位
-      this.setData({ location: '当前位置' });
+      // 用坐标反查城市名
+      await this.reverseGeocode(latitude, longitude);
     } catch (err) {
       console.warn('定位失败', err);
       this.setData({ location: '点击定位' });
     }
+  },
+
+  // 点击位置：调起微信地图，触发授权确认 + 位置定位
+  onLocationTap() {
+    wx.chooseLocation({
+      success: async (res) => {
+        // res: { name, address, latitude, longitude } —— 用选点结果更新位置
+        await this.reverseGeocode(res.latitude, res.longitude, res.name, res.address);
+      },
+      fail: (err) => {
+        const msg = (err && err.errMsg) || '';
+        // 用户拒绝授权 -> 引导去设置开启
+        if (msg.indexOf('auth') >= 0 && msg.indexOf('deny') >= 0) {
+          wx.showModal({
+            title: '需要位置权限',
+            content: '用于展示您所在城市并就近匹配回收专员，请在设置中开启位置权限',
+            confirmText: '去设置',
+            cancelText: '取消',
+            success: (m) => { if (m.confirm) wx.openSetting(); }
+          });
+        }
+        // 用户主动取消选择，不做处理
+      }
+    });
   },
 
   async loadUserInfo() {

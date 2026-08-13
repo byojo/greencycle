@@ -1,7 +1,17 @@
 .page { min-height: 100vh; background: #F7F8FA; }
+
+/* 顶部 Tab */
+.top-tabs { display: flex; background: #fff; padding: 0 24rpx; border-bottom: 1rpx solid #F3F4F6; }
+.top-tab { flex: 1; text-align: center; padding: 24rpx 0; font-size: 30rpx; color: #6B7280; position: relative; }
+.top-tab.active { color: #07C160; font-weight: 600; }
+.top-tab.active::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 60rpx; height: 4rpx; background: #07C160; border-radius: 2rpx; }
+
+/* 筛选 */
 .filters { display: flex; white-space: nowrap; padding: 16rpx 24rpx; gap: 12rpx; background: #fff; border-bottom: 1rpx solid #F3F4F6; }
 .filter { display: inline-block; padding: 8rpx 24rpx; border-radius: 32rpx; font-size: 26rpx; color: #666; background: #F3F4F6; }
 .filter.active { background: #07C160; color: #fff; }
+
+/* 回收工单 */
 .order-list { padding: 0 24rpx; }
 .order-card { background: #fff; border-radius: 16rpx; padding: 24rpx; margin-bottom: 20rpx; }
 .order-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12rpx; }
@@ -24,7 +34,27 @@
 .action-btn::after { border: none; }
 .action-green { background: #07C160; }
 .action-blue { background: #2563EB; }
+
+/* 配送任务 */
+.delivery-list { padding: 24rpx; }
+.delivery-card { background: #fff; border-radius: 16rpx; padding: 24rpx; margin-bottom: 20rpx; }
+.delivery-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16rpx; }
+.delivery-no { font-size: 24rpx; color: #9CA3AF; }
+.delivery-status { font-size: 26rpx; font-weight: 600; }
+.delivery-body { display: flex; gap: 20rpx; margin-bottom: 16rpx; }
+.delivery-img { width: 100rpx; height: 100rpx; border-radius: 12rpx; background: #F3F4F6; flex-shrink: 0; }
+.delivery-info { flex: 1; min-width: 0; }
+.delivery-name { display: block; font-size: 30rpx; font-weight: 600; color: #1F2937; }
+.delivery-addr { display: block; font-size: 26rpx; color: #6B7280; margin-top: 8rpx; }
+.delivery-contact { background: #F9FAFB; border-radius: 12rpx; padding: 16rpx 20rpx; margin-bottom: 16rpx; display: flex; align-items: center; }
+.contact-label { font-size: 24rpx; color: #9CA3AF; width: 100rpx; flex-shrink: 0; }
+.contact-value { font-size: 24rpx; color: #4B5563; flex: 1; }
+.delivery-actions { display: flex; gap: 16rpx; align-items: center; }
+
+/* 通用 */
 .empty, .loading { text-align: center; padding: 120rpx 0; color: #9CA3AF; font-size: 28rpx; }
+
+/* 弹窗 */
 .modal-mask { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.45); z-index: 999; display: flex; align-items: center; justify-content: center; }
 .modal { background: #fff; border-radius: 24rpx; padding: 40rpx; width: 680rpx; box-sizing: border-box; }
 .modal-title { font-size: 34rpx; font-weight: 600; margin-bottom: 30rpx; }

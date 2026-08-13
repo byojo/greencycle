@@ -1,0 +1,304 @@
+.page {
+  min-height: 100vh;
+  background: #F7F8FA;
+}
+
+/* 导航栏 */
+.nav {
+  background: #07C160;
+  padding-top: env(safe-area-inset-top);
+}
+
+.nav-inner {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  padding: 0 24rpx;
+  position: relative;
+}
+
+.nav-back {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-icon {
+  font-size: 48rpx;
+  color: #fff;
+  line-height: 1;
+}
+
+.nav-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* 筛选栏 */
+.filter-bar {
+  display: flex;
+  background: #fff;
+  padding: 16rpx 24rpx;
+  gap: 16rpx;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.filter-item {
+  padding: 12rpx 28rpx;
+  border-radius: 32rpx;
+  font-size: 26rpx;
+  color: #6B7280;
+  background: #F3F4F6;
+  flex-shrink: 0;
+}
+
+.filter-item.active {
+  background: #07C160;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* 列表 */
+.list {
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.card-no {
+  font-size: 24rpx;
+  color: #9CA3AF;
+  font-weight: 500;
+}
+
+.card-status {
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.card-body {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.card-img {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 12rpx;
+  background: #F3F4F6;
+  flex-shrink: 0;
+}
+
+.card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+.card-points {
+  font-size: 26rpx;
+  color: #EF4444;
+  margin-top: 8rpx;
+}
+
+.card-date {
+  font-size: 22rpx;
+  color: #9CA3AF;
+  margin-top: 8rpx;
+}
+
+/* 信息区域 */
+.info-section {
+  background: #F9FAFB;
+  border-radius: 12rpx;
+  padding: 20rpx;
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10rpx;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-label {
+  font-size: 24rpx;
+  color: #9CA3AF;
+  width: 120rpx;
+  flex-shrink: 0;
+}
+
+.info-value {
+  font-size: 24rpx;
+  color: #4B5563;
+  flex: 1;
+  word-break: break-all;
+}
+
+/* 操作按钮 */
+.card-actions {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 20rpx;
+}
+
+.btn-assign, .btn-cancel {
+  flex: 1;
+  height: 72rpx;
+  line-height: 72rpx;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  border: none;
+  box-sizing: border-box;
+}
+
+.btn-assign {
+  background: #07C160;
+  color: #fff;
+}
+
+.btn-cancel {
+  background: #F3F4F6;
+  color: #6B7280;
+}
+
+/* 空状态 */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 200rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+}
+
+.empty-text {
+  margin-top: 20rpx;
+  font-size: 28rpx;
+  color: #9CA3AF;
+}
+
+.loading {
+  text-align: center;
+  padding: 40rpx;
+  color: #9CA3AF;
+  font-size: 26rpx;
+}
+
+/* 弹窗 */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  z-index: 999;
+}
+
+.modal-content {
+  width: 100%;
+  background: #fff;
+  border-radius: 24rpx 24rpx 0 0;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32rpx 24rpx;
+  border-bottom: 1rpx solid #F3F4F6;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+.modal-close {
+  font-size: 40rpx;
+  color: #9CA3AF;
+  padding: 0 10rpx;
+}
+
+.rider-list {
+  padding: 12rpx 0;
+}
+
+.rider-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx;
+  border-bottom: 1rpx solid #F9FAFB;
+}
+
+.rider-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.rider-name {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #1F2937;
+}
+
+.rider-phone {
+  font-size: 26rpx;
+  color: #9CA3AF;
+}
+
+.rider-arrow {
+  font-size: 36rpx;
+  color: #D1D5DB;
+}
+
+.rider-empty {
+  padding: 60rpx 24rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: #9CA3AF;
+}

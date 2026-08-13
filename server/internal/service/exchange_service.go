@@ -26,8 +26,8 @@ func (s *ExchangeService) ListItems(ctx context.Context) ([]model.ExchangeItem, 
 
 // ExchangeReq 兑换请求
 type ExchangeReq struct {
-	ItemID     uint   `json:"itemId" binding:"required"`
-	AddressID  uint64 `json:"addressId" binding:"required"`
+	ItemID    uint   `json:"itemId" binding:"required"`
+	AddressID uint64 `json:"addressId" binding:"required"`
 }
 
 // Exchange 兑换商品
@@ -42,11 +42,11 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 	}
 
 	// 验证收货地址属于当前用户
-	addrExists, err := s.repo.Address.ExistsByIDAndUser(ctx, uint(req.AddressID), userID)
+	addr, err := s.repo.Address.GetByIDAndUser(ctx, uint(req.AddressID), userID)
 	if err != nil {
 		return errors.New("地址验证失败")
 	}
-	if !addrExists {
+	if addr == nil {
 		return errors.New("收货地址不存在")
 	}
 
@@ -105,25 +105,29 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 
 		// 7. 创建积分流水（type=3 兑换）
 		pointLog := &model.CarbonPointLog{
-			UserID:   userID,
-			Type:     3, // 兑换
-			Amount:   -item.Points,
-			Balance:  updatedUser.Points,
-			Remark:   "兑换：" + item.Name,
+			UserID:  userID,
+			Type:    3, // 兑换
+			Amount:  -item.Points,
+			Balance: updatedUser.Points,
+			Remark:  "兑换：" + item.Name,
 		}
 		if err := s.repo.Point.CreateLog(ctx, tx, pointLog); err != nil {
 			return errors.New("积分记录创建失败")
 		}
 
-		// 8. 创建兑换记录
+		// 8. 创建兑换记录（含收货地址快照）
 		addrID := req.AddressID
+		fullAddr := addr.Province + addr.City + addr.District + addr.Detail
 		record := &model.ExchangeRecord{
-			UserID:    userID,
-			ItemID:    item.ID,
-			ItemName:  item.Name,
-			ItemImage: item.Image,
-			Points:    item.Points,
-			Status:    1, // 待发货
+			UserID:        userID,
+			ItemID:        item.ID,
+			ItemName:      item.Name,
+			ItemImage:     item.Image,
+			Points:        item.Points,
+			Status:        1, // 待发货
+			DeliveryName:  addr.Name,
+			DeliveryPhone: addr.Phone,
+			DeliveryAddr:  fullAddr,
 		}
 		record.AddressID = &addrID
 		return s.repo.Exchange.CreateRecord(ctx, tx, record)
@@ -139,4 +143,50 @@ func (s *ExchangeService) ExchangeHistory(ctx context.Context, userID uint, page
 		size = 20
 	}
 	return s.repo.Exchange.UserExchangeHistory(ctx, userID, page, size)
+}
+
+// AdminList 管理端兑换工单列表
+func (s *ExchangeService) AdminList(ctx context.Context, status int) ([]model.ExchangeRecord, error) {
+	return s.repo.Exchange.AdminListRecords(ctx, status)
+}
+
+// AssignRider 分配配送专员
+func (s *ExchangeService) AssignRider(ctx context.Context, recordID uint, riderID uint) error {
+	// 获取专员信息
+	rider, err := s.repo.Rider.GetByID(ctx, riderID)
+	if err != nil {
+		return errors.New("回收专员查询失败")
+	}
+	if rider == nil {
+		return errors.New("回收专员不存在")
+	}
+	if rider.Status != 1 {
+		return errors.New("该专员已离职")
+	}
+
+	// 获取兑换记录
+	record, err := s.repo.Exchange.GetRecordByID(ctx, recordID)
+	if err != nil {
+		return errors.New("兑换记录不存在")
+	}
+	if record.Status != 1 {
+		return errors.New("该工单当前状态不允许分配")
+	}
+
+	return s.repo.Exchange.AssignRider(ctx, recordID, riderID, rider.Name, rider.Phone)
+}
+
+// CompleteDelivery 标记配送完成
+func (s *ExchangeService) CompleteDelivery(ctx context.Context, recordID uint, riderID uint) error {
+	return s.repo.Exchange.CompleteDelivery(ctx, recordID, riderID)
+}
+
+// CancelRecord 取消兑换工单
+func (s *ExchangeService) CancelRecord(ctx context.Context, recordID uint) error {
+	return s.repo.Exchange.CancelRecord(ctx, recordID)
+}
+
+// RiderDeliveries 获取专员的配送任务
+func (s *ExchangeService) RiderDeliveries(ctx context.Context, riderID uint) ([]model.ExchangeRecord, error) {
+	return s.repo.Exchange.FindDeliveriesByRiderID(ctx, riderID)
 }

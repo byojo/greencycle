@@ -74,6 +74,10 @@ func Register(h *handler.Handler) *gin.Engine {
 		auth.PUT("/rider/orders/:id/pick", h.RiderPickOrder)
 		auth.POST("/rider/orders/:id/complete", h.RiderCompleteOrder)
 		auth.PUT("/rider/location", h.RiderUpdateLocation)
+
+		// 回收专员配送任务（积分兑换商品配送）
+		auth.GET("/rider/deliveries", h.RiderDeliveries)
+		auth.PUT("/rider/deliveries/:id/complete", h.RiderCompleteDelivery)
 	}
 
 	// ========== 管理端（X-Admin-Key 鉴权）==========
@@ -95,6 +99,11 @@ func Register(h *handler.Handler) *gin.Engine {
 		// 加盟申请管理
 		admin.GET("/applications", h.AdminApplicationList)
 		admin.POST("/applications/:id", h.AdminApproveApplication)
+
+		// 兑换工单管理
+		admin.GET("/exchanges", h.AdminExchangeList)
+		admin.POST("/exchanges/:id/assign", h.AdminExchangeAssign)
+		admin.PUT("/exchanges/:id/cancel", h.AdminExchangeCancel)
 
 		// 测试
 		admin.POST("/test-notify", h.AdminTestNotify)

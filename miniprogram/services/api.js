@@ -103,6 +103,15 @@ module.exports = {
   // 用户兑换记录
   getExchangeHistory: (params) => get('/exchange/history', params),
 
+  // ========== 管理端：兑换工单管理 ==========
+  adminGetExchanges: (params) => get('/admin/exchanges', params, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' } }),
+  adminAssignExchange: (id, data) => post(`/admin/exchanges/${id}/assign`, data, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' }, showLoading: true, loadingText: '分配中...' }),
+  adminCancelExchange: (id) => put(`/admin/exchanges/${id}/cancel`, {}, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' }, showLoading: true, loadingText: '处理中...' }),
+
+  // ========== 回收专员：配送任务 ==========
+  riderGetDeliveries: (opts) => get('/rider/deliveries', {}, opts),
+  riderCompleteDelivery: (id) => put(`/rider/deliveries/${id}/complete`, {}, { showLoading: true, loadingText: '处理中...' }),
+
   // ========== 管理端 ==========
   adminGetOrders: (params) => get('/admin/orders', params, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' } }),
   adminGetRiders: () => get('/admin/riders', {}, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' } }),
