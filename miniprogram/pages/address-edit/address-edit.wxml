@@ -15,7 +15,7 @@
   <view class="form">
     <!-- 姓名 -->
     <view class="form-item">
-      <text class="form-label">姓名</text>
+      <text class="form-label">姓名<text class="required">*</text></text>
       <input
         class="form-input"
         placeholder="请输入收件人姓名"
@@ -28,7 +28,7 @@
 
     <!-- 电话 -->
     <view class="form-item">
-      <text class="form-label">电话</text>
+      <text class="form-label">电话<text class="required">*</text></text>
       <input
         class="form-input"
         type="number"
@@ -48,7 +48,7 @@
       custom-item="{{customItem}}"
     >
       <view class="form-item picker-item">
-        <text class="form-label">省市区</text>
+        <text class="form-label">省市区<text class="required">*</text></text>
         <view class="form-picker-value {{form.region ? '' : 'placeholder'}}">
           {{form.region || '请选择省 / 市 / 区'}}
         </view>
@@ -58,7 +58,7 @@
 
     <!-- 详细地址 -->
     <view class="form-item form-item-block">
-      <text class="form-label">详细地址</text>
+      <text class="form-label">详细地址<text class="required">*</text></text>
       <textarea
         class="form-textarea"
         placeholder="街道、楼栋、门牌号（5-60 字）"

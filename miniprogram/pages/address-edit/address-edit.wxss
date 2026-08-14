@@ -109,6 +109,12 @@
   width: 120rpx;
   flex-shrink: 0;
 }
+/* 必填项红色星号 */
+.required {
+  color: #EF4444;
+  font-weight: 700;
+  margin-left: 4rpx;
+}
 .form-item-block .form-label {
   width: auto;
   margin-bottom: 16rpx;
