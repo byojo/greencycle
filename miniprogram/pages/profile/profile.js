@@ -1,10 +1,10 @@
 // pages/profile/profile.js
 const app = getApp();
 const api = require('../../services/api.js');
+const upload = require('../../services/upload.js');
 
 Page({
   data: {
-    avatarText: '林',
     nickname: '绿友',
     vipLevel: '绿V1',
     orderDesc: '已回收 0 次',
@@ -53,7 +53,6 @@ Page({
       const inUse = u.inUseCount || 0;
       this.setData({
         avatarUrl: (u.avatar && u.avatar.startsWith('http')) ? u.avatar : '',
-        avatarText: (u.avatar && u.avatar.startsWith('http')) ? '' : (u.nickname ? u.nickname.charAt(0) : '林'),
         nickname: u.nickname || '绿友',
         vipLevel: '绿V' + (u.level || 1),
         orderDesc: '已回收 ' + orderCount + ' 次',
@@ -74,6 +73,38 @@ Page({
     } catch (err) {
       this.setData({ loading: false });
       wx.showToast({ title: '加载失败，请下拉刷新', icon: 'none' });
+    }
+  },
+
+  // 点击头像：从相册选择或拍摄照片更换（微信官方选头像用 chooseAvatar，这里要相册/拍照故用 chooseMedia）
+  onChooseAvatar() {
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
+      success: (res) => {
+        const tempPath = res.tempFiles[0].tempFilePath;
+        this.uploadAvatar(tempPath);
+      },
+      fail: () => {}
+    });
+  },
+
+  // 上传头像到 COS 并保存
+  async uploadAvatar(tempPath) {
+    try {
+      wx.showLoading({ title: '上传中...', mask: true });
+      const url = await upload.uploadImage(tempPath);
+      await api.updateProfile({ avatar: url });
+      this.setData({ avatarUrl: url });
+      const cached = app.globalData.userInfo || {};
+      app.globalData.userInfo = { ...cached, avatar: url };
+      wx.setStorageSync('userInfo', app.globalData.userInfo);
+      wx.hideLoading();
+      wx.showToast({ title: '头像已更新', icon: 'success' });
+    } catch (err) {
+      wx.hideLoading();
+      wx.showToast({ title: '头像上传失败', icon: 'none' });
     }
   },
 

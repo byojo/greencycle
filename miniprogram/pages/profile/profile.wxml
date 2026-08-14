@@ -3,9 +3,13 @@
   <!-- 顶部用户卡 -->
   <view class="header">
     <view class="user-row">
-      <view class="avatar">
+      <view class="avatar" bindtap="onChooseAvatar">
         <image wx:if="{{avatarUrl}}" src="{{avatarUrl}}" mode="aspectFill" class="avatar-img"></image>
-        <text wx:else>{{avatarText}}</text>
+        <view wx:else class="avatar-fallback">
+          <view class="fallback-head"></view>
+          <view class="fallback-body"></view>
+        </view>
+        <view class="avatar-camera">📷</view>
       </view>
       <view class="user-info">
         <view class="name-row">

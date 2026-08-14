@@ -58,9 +58,10 @@ func (h *Handler) UserInfo(c *gin.Context) {
 // UpdateProfileRequest 更新用户资料请求
 type UpdateProfileRequest struct {
 	Nickname string `json:"nickname"`
+	Avatar   string `json:"avatar"` // 头像 URL（上传 COS 后回传）
 }
 
-// UpdateProfile 更新当前用户昵称
+// UpdateProfile 更新当前用户资料（昵称 / 头像）
 func (h *Handler) UpdateProfile(c *gin.Context) {
 	userID := getUserID(c)
 	if userID == 0 {
@@ -74,14 +75,11 @@ func (h *Handler) UpdateProfile(c *gin.Context) {
 		return
 	}
 
+	// 至少传一个字段才允许更新
 	nick := strings.TrimSpace(req.Nickname)
-	if nick == "" {
-		response.BadRequest(c, "昵称不能为空")
-		return
-	}
-	// 按 rune 计算长度，避免 emoji/中文被截断算错
-	if len([]rune(nick)) > 32 {
-		response.BadRequest(c, "昵称过长（最多 32 个字符）")
+	avatar := strings.TrimSpace(req.Avatar)
+	if nick == "" && avatar == "" {
+		response.BadRequest(c, "无可更新内容")
 		return
 	}
 
@@ -96,7 +94,23 @@ func (h *Handler) UpdateProfile(c *gin.Context) {
 		return
 	}
 
-	user.Nickname = nick
+	if nick != "" {
+		// 按 rune 计算长度，避免 emoji/中文被截断算错
+		if len([]rune(nick)) > 32 {
+			response.BadRequest(c, "昵称过长（最多 32 个字符）")
+			return
+		}
+		user.Nickname = nick
+	}
+	if avatar != "" {
+		// 仅接受 http(s) 链接（COS 上传后返回的 fullUrl）
+		if !strings.HasPrefix(avatar, "http") {
+			response.BadRequest(c, "头像地址无效")
+			return
+		}
+		user.Avatar = avatar
+	}
+
 	if err := h.Svc.Repo.User.Update(ctx, user); err != nil {
 		response.ServerError(c, "更新失败: "+err.Error())
 		return

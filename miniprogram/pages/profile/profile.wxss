@@ -31,15 +31,14 @@
   z-index: 5;
 }
 .avatar {
+  position: relative;
   width: 120rpx;
   height: 120rpx;
   border-radius: 50%;
   background: #FFFFFF;
-  color: #07C160;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 48rpx;
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -47,6 +46,47 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
+}
+/* 统一默认头像：灰底白色人形剪影 */
+.avatar-fallback {
+  width: 100%;
+  height: 100%;
+  background: #E5E7EB;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 16rpx;
+  box-sizing: border-box;
+}
+.fallback-head {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: #FFFFFF;
+}
+.fallback-body {
+  width: 72rpx;
+  height: 38rpx;
+  border-radius: 38rpx 38rpx 0 0;
+  background: #FFFFFF;
+  margin-top: 8rpx;
+}
+/* 头像右下角相机角标，提示可点击更换 */
+.avatar-camera {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 38rpx;
+  height: 38rpx;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #FFFFFF;
+  font-size: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid #FFFFFF;
 }
 .user-info { flex: 1; min-width: 0; }
 .name-row {
