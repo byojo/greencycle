@@ -1,16 +1,5 @@
 <!--pages/exchange/exchange.wxml-->
 <view class="page">
-  <!-- 顶部导航 -->
-  <view class="nav">
-    <view class="nav-inner">
-      <view class="nav-back" bindtap="onBack">
-        <text class="back-icon">‹</text>
-      </view>
-      <view class="nav-title">积分商城</view>
-      <view class="nav-action" bindtap="onGoHistory">兑换记录</view>
-    </view>
-  </view>
-
   <!-- 我的积分卡 -->
   <view class="points-card">
     <view class="points-info">
@@ -21,7 +10,10 @@
   </view>
 
   <!-- 商品列表 -->
-  <view class="section-title">可兑换商品</view>
+  <view class="section-header">
+    <view class="section-title">可兑换商品</view>
+    <view class="section-action" bindtap="onGoHistory">兑换记录 ›</view>
+  </view>
   <view class="items-grid" wx:if="{{!loading}}">
     <view
       class="item-card"

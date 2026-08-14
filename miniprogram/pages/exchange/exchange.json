@@ -1,4 +1,6 @@
 {
   "usingComponents": {},
-  "navigationStyle": "custom"
+  "navigationBarTitleText": "积分商城",
+  "navigationBarBackgroundColor": "#07C160",
+  "navigationBarTextStyle": "white"
 }

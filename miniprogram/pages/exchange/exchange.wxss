@@ -5,32 +5,6 @@
   background: #F7F8FA;
 }
 
-/* 导航栏 */
-.nav {
-  background: #07C160;
-  color: white;
-  padding: 20rpx 0;
-}
-.nav-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 24rpx;
-}
-.nav-back {
-  font-size: 48rpx;
-  font-weight: bold;
-  width: 60rpx;
-}
-.nav-title {
-  font-size: 32rpx;
-  font-weight: 600;
-}
-.nav-action {
-  font-size: 28rpx;
-  color: rgba(255,255,255,0.9);
-}
-
 /* 积分卡 */
 .points-card {
   background: linear-gradient(135deg, #07C160 0%, #10B981 100%);
@@ -60,12 +34,22 @@
   opacity: 0.8;
 }
 
-/* 标题 */
+/* 标题区：可兑换商品 + 兑换记录 */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 24rpx 12rpx;
+}
 .section-title {
-  padding: 24rpx;
   font-size: 32rpx;
   font-weight: 600;
   color: #333;
+}
+.section-action {
+  font-size: 26rpx;
+  color: #07C160;
+  padding: 8rpx 0;
 }
 
 /* 商品网格 */
