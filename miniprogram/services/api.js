@@ -14,6 +14,8 @@ module.exports = {
   // ========== 用户 ==========
   // 获取用户信息
   getUserInfo: () => get('/user/info'),
+  // 更新用户资料（昵称 / 头像）
+  updateProfile: (data) => put('/user/profile', data),
 
   // 判断是否管理员
   isAdmin: () => get('/user/is-admin'),

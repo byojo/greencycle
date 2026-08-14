@@ -3,13 +3,17 @@
   <!-- 顶部用户卡 -->
   <view class="header">
     <view class="user-row">
-      <view class="avatar">
-        <image wx:if="{{avatarUrl}}" src="{{avatarUrl}}" mode="aspectFill" class="avatar-img"></image>
-        <text wx:else>{{avatarText}}</text>
-      </view>
+      <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+        <view class="avatar">
+          <image wx:if="{{avatarUrl}}" src="{{avatarUrl}}" mode="aspectFill" class="avatar-img"></image>
+          <text wx:else>{{avatarText}}</text>
+        </view>
+        <view class="avatar-edit-tip">更换</view>
+      </button>
       <view class="user-info">
         <view class="name-row">
-          <text class="nickname">{{nickname}}</text>
+          <text class="nickname" bindtap="onEditNickname">{{nickname}}</text>
+          <text class="edit-pen" bindtap="onEditNickname">✎</text>
         </view>
         <view class="level">
           <text class="vip">🌳 {{vipLevel}}</text>
@@ -19,6 +23,28 @@
       </view>
     </view>
     <view class="setting" bindtap="showSetting">⚙️</view>
+  </view>
+
+  <!-- 昵称编辑弹层 -->
+  <view class="nick-mask" wx:if="{{editingNick}}" bindtap="cancelEditNick">
+    <view class="nick-dialog" catchtap="stopPropagation">
+      <view class="nick-title">修改昵称</view>
+      <input
+        class="nick-input"
+        type="nickname"
+        placeholder="请输入昵称"
+        placeholder-class="nick-ph"
+        value="{{nickInput}}"
+        maxlength="32"
+        focus="{{editingNick}}"
+        bindinput="onNickInput"
+        bindconfirm="saveNickname"
+      />
+      <view class="nick-actions">
+        <button class="nick-cancel" bindtap="cancelEditNick">取消</button>
+        <button class="nick-save" bindtap="saveNickname">保存</button>
+      </view>
+    </view>
   </view>
 
   <!-- 4 个数据统计：积分 / 减碳 / 订单数 / 在用 -->

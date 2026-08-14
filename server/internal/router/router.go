@@ -44,6 +44,7 @@ func Register(h *handler.Handler) *gin.Engine {
 	auth.Use(middleware.JWTAuth())
 	{
 		auth.GET("/user/info", h.UserInfo)
+		auth.PUT("/user/profile", h.UpdateProfile)
 		auth.GET("/user/is-admin", h.IsAdmin)
 		auth.GET("/user/invite-list", h.InviteList)
 		auth.POST("/auth/logout", h.Logout)
