@@ -114,46 +114,6 @@ func (c *Client) GetAccessToken() (string, error) {
 	return result.AccessToken, nil
 }
 
-// PhoneNumberResponse 手机号授权响应
-type PhoneNumberResponse struct {
-	ErrCode   int    `json:"errcode"`
-	ErrMsg    string `json:"errmsg"`
-	PhoneInfo struct {
-		PhoneNumber     string `json:"phoneNumber"`
-		PurePhoneNumber string `json:"purePhoneNumber"`
-		CountryCode     string `json:"countryCode"`
-	} `json:"phone_info"`
-}
-
-// GetUserPhoneNumber 用 getPhoneNumber 回调的 code 换取真实手机号（需已认证企业/个体户主体）
-func (c *Client) GetUserPhoneNumber(code string) (string, error) {
-	token, err := c.GetAccessToken()
-	if err != nil {
-		return "", err
-	}
-
-	apiURL := fmt.Sprintf("https://api.weixin.qq.com/wxa/business/getuserphonenumber?access_token=%s", token)
-	body, _ := json.Marshal(map[string]string{"code": code})
-
-	resp, err := httpClient.Post(apiURL, "application/json", bytes.NewReader(body))
-	if err != nil {
-		return "", err
-	}
-	defer resp.Body.Close()
-
-	var result PhoneNumberResponse
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return "", err
-	}
-	if result.ErrCode != 0 {
-		return "", fmt.Errorf("获取手机号失败: %d %s", result.ErrCode, result.ErrMsg)
-	}
-	if result.PhoneInfo.PurePhoneNumber == "" {
-		return "", fmt.Errorf("获取手机号失败: 返回为空")
-	}
-	return result.PhoneInfo.PurePhoneNumber, nil
-}
-
 // SendSubscribeMessage 发送订阅消息
 type SubscribeMessage struct {
 	Touser           string                 `json:"touser"`

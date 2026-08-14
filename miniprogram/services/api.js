@@ -21,9 +21,6 @@ module.exports = {
   // 邀请记录
   getInviteList: () => get('/user/invite-list'),
 
-  // 绑定手机号（微信授权 code 或 手动填写 phone）
-  bindPhone: (data) => post('/user/phone', data),
-
   // 更新用户信息
   updateUserInfo: (data) => put('/user/info', data),
 

@@ -58,12 +58,6 @@
       <view class="row-extra">{{addressCountText}} 个</view>
       <view class="row-arrow">›</view>
     </view>
-    <view class="list-row" bindtap="goBindPhone">
-      <view class="row-icon" style="background:#FEF3C7;color:#D97706">📱</view>
-      <view class="row-label">我的手机号</view>
-      <view class="row-extra">{{phoneText}}</view>
-      <view class="row-arrow">›</view>
-    </view>
     <view class="list-row" bindtap="goExchange">
       <view class="row-icon" style="background:#ECFDF5;color:#059669">🎁</view>
       <view class="row-label">积分商城</view>

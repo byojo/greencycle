@@ -21,14 +21,7 @@ Page({
     inUseText: '0',
     addressCount: 0,
     addressCountText: '0',
-    phoneText: '未绑定',
     version: '1.0.0'
-  },
-
-  // 手机号脱敏：138****6688
-  maskPhone(p) {
-    if (!p || p.length < 7) return '未绑定';
-    return p.slice(0, 3) + '****' + p.slice(7);
   },
 
   onLoad() {
@@ -70,8 +63,7 @@ Page({
         inUse,
         inUseText: String(inUse),
         addressCount: u.addressCount || 0,
-        addressCountText: String(u.addressCount || 0),
-        phoneText: this.maskPhone(u.phone)
+        addressCountText: String(u.addressCount || 0)
       });
       app.globalData.userInfo = u;
       // 检查是否管理员
@@ -108,7 +100,6 @@ Page({
   // 各种跳转
   goOrders() { wx.navigateTo({ url: '/pages/order-list/order-list' }); },
   goAddresses() { wx.navigateTo({ url: '/pages/address/address' }); },
-  goBindPhone() { wx.navigateTo({ url: '/pages/bind-phone/bind-phone' }); },
   goPoints() { wx.navigateTo({ url: '/pages/points/points' }); },
   goExchange() { wx.navigateTo({ url: '/pages/exchange/exchange' }); },
   goInvite() { wx.navigateTo({ url: '/pages/invite/invite' }); },

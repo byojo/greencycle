@@ -73,32 +73,6 @@ func (h *Handler) IsAdmin(c *gin.Context) {
 	response.Success(c, gin.H{"isAdmin": isAdmin, "isRider": isRider})
 }
 
-// BindPhone 绑定手机号（微信授权 code 或 手动填写）
-func (h *Handler) BindPhone(c *gin.Context) {
-	userID := getUserID(c)
-	if userID == 0 {
-		response.Unauthorized(c, "未登录")
-		return
-	}
-
-	var req struct {
-		Code  string `json:"code"`
-		Phone string `json:"phone"`
-	}
-	if err := c.ShouldBindJSON(&req); err != nil {
-		response.BadRequest(c, "参数错误: "+err.Error())
-		return
-	}
-
-	phone, err := h.Svc.Auth.BindPhone(c.Request.Context(), userID, req.Code, req.Phone)
-	if err != nil {
-		response.BadRequest(c, err.Error())
-		return
-	}
-
-	response.Success(c, gin.H{"phone": phone})
-}
-
 // InviteList 邀请记录
 func (h *Handler) InviteList(c *gin.Context) {
 	userID := getUserID(c)

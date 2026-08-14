@@ -4,8 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"regexp"
-	"strings"
 
 	"gorm.io/gorm"
 
@@ -14,9 +12,6 @@ import (
 	"github.com/greencycle/server/pkg/jwt"
 	"github.com/greencycle/server/pkg/wechat"
 )
-
-// phoneRegexp 中国大陆手机号
-var phoneRegexp = regexp.MustCompile(`^1[3-9]\d{9}$`)
 
 type AuthService struct {
 	repo   *repository.Repository
@@ -119,41 +114,6 @@ func (s *AuthService) GetUserInfo(ctx context.Context, userID uint) (*UserInfoRe
 		CarbonKg:     carbonKg,
 		InUseCount:   inUseCount,
 	}, nil
-}
-
-// BindPhone 绑定手机号：优先用微信授权 code 换号，其次手动填写
-// wxCode: getPhoneNumber 回调的 code（企业/个体户主体可用）
-// phone: 用户手动填写的手机号（任意主体兜底）
-// 返回最终写入的手机号
-func (s *AuthService) BindPhone(ctx context.Context, userID uint, wxCode, phone string) (string, error) {
-	var finalPhone string
-
-	switch {
-	case wxCode != "":
-		p, err := s.wechat.GetUserPhoneNumber(wxCode)
-		if err != nil {
-			return "", err
-		}
-		finalPhone = p
-	case phone != "":
-		cleaned := strings.NewReplacer(" ", "", "-", "", "*", "", "+86", "").Replace(phone)
-		if !phoneRegexp.MatchString(cleaned) {
-			return "", fmt.Errorf("手机号格式不正确")
-		}
-		finalPhone = cleaned
-	default:
-		return "", fmt.Errorf("请提供微信授权或手动填写手机号")
-	}
-
-	user, err := s.repo.User.FindByID(ctx, userID)
-	if err != nil {
-		return "", err
-	}
-	user.Phone = finalPhone
-	if err := s.repo.User.Update(ctx, user); err != nil {
-		return "", err
-	}
-	return finalPhone, nil
 }
 
 // helpers
