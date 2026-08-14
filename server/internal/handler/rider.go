@@ -41,7 +41,8 @@ func (h *Handler) RiderOrders(c *gin.Context) {
 		return
 	}
 
-	orders, err := h.Svc.Rider.GetOrdersByRiderID(c.Request.Context(), riderID)
+	days, _ := strconv.Atoi(c.DefaultQuery("days", "7"))
+	orders, err := h.Svc.Rider.GetOrdersByRiderID(c.Request.Context(), riderID, days)
 	if err != nil {
 		response.ServerError(c, err.Error())
 		return

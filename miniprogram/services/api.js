@@ -125,9 +125,9 @@ module.exports = {
   adminCompleteOrder: (id, data) => post(`/admin/orders/${id}/complete`, data, { header: { 'X-Admin-Key': wx.getStorageSync('adminKey') || '' }, showLoading: true, loadingText: '处理中...' }),
 
   // ========== 回收专员工单 ==========
-  riderGetOrders: (opts) => get('/rider/orders', {}, opts),
+  riderGetOrders: (params, opts) => get('/rider/orders', params || {}, opts),
   riderGetOrderDetail: (id) => get(`/rider/orders/${id}`),
-  riderCheckIsRider: () => get('/rider/orders', {}, { silent: true }),
+  riderCheckIsRider: () => get('/rider/orders', { days: 0 }, { silent: true }),
   riderPickOrder: (id) => put(`/rider/orders/${id}/pick`),
   riderCompleteOrder: (id, data) => post(`/rider/orders/${id}/complete`, data, { showLoading: true, loadingText: '处理中...' }),
   riderUpdateLocation: (lat, lng) => put('/rider/location', { lat, lng }, { silent: true }),

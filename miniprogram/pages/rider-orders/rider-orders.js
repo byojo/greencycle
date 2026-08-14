@@ -16,6 +16,14 @@ Page({
       { value: 3, label: '已取件' },
       { value: 4, label: '已完成' }
     ],
+    // 时间筛选：默认近 7 天
+    timeRange: 7,
+    timeOptions: [
+      { label: '全部', value: 0 },
+      { label: '近3天', value: 3 },
+      { label: '近7天', value: 7 },
+      { label: '近30天', value: 30 }
+    ],
     statusMap: { 1: '待评估', 2: '待回收', 3: '已取件', 4: '已完成', 5: '已取消' },
     showComplete: false,
     completeOrderId: null,
@@ -76,7 +84,7 @@ Page({
 
   async loadOrders() {
     try {
-      const res = await api.riderGetOrders();
+      const res = await api.riderGetOrders({ days: this.data.timeRange });
       const orders = (res.data.list || []).map(o => ({
         ...o,
         estimatedAtText: o.estimatedAt ? formatDate(o.estimatedAt, 'MM-DD HH:mm') : ''
@@ -106,6 +114,14 @@ Page({
   onFilter(e) {
     this.setData({ currentFilter: e.currentTarget.dataset.value });
     this.applyFilter();
+  },
+
+  // 切换时间筛选（全部/近3天/近7天/近30天）
+  onTimeRange(e) {
+    const value = parseInt(e.currentTarget.dataset.value);
+    if (value === this.data.timeRange) return;
+    this.setData({ timeRange: value, loading: true });
+    this.loadOrders();
   },
 
   applyFilter() {

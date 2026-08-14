@@ -52,15 +52,15 @@ func (s *RiderService) NearestRiders(ctx context.Context, orderLat, orderLng flo
 			online = true
 		}
 		result = append(result, map[string]interface{}{
-			"id":              r.ID,
-			"name":            r.Name,
-			"phone":           r.Phone,
-			"rating":          r.Rating,
-			"serviceCnt":      r.ServiceCnt,
-			"distance":        distance,
-			"distanceText":    formatDistance(distance),
-			"online":          online,
-			"lastLocationAt":  r.LastLocationAt,
+			"id":             r.ID,
+			"name":           r.Name,
+			"phone":          r.Phone,
+			"rating":         r.Rating,
+			"serviceCnt":     r.ServiceCnt,
+			"distance":       distance,
+			"distanceText":   formatDistance(distance),
+			"online":         online,
+			"lastLocationAt": r.LastLocationAt,
 		})
 	}
 
@@ -122,9 +122,14 @@ func (s *RiderService) Update(ctx context.Context, id uint, updates map[string]i
 	return s.repo.Rider.Update(ctx, id, updates)
 }
 
-// GetOrdersByRiderID 获取分配给专员的订单
-func (s *RiderService) GetOrdersByRiderID(ctx context.Context, riderID uint) ([]model.Order, error) {
-	return s.repo.Order.FindByRiderID(ctx, riderID)
+// GetOrdersByRiderID 获取分配给专员的工单；days>0 时仅返回最近 days 天的工单
+func (s *RiderService) GetOrdersByRiderID(ctx context.Context, riderID uint, days int) ([]model.Order, error) {
+	var since *time.Time
+	if days > 0 {
+		t := time.Now().AddDate(0, 0, -days)
+		since = &t
+	}
+	return s.repo.Order.FindByRiderID(ctx, riderID, since)
 }
 
 // PickOrder 专员标记已取件

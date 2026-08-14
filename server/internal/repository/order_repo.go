@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"time"
 
 	"gorm.io/gorm"
 
@@ -57,14 +58,16 @@ func (r *OrderRepository) FindByID(ctx context.Context, id uint64) (*model.Order
 	return &order, nil
 }
 
-// FindByRiderID 查询分配给专员的订单
-func (r *OrderRepository) FindByRiderID(ctx context.Context, riderID uint) ([]model.Order, error) {
-	var orders []model.Order
-	err := r.db.WithContext(ctx).
+// FindByRiderID 查询分配给专员的订单；since 非空时仅返回该时间之后的工单（按创建时间）
+func (r *OrderRepository) FindByRiderID(ctx context.Context, riderID uint, since *time.Time) ([]model.Order, error) {
+	tx := r.db.WithContext(ctx).
 		Preload("Images").
-		Where("rider_id = ?", riderID).
-		Order("created_at DESC").
-		Find(&orders).Error
+		Where("rider_id = ?", riderID)
+	if since != nil {
+		tx = tx.Where("created_at >= ?", *since)
+	}
+	var orders []model.Order
+	err := tx.Order("created_at DESC").Find(&orders).Error
 	return orders, err
 }
 
