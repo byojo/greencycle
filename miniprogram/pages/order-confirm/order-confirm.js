@@ -87,7 +87,6 @@ Page({
     timeLabel: '',
     remark: '',
     quantity: '1 件',
-    pickupPhone: '',
     submitting: false
   },
 
@@ -117,15 +116,11 @@ Page({
   },
 
   onShow() {
-    // 从地址选择页返回时，接收选中的地址
+    // 从地址选择页返回时，接收选中的地址（联系电话直接取自地址，无需单独输入）
     if (app.globalData.selectedAddress) {
       const addr = app.globalData.selectedAddress;
       this.setData({ address: addr });
       app.globalData.selectedAddress = null;
-      // 联系电话未填写时，自动补全所选地址的电话
-      if (!this.data.pickupPhone && addr.phone) {
-        this.setData({ pickupPhone: addr.phone });
-      }
     }
   },
 
@@ -203,10 +198,6 @@ Page({
       const defaultAddr = list.find(a => a.isDefault) || list[0];
       if (defaultAddr) {
         this.setData({ address: defaultAddr });
-        // 联系电话未填写时，自动补全默认地址的电话
-        if (!this.data.pickupPhone && defaultAddr.phone) {
-          this.setData({ pickupPhone: defaultAddr.phone });
-        }
       }
     } catch (err) {
       wx.showToast({ title: '加载地址失败', icon: 'none' });
@@ -263,10 +254,6 @@ Page({
     this.setData({ remark: e.detail.value });
   },
 
-  onPhoneInput(e) {
-    this.setData({ pickupPhone: e.detail.value });
-  },
-
   async onSubmit() {
     if (this.data.submitting) return;
 
@@ -275,14 +262,14 @@ Page({
       return;
     }
 
-    // 联系电话必填校验（与地址同等必填）
-    const phone = (this.data.pickupPhone || '').trim();
+    // 联系电话直接取自地址，地址手机号与地址本身同为必填项
+    const phone = (this.data.address.phone || '').trim();
     if (!phone) {
-      wx.showToast({ title: '请填写联系电话', icon: 'none' });
+      wx.showToast({ title: '该地址未填写手机号，请补全或更换地址', icon: 'none' });
       return;
     }
     if (!/^[\d\s+\-]{7,20}$/.test(phone)) {
-      wx.showToast({ title: '联系电话格式不正确', icon: 'none' });
+      wx.showToast({ title: '该地址手机号格式不正确，请修改地址', icon: 'none' });
       return;
     }
 
