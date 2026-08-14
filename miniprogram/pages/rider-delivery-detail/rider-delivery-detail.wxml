@@ -1,0 +1,87 @@
+<!--pages/rider-delivery-detail/rider-delivery-detail.wxml-->
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="nav">
+    <view class="nav-inner">
+      <view class="nav-back" bindtap="onBack">‹</view>
+      <view class="nav-title">配送详情</view>
+      <view class="nav-action"></view>
+    </view>
+  </view>
+
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+
+  <block wx:if="{{record}}">
+    <!-- 状态条 -->
+    <view class="status-bar" style="background:{{statusBarBg}}">
+      <view class="status-text">{{statusText}}</view>
+      <view class="status-no">配送单 #{{record.id}}</view>
+    </view>
+
+    <!-- 兑换商品 -->
+    <view class="card">
+      <view class="card-title">🎁 兑换商品</view>
+      <view class="goods">
+        <image wx:if="{{record.itemImage}}" class="goods-img" src="{{record.itemImage}}" mode="aspectFill" bindtap="onPreviewPhoto" data-url="{{record.itemImage}}"></image>
+        <view class="goods-info">
+          <view class="goods-name">{{record.itemName}}</view>
+          <view class="goods-points">消耗积分 {{record.points}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 收货信息 -->
+    <view class="card">
+      <view class="card-title">📍 收货信息</view>
+      <view class="info-row">
+        <text class="info-key">收货地址</text>
+        <text class="info-val">{{record.deliveryAddr}}</text>
+      </view>
+      <map wx:if="{{record.deliveryLat && record.deliveryLng}}" class="order-map"
+        latitude="{{record.deliveryLat}}" longitude="{{record.deliveryLng}}"
+        markers="{{[{id:1, latitude: record.deliveryLat, longitude: record.deliveryLng, title:'收货地址'}]}}"
+        scale="16" show-location bindtap="onNavigate"></map>
+      <view class="row-btns">
+        <button class="btn-nav" bindtap="onNavigate">🧭 导航</button>
+        <button class="btn-call" wx:if="{{record.deliveryPhone}}" bindtap="onCallCustomer">📞 联系收货人</button>
+      </view>
+    </view>
+
+    <!-- 收货人信息 -->
+    <view class="card" wx:if="{{record.deliveryName || record.deliveryPhone}}">
+      <view class="card-title">👤 收货人信息</view>
+      <view class="info-row">
+        <text class="info-key">称呼</text>
+        <text class="info-val">{{record.deliveryName || '—'}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-key">电话</text>
+        <text class="info-val">{{record.deliveryPhone || '—'}}</text>
+      </view>
+    </view>
+
+    <!-- 时间节点 -->
+    <view class="card">
+      <view class="card-title">⏱ 时间节点</view>
+      <view class="info-row">
+        <text class="info-key">下单时间</text>
+        <text class="info-val">{{createdAtText || '—'}}</text>
+      </view>
+      <view class="info-row" wx:if="{{status >= 2}}">
+        <text class="info-key">发货时间</text>
+        <text class="info-val">{{shippedAtText || '—'}}</text>
+      </view>
+      <view class="info-row" wx:if="{{status >= 3}}">
+        <text class="info-key">送达时间</text>
+        <text class="info-val">{{completedAtText || '—'}}</text>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="actions safe-area-bottom">
+      <button wx:if="{{status === 2}}" class="btn-primary" bindtap="onComplete">确认送达</button>
+      <view wx:if="{{status === 3}}" class="done-tip">✓ 已送达</view>
+      <view wx:if="{{status === 4}}" class="done-tip">配送已取消</view>
+    </view>
+  </block>
+</view>

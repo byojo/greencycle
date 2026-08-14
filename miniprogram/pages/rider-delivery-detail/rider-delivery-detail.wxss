@@ -1,0 +1,172 @@
+/* pages/rider-delivery-detail/rider-delivery-detail.wxss */
+.page {
+  min-height: 100vh;
+  background: #F7F8FA;
+  padding-bottom: 200rpx;
+}
+
+/* 顶部导航 */
+.nav {
+  background: #FFFFFF;
+  border-bottom: 1rpx solid #F3F4F6;
+  padding-top: env(safe-area-inset-top);
+}
+.nav-inner {
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+}
+.nav-back {
+  width: 80rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  color: #1F2937;
+}
+.nav-title {
+  flex: 1;
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1F2937;
+  margin-right: 80rpx;
+}
+
+/* 状态条 */
+.status-bar {
+  padding: 40rpx 32rpx;
+  color: #fff;
+}
+.status-text {
+  font-size: 40rpx;
+  font-weight: 700;
+}
+.status-no {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  opacity: 0.85;
+}
+
+/* 卡片 */
+.card {
+  background: #fff;
+  margin: 20rpx 24rpx;
+  border-radius: 20rpx;
+  padding: 28rpx;
+}
+.card-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 20rpx;
+}
+
+/* 商品 */
+.goods {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+.goods-img {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 14rpx;
+  background: #E5E7EB;
+  flex-shrink: 0;
+}
+.goods-info {
+  flex: 1;
+}
+.goods-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1F2937;
+}
+.goods-points {
+  margin-top: 10rpx;
+  font-size: 26rpx;
+  color: #FF8C42;
+  font-weight: 600;
+}
+
+/* 信息行 */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 14rpx 0;
+  border-bottom: 1rpx solid #F3F4F6;
+}
+.info-row:last-child { border-bottom: none; }
+.info-key {
+  font-size: 26rpx;
+  color: #6B7280;
+  flex-shrink: 0;
+  margin-right: 24rpx;
+}
+.info-val {
+  font-size: 26rpx;
+  color: #1F2937;
+  font-weight: 500;
+  text-align: right;
+}
+
+/* 地图 */
+.order-map {
+  width: 100%;
+  height: 320rpx;
+  border-radius: 16rpx;
+  margin: 16rpx 0;
+  background: #E5E7EB;
+}
+.row-btns {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 8rpx;
+}
+.btn-nav, .btn-call {
+  flex: 1;
+  font-size: 28rpx;
+  height: 76rpx;
+  line-height: 76rpx;
+  border-radius: 38rpx;
+  border: none;
+  color: #fff;
+}
+.btn-nav { background: #F97316; }
+.btn-call { background: #2563EB; }
+
+/* 操作按钮 */
+.actions {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  padding: 20rpx 24rpx calc(20rpx + env(safe-area-inset-bottom));
+  background: #fff;
+  border-top: 1rpx solid #F3F4F6;
+}
+.btn-primary {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 44rpx;
+  background: #07C160;
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 600;
+  border: none;
+}
+.done-tip {
+  text-align: center;
+  color: #10B981;
+  font-size: 30rpx;
+  padding: 20rpx 0;
+}
+
+.loading {
+  text-align: center;
+  color: #9CA3AF;
+  padding: 80rpx 0;
+  font-size: 28rpx;
+}

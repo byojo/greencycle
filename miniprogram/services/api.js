@@ -110,6 +110,7 @@ module.exports = {
 
   // ========== 回收专员：配送任务 ==========
   riderGetDeliveries: (opts) => get('/rider/deliveries', {}, opts),
+  riderGetDeliveryDetail: (id) => get(`/rider/deliveries/${id}`),
   riderCompleteDelivery: (id) => put(`/rider/deliveries/${id}/complete`, {}, { showLoading: true, loadingText: '处理中...' }),
 
   // ========== 管理端 ==========

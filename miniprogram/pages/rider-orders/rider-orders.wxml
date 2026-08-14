@@ -59,7 +59,7 @@
         <view class="delivery-actions" catchtap="stopPropagation">
           <button class="action-btn action-nav" data-lat="{{item.deliveryLat}}" data-lng="{{item.deliveryLng}}" data-addr="{{item.deliveryAddr}}" bindtap="onNavigate">🧭 导航</button>
           <button wx:if="{{item.status === 2}}" class="action-btn action-green" data-id="{{item.id}}" bindtap="onCompleteDelivery">确认送达</button>
-          <view class="detail-link" wx:if="{{item.status === 3}}">已于 {{item.completedAtText}} 送达 ✓</view>
+          <view class="detail-link" data-id="{{item.id}}" bindtap="onViewDelivery">查看详情 ›</view>
         </view>
       </view>
     </view>

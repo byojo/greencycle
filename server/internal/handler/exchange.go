@@ -174,3 +174,32 @@ func (h *Handler) RiderCompleteDelivery(c *gin.Context) {
 	}
 	response.Success(c, gin.H{"message": "配送已完成"})
 }
+
+// RiderDeliveryDetail 专员查看分配给自己的配送任务详情
+func (h *Handler) RiderDeliveryDetail(c *gin.Context) {
+	riderID := h.getRiderID(c)
+	if riderID == 0 {
+		response.BadRequest(c, "您不是回收专员")
+		return
+	}
+
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		response.BadRequest(c, "工单 ID 错误")
+		return
+	}
+
+	record, err := h.Svc.Repo.Exchange.GetRecordByID(c.Request.Context(), uint(id))
+	if err != nil {
+		response.NotFound(c, "配送工单不存在")
+		return
+	}
+
+	// 仅允许查看分配给自己的配送任务
+	if record.RiderID == nil || *record.RiderID != riderID {
+		response.BadRequest(c, "无权查看该配送工单")
+		return
+	}
+
+	response.Success(c, record)
+}

@@ -24,6 +24,7 @@
     "pages/admin-riders/admin-riders",
     "pages/rider-orders/rider-orders",
     "pages/rider-order-detail/rider-order-detail",
+    "pages/rider-delivery-detail/rider-delivery-detail",
     "pages/admin-applications/admin-applications",
     "pages/admin-exchange/admin-exchange"
   ],

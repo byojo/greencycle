@@ -78,6 +78,7 @@ func Register(h *handler.Handler) *gin.Engine {
 
 		// 回收专员配送任务（积分兑换商品配送）
 		auth.GET("/rider/deliveries", h.RiderDeliveries)
+		auth.GET("/rider/deliveries/:id", h.RiderDeliveryDetail)
 		auth.PUT("/rider/deliveries/:id/complete", h.RiderCompleteDelivery)
 	}
 
