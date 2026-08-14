@@ -1,14 +1,5 @@
 <!--pages/rider-order-detail/rider-order-detail.wxml-->
 <view class="page">
-  <!-- 顶部导航 -->
-  <view class="nav">
-    <view class="nav-inner">
-      <view class="nav-back" bindtap="onBack">‹</view>
-      <view class="nav-title">工单详情</view>
-      <view class="nav-action"></view>
-    </view>
-  </view>
-
   <view class="loading" wx:if="{{loading}}">加载中...</view>
 
   <block wx:if="{{order}}">
@@ -66,8 +57,8 @@
       </view>
     </view>
 
-    <!-- 操作按钮 -->
-    <view class="actions safe-area-bottom">
+    <!-- 底部操作 -->
+    <view class="action-card">
       <button wx:if="{{status === 2}}" class="btn-primary" bindtap="onPick">已取件</button>
       <button wx:if="{{status === 3}}" class="btn-primary" bindtap="onShowComplete">完成回收</button>
       <view wx:if="{{status === 4}}" class="done-tip">✓ 已完成回收</view>

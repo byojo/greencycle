@@ -2,36 +2,7 @@
 .page {
   min-height: 100vh;
   background: #F7F8FA;
-  padding-bottom: 200rpx;
-}
-
-/* 顶部导航 */
-.nav {
-  background: #FFFFFF;
-  border-bottom: 1rpx solid #F3F4F6;
-  padding-top: env(safe-area-inset-top);
-}
-.nav-inner {
-  height: 88rpx;
-  display: flex;
-  align-items: center;
-}
-.nav-back {
-  width: 80rpx;
-  height: 88rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 48rpx;
-  color: #1F2937;
-}
-.nav-title {
-  flex: 1;
-  text-align: center;
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #1F2937;
-  margin-right: 80rpx;
+  padding-bottom: 40rpx;
 }
 
 /* 状态条 */
@@ -139,16 +110,16 @@
   border: none;
   color: #fff;
 }
+.btn-nav::after, .btn-call::after { border: none; }
 .btn-nav { background: #F97316; }
 .btn-call { background: #2563EB; }
 
-/* 操作按钮 */
-.actions {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  padding: 20rpx 24rpx calc(20rpx + env(safe-area-inset-bottom));
+/* 底部操作卡 */
+.action-card {
   background: #fff;
-  border-top: 1rpx solid #F3F4F6;
+  margin: 20rpx 24rpx;
+  border-radius: 20rpx;
+  padding: 28rpx;
 }
 .btn-primary {
   width: 100%;
@@ -161,6 +132,7 @@
   font-weight: 600;
   border: none;
 }
+.btn-primary::after { border: none; }
 .done-tip {
   text-align: center;
   color: #10B981;
@@ -226,5 +198,6 @@
   border: none;
   font-size: 30rpx;
 }
+.modal-btn::after { border: none; }
 .modal-btn-gray { background: #F3F4F6; color: #374151; }
 .modal-btn-green { background: #07C160; color: #fff; }
