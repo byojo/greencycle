@@ -222,29 +222,58 @@ async function loadOrders() {
   } catch(e) { toast('加载失败'); }
 }
 
+function riderOnline(r) {
+  if (!r.lastLocationAt || !r.lat || !r.lng) return false;
+  const t = new Date(r.lastLocationAt.replace(' ', 'T'));
+  if (isNaN(t.getTime())) return false;
+  return (Date.now() - t.getTime()) / 1000 < 30 * 60;
+}
+function riderLastLocText(r) {
+  if (!r.lastLocationAt) return '未上报位置';
+  const t = new Date(r.lastLocationAt.replace(' ', 'T'));
+  if (isNaN(t.getTime())) return '未上报位置';
+  const diff = (Date.now() - t.getTime()) / 1000;
+  if (diff < 60) return '刚刚上报';
+  if (diff < 3600) return Math.floor(diff / 60) + ' 分钟前上报';
+  if (diff < 86400) return Math.floor(diff / 3600) + ' 小时前上报';
+  return r.lastLocationAt;
+}
+
 async function loadRiders() {
   try {
     const res = await api('/admin/riders');
     ridersCache = res.data?.list || [];
     const el = document.getElementById('ridersList');
     if (ridersCache.length === 0) { el.innerHTML = '<div class="empty">暂无回收专员，点击右上角添加</div>'; return; }
-    el.innerHTML = ridersCache.map(r => `<div class="rider-card">
+    el.innerHTML = ridersCache.map(r => {
+      const online = riderOnline(r);
+      return `<div class="rider-card">
       <div class="rider-info">
         <div class="rider-avatar">${r.name.charAt(0)}</div>
         <div>
-          <div class="rider-name">${r.name}</div>
-          <div class="rider-meta">${r.phone} · ${r.plateNo || '无车牌'} · 评分 ${r.rating} · 服务 ${r.serviceCnt} 次</div>
+          <div class="rider-name">${r.name} <span style="font-size:12px;color:${online ? '#07C160' : '#999'}">● ${online ? '在线' : '离线'}</span></div>
+          <div class="rider-meta">${r.phone} · ${r.plateNo || '无车牌'} · 评分 ${r.rating} · 服务 ${r.serviceCnt} 次 · ${riderLastLocText(r)}</div>
         </div>
       </div>
       <button class="btn btn-gray btn-sm" onclick="toggleRiderStatus(${r.id}, ${r.status})">${r.status === 1 ? '离职' : '复职'}</button>
-    </div>`).join('');
+    </div>`;
+    }).join('');
   } catch(e) { toast('加载失败'); }
 }
 
-function showAssign(orderId) {
+async function showAssign(orderId) {
   currentAssignOrderId = orderId;
   const select = document.getElementById('riderSelect');
-  select.innerHTML = ridersCache.filter(r => r.status === 1).map(r => `<option value="${r.id}">${r.name} · ${r.phone} · 评分${r.rating}</option>`).join('');
+  select.innerHTML = '<option>加载中...</option>';
+  try {
+    const res = await api('/admin/orders/' + orderId + '/nearest-riders');
+    const list = (res.data && res.data.list) || [];
+    if (list.length === 0) throw new Error('empty');
+    select.innerHTML = list.map(r => `<option value="${r.id}">${r.name} · ${r.phone} · ${r.distanceText} · ${r.online ? '在线' : '离线'}</option>`).join('');
+  } catch (e) {
+    // 订单无坐标时退回普通列表
+    select.innerHTML = ridersCache.filter(r => r.status === 1).map(r => `<option value="${r.id}">${r.name} · ${r.phone} · 评分${r.rating}</option>`).join('');
+  }
   document.getElementById('assignModal').classList.add('show');
 }
 

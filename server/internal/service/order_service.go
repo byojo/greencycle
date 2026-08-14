@@ -131,6 +131,14 @@ func (s *OrderService) GetDetail(ctx context.Context, orderID uint64, userID uin
 	if order.UserID != userID {
 		return nil, errors.New("无权访问该订单")
 	}
+	// 填充专员实时位置，供用户端计算距离与预计到达
+	if order.RiderID != nil {
+		if rider, err := s.repo.Rider.GetByID(ctx, *order.RiderID); err == nil && rider != nil {
+			order.RiderLat = rider.Lat
+			order.RiderLng = rider.Lng
+			order.RiderLastLocationAt = rider.LastLocationAt
+		}
+	}
 	return order, nil
 }
 

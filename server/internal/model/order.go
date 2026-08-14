@@ -42,6 +42,11 @@ type Order struct {
 	UpdatedAt     time.Time      `json:"updatedAt"`
 	DeletedAt     gorm.DeletedAt `gorm:"index" json:"-"`
 
+	// 专员实时位置（非表字段，详情接口填充，供用户端计算距离/ETA）
+	RiderLat            float64    `gorm:"-" json:"riderLat"`
+	RiderLng            float64    `gorm:"-" json:"riderLng"`
+	RiderLastLocationAt *time.Time `gorm:"-" json:"riderLastLocationAt"`
+
 	// 关联
 	Images    []OrderImage    `gorm:"foreignKey:OrderID" json:"images,omitempty"`
 	Timelines []OrderTimeline `gorm:"foreignKey:OrderID" json:"timelines,omitempty"`

@@ -14,7 +14,9 @@
       <text class="state-text">{{stateText}}</text>
     </view>
     <view class="eta-title">{{etaTitle}}</view>
-    <view class="eta-info">回收专员距您 {{distance}} · 预计 {{eta}} 分钟</view>
+    <view class="eta-info" wx:if="{{progress >= 1 && distance !== '—'}}">回收专员距您 {{distance}} · 预计 {{eta}} 分钟</view>
+    <view class="eta-info" wx:elif="{{progress >= 1}}">回收专员已接单，正在获取位置…</view>
+    <view class="eta-info" wx:else>等待分配回收专员</view>
   </view>
 
   <!-- 地图 mock -->

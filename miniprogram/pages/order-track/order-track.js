@@ -13,6 +13,23 @@ const CATEGORY_INFO = {
   metal:   { icon: '🥫', name: '废品',     item: '纸壳 + 塑料瓶' }
 };
 
+// 计算两点直线距离（km），用于订单追踪页真实距离
+function haversine(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLng / 2) * Math.sin(dLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+function formatDistanceKm(km) {
+  if (!km || km <= 0) return '—';
+  if (km < 1) return Math.round(km * 1000) + '米';
+  return km.toFixed(1) + '公里';
+}
+
 // 4 步进度状态：已下单 / 已派单 / 上门中 / 已完成
 // progress: 0 = 刚下单, 1 = 已派单, 2 = 上门中, 3 = 已完成
 function buildTimeline(progress) {
@@ -43,8 +60,8 @@ Page({
       plate: '沪 A·8862',
       rating: '4.95'
     },
-    eta: 8,
-    distance: '1.2km',
+    eta: 0,
+    distance: '—',
     stateText: '🚴 回收专员正在前往',
     etaTitle: '预计 14:30 到达',
     timeline: [],
@@ -93,6 +110,15 @@ Page({
     const progress = this.statusToProgress(order.status);
     const rider = order.rider || this.data.rider;
 
+    // 真实距离与预计到达：需专员已上报位置且订单有取件坐标
+    let distance = '—';
+    let eta = 0;
+    if (order.riderLat && order.riderLng && order.pickupLat && order.pickupLng) {
+      const km = haversine(order.pickupLat, order.pickupLng, order.riderLat, order.riderLng);
+      distance = formatDistanceKm(km);
+      eta = Math.max(1, Math.round(km / 25 * 60)); // 假设平均骑行 25km/h
+    }
+
     this.setData({
       orderNo: order.orderNo || order.id || this.data.orderNo,
       catText: info.name + ' · ' + (order.itemName || info.item),
@@ -107,6 +133,8 @@ Page({
       progress,
       stateText: this.getStateText(progress),
       etaTitle: this.getEtaTitle(progress),
+      distance,
+      eta,
       loading: false
     });
   },
