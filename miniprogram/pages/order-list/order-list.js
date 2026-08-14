@@ -81,7 +81,11 @@ Page({
       categoryName: categoryName(code),
       statusText: status ? orderStatusText(status) : '',
       statusColor: status ? (STATUS_COLORS[status] || '#6B7280') : '#6B7280',
-      // 解析日期
+      // 卡头：下单时间（对齐"我的工单"排版）
+      createdAtText: o.createdAt ? formatDate(o.createdAt, 'YYYY-MM-DD HH:mm') : '',
+      // 预约时间（null 时前端兜底显示"尽快上门"）
+      estimatedAtText: o.estimatedAt ? formatDate(o.estimatedAt, 'YYYY-MM-DD HH:mm') : '',
+      // 解析日期（兼容旧字段）
       date: o.date || (o.createdAt ? this.formatDateShort(o.createdAt) : ''),
       time: o.time || (o.createdAt ? this.formatTimeShort(o.createdAt) : ''),
       // itemName 兜底
@@ -188,6 +192,18 @@ Page({
 
   onMore() {
     wx.showToast({ title: '更早订单开发中', icon: 'none' });
+  },
+
+  // 阻止卡片底部操作区冒泡到整卡（点击"详情›"不会重复触发卡片导航）
+  stopPropagation() {},
+
+  // 预览订单图片
+  onPreviewPhoto(e) {
+    const urls = (e.currentTarget.dataset.urls || []).map(i => i.url);
+    const current = e.currentTarget.dataset.current;
+    if (urls.length) {
+      wx.previewImage({ urls, current });
+    }
   },
 
   goHome() {

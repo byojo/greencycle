@@ -43,7 +43,7 @@
       <view class="month-title">{{group.monthLabel}}</view>
       <view class="order-list">
         <view
-          class="order-item {{index === group.list.length - 1 ? 'last' : ''}}"
+          class="order-card"
           wx:for="{{group.list}}"
           wx:key="id"
           wx:for-item="order"
@@ -51,19 +51,25 @@
           data-category="{{order.categoryCode}}"
           bindtap="onOrderTap"
         >
-          <view class="order-icon" style="background:{{order.bg}}">{{order.icon}}</view>
-          <view class="order-info">
-            <view class="order-name">{{order.itemName}}</view>
-            <view class="order-cat">
-              <text class="order-cat-tag">{{order.categoryName}}</text>
-              <text wx:if="{{order.statusText}}" class="order-status-tag" style="color:{{order.statusColor}}">{{order.statusText}}</text>
+          <view class="card-head">
+            <text class="card-meta">下单时间 {{order.createdAtText}}</text>
+            <view class="status-badge status-{{order.status}}">{{order.statusText}}</view>
+          </view>
+          <view class="card-body">
+            <view class="type-row">
+              <view class="type-tag">{{order.categoryName}}</view>
+              <text class="item-name">{{order.itemName}}</text>
             </view>
+            <view class="info-line"><text class="line-key">预约时间</text><text class="line-val">{{order.estimatedAtText || '尽快上门'}}</text></view>
+            <view class="info-line"><text class="line-key">联系方式</text><text class="line-val">{{order.pickupPhone || '—'}}</text></view>
+            <view class="info-line"><text class="line-key">地址</text><text class="line-val">{{order.pickupAddr}}</text></view>
           </view>
-          <view class="order-time">
-            <view class="time-date">{{order.date}}</view>
-            <view class="time-hour">{{order.time}}</view>
+          <view class="card-photos" wx:if="{{order.images && order.images.length > 0}}">
+            <image wx:for="{{order.images}}" wx:for-item="img" wx:key="id" src="{{img.url}}" mode="aspectFill" class="photo-thumb" catchtap="onPreviewPhoto" data-urls="{{order.images}}" data-current="{{img.url}}"></image>
           </view>
-          <view class="order-arrow">›</view>
+          <view class="card-actions" catchtap="stopPropagation">
+            <view class="detail-link" data-id="{{order.id}}" data-category="{{order.categoryCode}}" bindtap="onOrderTap">详情 ›</view>
+          </view>
         </view>
       </view>
     </view>

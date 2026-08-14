@@ -4,8 +4,8 @@
   background: #F7F8FA;
 }
 
-.status-tabs { display: flex; white-space: nowrap; padding: 16rpx 24rpx; gap: 12rpx; background: #FFFFFF; border-bottom: 1rpx solid #F3F4F6; }
-.status-tabs .tab { display: inline-block; padding: 8rpx 24rpx; border-radius: 32rpx; font-size: 26rpx; color: #666; background: #fff; }
+.status-tabs { white-space: nowrap; padding: 16rpx 24rpx; background: #FFFFFF; border-bottom: 1rpx solid #F3F4F6; }
+.status-tabs .tab { display: inline-block; padding: 8rpx 28rpx; margin-right: 16rpx; border-radius: 32rpx; font-size: 26rpx; color: #6B7280; background: #F3F4F6; }
 .status-tabs .tab.active { background: #07C160; color: #fff; }
 
 /* ============ 顶部导航 ============ */
@@ -98,89 +98,52 @@
   letter-spacing: 1rpx;
 }
 
-/* ============ 订单列表卡片 ============ */
+/* ============ 订单列表卡片（对齐"我的工单"排版） ============ */
 .order-list {
-  background: #FFFFFF;
-  margin: 0 32rpx 24rpx;
-  border-radius: 24rpx;
-  overflow: hidden;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+  padding: 20rpx 24rpx;
 }
-.order-item {
+.order-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+.card-head {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 20rpx;
-  padding: 28rpx 24rpx;
-  border-bottom: 1rpx solid #F3F4F6;
+  margin-bottom: 16rpx;
 }
-.order-item.last {
-  border-bottom: none;
-}
-.order-icon {
-  width: 96rpx;
-  height: 96rpx;
-  border-radius: 24rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 48rpx;
-  flex-shrink: 0;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
-}
-.order-info {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6rpx;
-}
-.order-name {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #1F2937;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.order-cat {
-  display: flex;
-  align-items: center;
-  gap: 12rpx;
-  font-size: 22rpx;
-}
-.order-cat-tag {
-  color: #9CA3AF;
-}
-.order-status-tag {
-  font-size: 20rpx;
-  font-weight: 600;
-  padding: 2rpx 10rpx;
-  border-radius: 6rpx;
-  background: rgba(0, 0, 0, 0.04);
-}
-.order-time {
-  text-align: right;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4rpx;
-}
-.time-date {
+.card-meta {
   font-size: 24rpx;
-  color: #6B7280;
-  font-weight: 500;
-}
-.time-hour {
-  font-size: 22rpx;
   color: #9CA3AF;
 }
-.order-arrow {
-  color: #D1D5DB;
-  font-size: 36rpx;
-  margin-left: 4rpx;
+.status-badge {
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
   flex-shrink: 0;
 }
+.status-1 { background: #FEF3C7; color: #D97706; }
+.status-2 { background: #DBEAFE; color: #2563EB; }
+.status-3 { background: #E0E7FF; color: #4F46E5; }
+.status-4 { background: #D1FAE5; color: #059669; }
+.status-5 { background: #FEE2E2; color: #DC2626; }
+
+.card-body { margin-bottom: 16rpx; }
+.type-row { display: flex; align-items: center; margin-bottom: 14rpx; }
+.type-tag { flex-shrink: 0; font-size: 22rpx; color: #07C160; background: #E7F8EE; padding: 4rpx 16rpx; border-radius: 20rpx; margin-right: 14rpx; }
+.item-name { font-size: 30rpx; font-weight: 600; color: #1F2937; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.info-line { display: flex; align-items: flex-start; font-size: 26rpx; color: #6B7280; margin-top: 8rpx; line-height: 1.4; }
+.line-key { flex-shrink: 0; width: 120rpx; color: #9CA3AF; }
+.line-val { flex: 1; color: #1F2937; }
+
+.card-photos { display: flex; gap: 12rpx; margin-bottom: 16rpx; flex-wrap: wrap; }
+.photo-thumb { width: 120rpx; height: 120rpx; border-radius: 12rpx; background: #F3F4F6; }
+
+.card-actions { display: flex; gap: 12rpx; align-items: center; border-top: 1rpx solid #F3F4F6; padding-top: 20rpx; }
+.detail-link { font-size: 24rpx; color: #07C160; padding: 6rpx 0; margin-left: auto; flex-shrink: 0; }
 
 /* ============ 加载状态 ============ */
 .loading-state {
