@@ -58,13 +58,17 @@ func (r *OrderRepository) FindByID(ctx context.Context, id uint64) (*model.Order
 	return &order, nil
 }
 
-// FindByRiderID 查询分配给专员的订单；since 非空时仅返回该时间之后的工单（按创建时间）
-func (r *OrderRepository) FindByRiderID(ctx context.Context, riderID uint, since *time.Time) ([]model.Order, error) {
+// FindByRiderID 查询分配给专员的订单；month 非空时(格式 YYYY-MM)仅返回该月工单（按创建时间）
+func (r *OrderRepository) FindByRiderID(ctx context.Context, riderID uint, month *time.Time) ([]model.Order, error) {
 	tx := r.db.WithContext(ctx).
 		Preload("Images").
 		Where("rider_id = ?", riderID)
-	if since != nil {
-		tx = tx.Where("created_at >= ?", *since)
+	if month != nil {
+		y, m, _ := month.Date()
+		loc := month.Location()
+		start := time.Date(y, m, 1, 0, 0, 0, 0, loc)
+		end := start.AddDate(0, 1, 0)
+		tx = tx.Where("created_at >= ? AND created_at < ?", start, end)
 	}
 	var orders []model.Order
 	err := tx.Order("created_at DESC").Find(&orders).Error

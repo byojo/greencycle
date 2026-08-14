@@ -32,6 +32,16 @@ func (r *UserRepository) FindByID(ctx context.Context, id uint) (*model.User, er
 	return &user, nil
 }
 
+// FindByIDs 批量查询用户
+func (r *UserRepository) FindByIDs(ctx context.Context, ids []uint) ([]model.User, error) {
+	if len(ids) == 0 {
+		return nil, nil
+	}
+	var users []model.User
+	err := r.db.WithContext(ctx).Where("id IN ?", ids).Find(&users).Error
+	return users, err
+}
+
 // FindByOpenID 根据 OpenID 查询
 func (r *UserRepository) FindByOpenID(ctx context.Context, openID string) (*model.User, error) {
 	var user model.User

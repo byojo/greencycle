@@ -2,6 +2,28 @@ const api = require('../../services/api.js');
 const { formatDate } = require('../../utils/format.js');
 const { requirePrivacy } = require('../../utils/privacy.js');
 
+function pad2(n) { return String(n).padStart(2, '0'); }
+
+// 当前月字符串 YYYY-MM
+function currentMonthStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}`;
+}
+
+// 月份标签，如 2026-07 -> "26年07月"
+function formatMonthLabel(yyyymm) {
+  const [y, m] = yyyymm.split('-').map(Number);
+  return `${String(y).slice(2)}年${pad2(m)}月`;
+}
+
+// 上一月字符串，如 2026-01 -> 2025-12
+function getPrevMonth(yyyymm) {
+  const [y, m] = yyyymm.split('-').map(Number);
+  let ny = y, nm = m - 1;
+  if (nm === 0) { nm = 12; ny -= 1; }
+  return `${ny}-${pad2(nm)}`;
+}
+
 Page({
   data: {
     currentTab: 0, // 0=回收工单, 1=配送任务
@@ -16,21 +38,23 @@ Page({
       { value: 3, label: '已取件' },
       { value: 4, label: '已完成' }
     ],
-    // 时间筛选：默认近 7 天
-    timeRange: 7,
-    timeOptions: [
-      { label: '全部', value: 0 },
-      { label: '近3天', value: 3 },
-      { label: '近7天', value: 7 },
-      { label: '近30天', value: 30 }
-    ],
     statusMap: { 1: '待评估', 2: '待回收', 3: '已取件', 4: '已完成', 5: '已取消' },
     showComplete: false,
     completeOrderId: null,
-    finalAmount: ''
+    finalAmount: '',
+    // 月份筛选：默认当前月，支持逐月往前加载
+    monthCursor: '',     // 当前已加载到的最早月份 YYYY-MM
+    prevMonthLabel: '',   // 上一月按钮文案（如 "26年07月"）
+    canLoadPrev: false,   // 是否还能继续加载更早月份
+    reachedEnd: false,    // 已无更早工单
+    loadingPrev: false
   },
 
-  onLoad() { this.loadData(); this.startLocationReport(); },
+  onLoad() {
+    this._currentMonth = currentMonthStr();
+    this.loadData();
+    this.startLocationReport();
+  },
   onShow() { this.loadData(); this.startLocationReport(); },
   onHide() { this.stopLocationReport(); },
   onUnload() { this.stopLocationReport(); },
@@ -73,7 +97,7 @@ Page({
     this.setData({ loading: true });
     try {
       await Promise.all([
-        this.loadOrders(),
+        this.loadOrders(this._currentMonth, false),
         this.loadDeliveries()
       ]);
       this.setData({ loading: false });
@@ -82,20 +106,50 @@ Page({
     }
   },
 
-  async loadOrders() {
+  // 加载某月工单。append=true 时追加到已有列表（用于"查看上一月"）
+  async loadOrders(month, append) {
     try {
-      const res = await api.riderGetOrders({ days: this.data.timeRange });
-      const orders = (res.data.list || []).map(o => ({
+      const res = await api.riderGetOrders({ month });
+      const list = (res.data.list || []).map(o => ({
         ...o,
-        estimatedAtText: o.estimatedAt ? formatDate(o.estimatedAt, 'MM-DD HH:mm') : ''
+        estimatedAtText: o.estimatedAt ? formatDate(o.estimatedAt, 'YYYY-MM-DD HH:mm') : ''
       }));
-      this.setData({ orders });
+
+      let orders;
+      if (append) {
+        orders = this.data.orders.concat(list);
+      } else {
+        orders = list;
+      }
+
+      const prev = getPrevMonth(month);
+      // 追加上一月后若该月无数据，则不再提供更早入口
+      const canLoadPrev = append ? list.length > 0 : true;
+      const reachedEnd = append && list.length === 0;
+
+      this.setData({
+        orders,
+        monthCursor: month,
+        prevMonthLabel: formatMonthLabel(prev),
+        canLoadPrev,
+        reachedEnd,
+        loadingPrev: false
+      });
       this.applyFilter();
     } catch (err) {
+      this.setData({ loadingPrev: false });
       if (!err || err.statusCode !== 403) {
         wx.showToast({ title: err.message || '加载工单失败', icon: 'none' });
       }
     }
+  },
+
+  // 轻按查看上一月工单
+  async onViewPrevMonth() {
+    if (this.data.loadingPrev || !this.data.canLoadPrev) return;
+    const prev = getPrevMonth(this.data.monthCursor);
+    this.setData({ loadingPrev: true });
+    await this.loadOrders(prev, true);
   },
 
   async loadDeliveries() {
@@ -116,14 +170,6 @@ Page({
     this.applyFilter();
   },
 
-  // 切换时间筛选（全部/近3天/近7天/近30天）
-  onTimeRange(e) {
-    const value = parseInt(e.currentTarget.dataset.value);
-    if (value === this.data.timeRange) return;
-    this.setData({ timeRange: value, loading: true });
-    this.loadOrders();
-  },
-
   applyFilter() {
     const f = this.data.currentFilter;
     const filtered = f === 0 ? this.data.orders : this.data.orders.filter(o => o.status === f);
@@ -140,7 +186,7 @@ Page({
           try {
             await api.riderPickOrder(orderId);
             wx.showToast({ title: '已标记取件', icon: 'success' });
-            this.loadOrders();
+            this.loadOrders(this._currentMonth, false);
           } catch (err) {
             wx.showToast({ title: err.message || '操作失败', icon: 'none' });
           }
@@ -192,7 +238,7 @@ Page({
       await api.riderCompleteOrder(this.data.completeOrderId, { finalAmount: amount });
       wx.showToast({ title: '订单已完成', icon: 'success' });
       this.closeComplete();
-      this.loadOrders();
+      this.loadOrders(this._currentMonth, false);
     } catch (err) {
       wx.showToast({ title: err.message || '操作失败', icon: 'none' });
     }

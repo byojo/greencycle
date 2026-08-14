@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/greencycle/server/internal/model"
 	"github.com/greencycle/server/pkg/response"
 )
 
@@ -41,11 +42,44 @@ func (h *Handler) RiderOrders(c *gin.Context) {
 		return
 	}
 
-	days, _ := strconv.Atoi(c.DefaultQuery("days", "7"))
-	orders, err := h.Svc.Rider.GetOrdersByRiderID(c.Request.Context(), riderID, days)
+	month := c.DefaultQuery("month", "")
+	orders, err := h.Svc.Rider.GetOrdersByRiderID(c.Request.Context(), riderID, month)
 	if err != nil {
 		response.ServerError(c, err.Error())
 		return
+	}
+
+	// 填充回收类型名称（按 categoryCode 反查）
+	if cats, cerr := h.Svc.Repo.Category.List(c.Request.Context()); cerr == nil {
+		catMap := make(map[string]string, len(cats))
+		for _, c := range cats {
+			catMap[c.Code] = c.Name
+		}
+		for i := range orders {
+			orders[i].CategoryName = catMap[orders[i].CategoryCode]
+		}
+	}
+
+	// 填充客户联系方式（仅对分配专员可见）
+	userIDs := make([]uint, 0, len(orders))
+	for i := range orders {
+		if orders[i].UserID != 0 {
+			userIDs = append(userIDs, orders[i].UserID)
+		}
+	}
+	if len(userIDs) > 0 {
+		if users, uerr := h.Svc.Repo.User.FindByIDs(c.Request.Context(), userIDs); uerr == nil {
+			userMap := make(map[uint]model.User, len(users))
+			for _, u := range users {
+				userMap[u.ID] = u
+			}
+			for i := range orders {
+				if u, ok := userMap[orders[i].UserID]; ok {
+					orders[i].CustomerName = u.Nickname
+					orders[i].CustomerPhone = u.Phone
+				}
+			}
+		}
 	}
 
 	// 对图片 URL 签名

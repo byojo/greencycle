@@ -123,13 +123,24 @@ func (s *RiderService) Update(ctx context.Context, id uint, updates map[string]i
 }
 
 // GetOrdersByRiderID 获取分配给专员的工单；days>0 时仅返回最近 days 天的工单
-func (s *RiderService) GetOrdersByRiderID(ctx context.Context, riderID uint, days int) ([]model.Order, error) {
-	var since *time.Time
-	if days > 0 {
-		t := time.Now().AddDate(0, 0, -days)
-		since = &t
+// GetOrdersByRiderID 获取分配给专员的订单。
+// month 为空或 "current" 表示当前月；"all" 表示不限制时间；否则为 "YYYY-MM" 指定月份。
+func (s *RiderService) GetOrdersByRiderID(ctx context.Context, riderID uint, month string) ([]model.Order, error) {
+	if month == "all" {
+		return s.repo.Order.FindByRiderID(ctx, riderID, nil)
 	}
-	return s.repo.Order.FindByRiderID(ctx, riderID, since)
+	var m *time.Time
+	if month == "" || month == "current" {
+		t := time.Now()
+		m = &t
+	} else {
+		t, err := time.Parse("2006-01", month)
+		if err != nil {
+			t = time.Now()
+		}
+		m = &t
+	}
+	return s.repo.Order.FindByRiderID(ctx, riderID, m)
 }
 
 // PickOrder 专员标记已取件

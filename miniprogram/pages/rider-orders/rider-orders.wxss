@@ -6,14 +6,10 @@
 .top-tab.active { color: #07C160; font-weight: 600; }
 .top-tab.active::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 60rpx; height: 4rpx; background: #07C160; border-radius: 2rpx; }
 
-/* 筛选 chips（时间 + 状态共用） */
+/* 筛选 chips（状态） */
 .chip-bar { white-space: nowrap; padding: 16rpx 24rpx; background: #fff; }
-.chip-bar + .chip-bar { padding-top: 0; }
 .chip { display: inline-block; padding: 8rpx 28rpx; margin-right: 16rpx; border-radius: 32rpx; font-size: 26rpx; color: #6B7280; background: #F3F4F6; }
 .chip.active { background: #07C160; color: #fff; }
-
-/* 时间范围提示 */
-.section-tip { font-size: 22rpx; color: #9CA3AF; padding: 12rpx 28rpx 0; }
 
 /* 列表 */
 .order-list, .delivery-list { padding: 20rpx 24rpx; }
@@ -31,6 +27,12 @@
 .delivery-status { font-size: 26rpx; font-weight: 600; }
 
 .card-body { margin-bottom: 16rpx; }
+.type-row { display: flex; align-items: center; margin-bottom: 14rpx; }
+.type-tag { flex-shrink: 0; font-size: 22rpx; color: #07C160; background: #E7F8EE; padding: 4rpx 16rpx; border-radius: 20rpx; margin-right: 14rpx; }
+.item-name { font-size: 30rpx; font-weight: 600; color: #1F2937; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.info-line { display: flex; align-items: flex-start; font-size: 26rpx; color: #6B7280; margin-top: 8rpx; line-height: 1.4; }
+.line-key { flex-shrink: 0; width: 120rpx; color: #9CA3AF; }
+.line-val { flex: 1; color: #1F2937; }
 .card-item { display: block; font-size: 32rpx; font-weight: 600; color: #1F2937; margin-bottom: 10rpx; }
 .card-line { display: block; font-size: 26rpx; color: #6B7280; margin-top: 6rpx; line-height: 1.4; }
 
@@ -49,6 +51,13 @@
 
 /* 通用 */
 .empty, .loading { text-align: center; padding: 120rpx 0; color: #9CA3AF; font-size: 28rpx; }
+
+/* 月份底部：查看上一月 */
+.month-footer { padding: 10rpx 24rpx 40rpx; text-align: center; }
+.month-hint { font-size: 26rpx; color: #9CA3AF; margin-bottom: 16rpx; }
+.prev-month-btn { display: inline-block; font-size: 26rpx; color: #2563EB; background: #EFF4FF; border-radius: 40rpx; padding: 0 36rpx; height: 72rpx; line-height: 72rpx; border: none; }
+.prev-month-btn::after { border: none; }
+.month-end { font-size: 24rpx; color: #C4C9D1; }
 
 /* 弹窗 */
 .modal-mask { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.45); z-index: 999; display: flex; align-items: center; justify-content: center; }
