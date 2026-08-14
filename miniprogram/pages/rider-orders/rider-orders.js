@@ -1,5 +1,6 @@
 const api = require('../../services/api.js');
 const { formatDate } = require('../../utils/format.js');
+const { requirePrivacy } = require('../../utils/privacy.js');
 
 Page({
   data: {
@@ -51,6 +52,8 @@ Page({
 
   async reportLocation() {
     try {
+      // 隐私合规：上报位置前必须先获用户同意隐私协议
+      await requirePrivacy();
       const res = await new Promise((resolve, reject) => {
         wx.getLocation({ type: 'gcj02', success: resolve, fail: reject });
       });

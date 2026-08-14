@@ -2,6 +2,7 @@
 const app = getApp();
 const api = require('../../services/api.js');
 const { formatNumber, formatDate } = require('../../utils/format.js');
+const { requirePrivacy } = require('../../utils/privacy.js');
 
 Page({
   data: {
@@ -91,6 +92,8 @@ Page({
     // 用户已手动选过地址，不再用 GPS 自动覆盖
     if (this.data.locationLocked) return;
     try {
+      // 隐私合规：调 getLocation 前必须先获用户同意隐私协议
+      await requirePrivacy();
       const { latitude, longitude } = await new Promise((resolve, reject) => {
         wx.getLocation({ type: 'gcj02', success: resolve, fail: reject });
       });
@@ -103,7 +106,21 @@ Page({
   },
 
   // 点击位置：调起微信地图，触发授权确认 + 位置定位
-  onLocationTap() {
+  async onLocationTap() {
+    try {
+      // 隐私合规：调 chooseLocation 前必须先获用户同意隐私协议
+      await requirePrivacy();
+    } catch (e) {
+      // 用户拒绝隐私协议 -> 引导去设置开启
+      wx.showModal({
+        title: '需要位置权限',
+        content: '用于展示您所在城市并就近匹配回收专员，请在设置中开启位置权限',
+        confirmText: '去设置',
+        cancelText: '取消',
+        success: (m) => { if (m.confirm) wx.openSetting(); }
+      });
+      return;
+    }
     wx.chooseLocation({
       success: async (res) => {
         // res: { name, address, latitude, longitude } —— 用选点结果更新位置
