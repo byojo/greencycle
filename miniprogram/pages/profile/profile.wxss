@@ -64,29 +64,6 @@
   white-space: nowrap;
   max-width: 360rpx;
 }
-/* 头像：用 button 承载微信 chooseAvatar 能力，重置默认样式 */
-.avatar-btn {
-  margin: 0;
-  padding: 0;
-  border: none;
-  background: transparent;
-  line-height: normal;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex-shrink: 0;
-}
-.avatar-btn::after {
-  border: none;
-}
-.avatar-edit-tip {
-  margin-top: 6rpx;
-  font-size: 18rpx;
-  color: #FFFFFF;
-  background: rgba(0, 0, 0, 0.25);
-  padding: 2rpx 12rpx;
-  border-radius: 16rpx;
-}
 /* 昵称旁的编辑笔 */
 .edit-pen {
   font-size: 26rpx;

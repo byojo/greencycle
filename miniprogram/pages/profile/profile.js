@@ -1,7 +1,6 @@
 // pages/profile/profile.js
 const app = getApp();
 const api = require('../../services/api.js');
-const upload = require('../../services/upload.js');
 
 Page({
   data: {
@@ -75,29 +74,6 @@ Page({
     } catch (err) {
       this.setData({ loading: false });
       wx.showToast({ title: '加载失败，请下拉刷新', icon: 'none' });
-    }
-  },
-
-  // 选择头像（微信官方能力：button open-type=chooseAvatar）
-  async onChooseAvatar(e) {
-    const tempPath = e && e.detail && e.detail.avatarUrl;
-    if (!tempPath) return;
-    try {
-      wx.showLoading({ title: '上传中...', mask: true });
-      // 1. 上传临时头像到 COS，拿回 CDN URL
-      const url = await upload.uploadImage(tempPath);
-      // 2. 调后端保存头像 URL
-      await api.updateProfile({ avatar: url });
-      // 3. 更新本地展示与缓存
-      this.setData({ avatarUrl: url, avatarText: '' });
-      const cached = app.globalData.userInfo || {};
-      app.globalData.userInfo = { ...cached, avatar: url };
-      wx.setStorageSync('userInfo', app.globalData.userInfo);
-      wx.hideLoading();
-      wx.showToast({ title: '头像已更新', icon: 'success' });
-    } catch (err) {
-      wx.hideLoading();
-      wx.showToast({ title: '头像上传失败', icon: 'none' });
     }
   },
 
