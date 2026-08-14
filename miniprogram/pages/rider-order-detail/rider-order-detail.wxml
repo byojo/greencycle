@@ -1,0 +1,89 @@
+<!--pages/rider-order-detail/rider-order-detail.wxml-->
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="nav">
+    <view class="nav-inner">
+      <view class="nav-back" bindtap="onBack">‹</view>
+      <view class="nav-title">工单详情</view>
+      <view class="nav-action"></view>
+    </view>
+  </view>
+
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+
+  <block wx:if="{{order}}">
+    <!-- 状态条 -->
+    <view class="status-bar" style="background:{{statusBarBg}}">
+      <view class="status-text">{{statusText}}</view>
+      <view class="status-no">工单号 {{order.orderNo}}</view>
+    </view>
+
+    <!-- 回收物品 -->
+    <view class="card">
+      <view class="card-title">📦 回收物品</view>
+      <view class="item-name">{{order.itemName}}</view>
+      <view class="item-desc" wx:if="{{order.itemDesc}}">{{order.itemDesc}}</view>
+      <view class="photo-grid" wx:if="{{order.images && order.images.length > 0}}">
+        <image wx:for="{{order.images}}" wx:key="id" src="{{item.url}}" mode="aspectFill" class="photo-item" bindtap="onPreviewPhoto" data-url="{{item.url}}"></image>
+      </view>
+    </view>
+
+    <!-- 取件信息 -->
+    <view class="card">
+      <view class="card-title">📍 取件信息</view>
+      <view class="info-row">
+        <text class="info-key">预约时间</text>
+        <text class="info-val">{{estimatedAtText || '尽快上门'}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-key">取件地址</text>
+        <text class="info-val">{{order.pickupAddr}}</text>
+      </view>
+      <map wx:if="{{order.pickupLat && order.pickupLng}}" class="order-map"
+        latitude="{{order.pickupLat}}" longitude="{{order.pickupLng}}"
+        markers="{{[{id:1, latitude: order.pickupLat, longitude: order.pickupLng, title:'回收地址'}]}}"
+        scale="16" show-location bindtap="onNavigate"></map>
+      <view class="row-btns">
+        <button class="btn-nav" bindtap="onNavigate">🧭 导航</button>
+        <button class="btn-call" wx:if="{{order.customerPhone}}" bindtap="onCallCustomer">📞 联系客户</button>
+      </view>
+    </view>
+
+    <!-- 客户信息 -->
+    <view class="card" wx:if="{{order.customerName || order.customerPhone}}">
+      <view class="card-title">👤 客户信息</view>
+      <view class="info-row">
+        <text class="info-key">称呼</text>
+        <text class="info-val">{{order.customerName || '—'}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-key">电话</text>
+        <text class="info-val">{{order.customerPhone || '—'}}</text>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="actions safe-area-bottom">
+      <button wx:if="{{status === 2}}" class="btn-primary" bindtap="onPick">已取件</button>
+      <button wx:if="{{status === 3}}" class="btn-primary" bindtap="onShowComplete">完成回收</button>
+      <view wx:if="{{status === 4}}" class="done-tip">✓ 已完成回收</view>
+      <view wx:if="{{status === 5}}" class="done-tip">订单已取消</view>
+    </view>
+  </block>
+
+  <!-- 完成回收弹窗 -->
+  <view class="modal-mask" wx:if="{{showComplete}}" bindtap="closeComplete">
+    <view class="modal" catchtap="stopPropagation">
+      <view class="modal-title">✅ 完成回收</view>
+      <view class="input-group">
+        <text class="input-label">回收金额（元）</text>
+        <input type="digit" class="input" value="{{finalAmount}}" bindinput="onAmountInput" placeholder="50" />
+      </view>
+      <view class="input-hint">用户将获得积分 = 品类基础分 + 金额×5%</view>
+      <view class="modal-actions">
+        <button class="modal-btn modal-btn-gray" bindtap="closeComplete">取消</button>
+        <button class="modal-btn modal-btn-green" bindtap="confirmComplete">确认完成</button>
+      </view>
+    </view>
+  </view>
+</view>

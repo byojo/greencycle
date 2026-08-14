@@ -142,7 +142,7 @@ Page({
 
   onViewDetail(e) {
     const id = e.currentTarget.dataset.id;
-    wx.navigateTo({ url: `/pages/order-detail/order-detail?id=${id}` });
+    wx.navigateTo({ url: `/pages/rider-order-detail/rider-order-detail?id=${id}` });
   },
 
   // 点击导航：唤起系统地图前往取件/收货点

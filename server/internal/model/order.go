@@ -50,6 +50,10 @@ type Order struct {
 	// 关联
 	Images    []OrderImage    `gorm:"foreignKey:OrderID" json:"images,omitempty"`
 	Timelines []OrderTimeline `gorm:"foreignKey:OrderID" json:"timelines,omitempty"`
+
+	// 客户联系方式（仅专员详情接口填充，非表字段）
+	CustomerName  string `gorm:"-" json:"customerName,omitempty"`
+	CustomerPhone string `gorm:"-" json:"customerPhone,omitempty"`
 }
 
 func (Order) TableName() string {

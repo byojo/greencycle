@@ -57,6 +57,42 @@ func (h *Handler) RiderOrders(c *gin.Context) {
 	response.Success(c, gin.H{"list": orders})
 }
 
+// RiderOrderDetail 专员查看分配给自己的工单详情（含客户联系方式）
+func (h *Handler) RiderOrderDetail(c *gin.Context) {
+	riderID := h.getRiderID(c)
+	if riderID == 0 {
+		response.BadRequest(c, "您不是回收专员")
+		return
+	}
+
+	orderID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		response.BadRequest(c, "订单 ID 错误")
+		return
+	}
+
+	order, err := h.Svc.Repo.Order.FindByID(c.Request.Context(), orderID)
+	if err != nil {
+		response.NotFound(c, "工单不存在")
+		return
+	}
+
+	// 仅允许查看分配给自己的工单
+	if order.RiderID == nil || *order.RiderID != riderID {
+		response.BadRequest(c, "无权查看该工单")
+		return
+	}
+
+	// 附加客户联系方式（仅对分配专员可见）
+	if user, uerr := h.Svc.Repo.User.FindByID(c.Request.Context(), order.UserID); uerr == nil && user != nil {
+		order.CustomerName = user.Nickname
+		order.CustomerPhone = user.Phone
+	}
+
+	h.signSingleOrderImages(order)
+	response.Success(c, order)
+}
+
 // RiderPickOrder 专员标记已取件
 func (h *Handler) RiderPickOrder(c *gin.Context) {
 	riderID := h.getRiderID(c)

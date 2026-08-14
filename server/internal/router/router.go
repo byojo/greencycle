@@ -71,6 +71,7 @@ func Register(h *handler.Handler) *gin.Engine {
 
 		// 回收专员工单
 		auth.GET("/rider/orders", h.RiderOrders)
+		auth.GET("/rider/orders/:id", h.RiderOrderDetail)
 		auth.PUT("/rider/orders/:id/pick", h.RiderPickOrder)
 		auth.POST("/rider/orders/:id/complete", h.RiderCompleteOrder)
 		auth.PUT("/rider/location", h.RiderUpdateLocation)
