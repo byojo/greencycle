@@ -142,6 +142,26 @@ func (s *OrderService) GetDetail(ctx context.Context, orderID uint64, userID uin
 	return order, nil
 }
 
+// AdminGetDetail 管理端获取订单详情（不校验归属用户，供管理后台派单/匹配使用）
+func (s *OrderService) AdminGetDetail(ctx context.Context, orderID uint64) (*model.Order, error) {
+	order, err := s.repo.Order.FindByID(ctx, orderID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("订单不存在")
+		}
+		return nil, err
+	}
+	// 填充专员实时位置，供管理端计算最近专员与距离
+	if order.RiderID != nil {
+		if rider, err := s.repo.Rider.GetByID(ctx, *order.RiderID); err == nil && rider != nil {
+			order.RiderLat = rider.Lat
+			order.RiderLng = rider.Lng
+			order.RiderLastLocationAt = rider.LastLocationAt
+		}
+	}
+	return order, nil
+}
+
 // ListByUser 用户订单列表
 func (s *OrderService) ListByUser(ctx context.Context, userID uint, page, size int, status int) ([]model.Order, int64, error) {
 	if page < 1 {

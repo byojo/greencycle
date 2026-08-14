@@ -147,7 +147,7 @@ func (h *Handler) AdminNearestRiders(c *gin.Context) {
 		return
 	}
 
-	order, err := h.Svc.Order.GetDetail(c.Request.Context(), orderID, 0)
+	order, err := h.Svc.Order.AdminGetDetail(c.Request.Context(), orderID)
 	if err != nil {
 		response.BadRequest(c, "订单不存在")
 		return
