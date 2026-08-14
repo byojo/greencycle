@@ -343,46 +343,67 @@
 }
 
 /* ============ 底部固定提交按钮栏 ============ */
+/* 注意：使用 padding 简写同时声明四边，避免与 .safe-area-bottom 类的 padding-bottom 冲突 */
 .bottom-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   background: #FFFFFF;
-  padding: 20rpx 32rpx;
+  padding: 24rpx 32rpx calc(24rpx + env(safe-area-inset-bottom));
   border-top: 1rpx solid #E5E7EB;
   display: flex;
   align-items: center;
-  gap: 20rpx;
+  gap: 24rpx;
   z-index: 100;
-  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.04);
 }
 .price-block {
   display: flex;
   flex-direction: column;
-  gap: 4rpx;
+  gap: 6rpx;
   flex-shrink: 0;
+  min-width: 180rpx;
+  line-height: 1.4;
 }
 .price-label {
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: #9CA3AF;
+  line-height: 1.2;
 }
 .price-value {
-  font-size: 28rpx;
+  font-size: 30rpx;
   font-weight: 700;
   color: #FF8C42;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.price-emoji {
+  font-size: 28rpx;
+  margin-right: 6rpx;
+  line-height: 1;
+}
+.price-text {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #FF8C42;
+  line-height: 1;
 }
 .btn-submit {
   flex: 1;
-  height: 88rpx;
+  height: 96rpx;
+  line-height: 96rpx;
   background: linear-gradient(135deg, #07C160 0%, #06A050 100%);
   color: #FFFFFF;
-  border-radius: 44rpx;
-  font-size: 30rpx;
+  border-radius: 48rpx;
+  font-size: 32rpx;
   font-weight: 700;
   box-shadow: 0 6rpx 20rpx rgba(7, 193, 96, 0.35);
   border: none;
-  line-height: 88rpx;
+  margin: 0;
+  padding: 0;
 }
 .btn-submit::after {
   border: none;

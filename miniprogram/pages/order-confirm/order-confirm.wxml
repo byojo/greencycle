@@ -109,11 +109,14 @@
     </view>
   </view>
 
-  <!-- 底部固定提交按钮栏 -->
-  <view class="bottom-bar safe-area-bottom">
+  <!-- 底部固定提交按钮栏（不再使用 safe-area-bottom，避免与 padding-bottom 规则冲突） -->
+  <view class="bottom-bar">
     <view class="price-block">
       <view class="price-label">回收金额</view>
-      <view class="price-value">👨‍🔧 当面评估</view>
+      <view class="price-value">
+        <text class="price-emoji">👨‍🔧</text>
+        <text class="price-text">当面评估</text>
+      </view>
     </view>
     <button
       class="btn-submit"
