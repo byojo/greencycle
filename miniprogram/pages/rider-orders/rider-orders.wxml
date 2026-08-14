@@ -29,7 +29,7 @@
           <button class="action-btn action-nav" data-lat="{{item.pickupLat}}" data-lng="{{item.pickupLng}}" data-addr="{{item.pickupAddr}}" bindtap="onNavigate">🧭 导航</button>
           <button wx:if="{{item.status === 2}}" class="action-btn action-blue" data-id="{{item.id}}" bindtap="onPick">已取件</button>
           <button wx:if="{{item.status === 3}}" class="action-btn action-green" data-id="{{item.id}}" bindtap="onShowComplete">完成回收</button>
-          <view class="detail-link">查看详情 ›</view>
+          <view class="detail-link" data-id="{{item.id}}" bindtap="onViewDetail">查看详情 ›</view>
         </view>
       </view>
     </view>
