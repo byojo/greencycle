@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/greencycle/server/internal/model"
 	"github.com/greencycle/server/pkg/response"
 )
 
@@ -60,26 +59,9 @@ func (h *Handler) RiderOrders(c *gin.Context) {
 		}
 	}
 
-	// 填充客户联系方式（仅对分配专员可见）
-	userIDs := make([]uint, 0, len(orders))
+	// 填充客户联系方式（直接读订单 pickupPhone，不依赖用户表）
 	for i := range orders {
-		if orders[i].UserID != 0 {
-			userIDs = append(userIDs, orders[i].UserID)
-		}
-	}
-	if len(userIDs) > 0 {
-		if users, uerr := h.Svc.Repo.User.FindByIDs(c.Request.Context(), userIDs); uerr == nil {
-			userMap := make(map[uint]model.User, len(users))
-			for _, u := range users {
-				userMap[u.ID] = u
-			}
-			for i := range orders {
-				if u, ok := userMap[orders[i].UserID]; ok {
-					orders[i].CustomerName = u.Nickname
-					orders[i].CustomerPhone = u.Phone
-				}
-			}
-		}
+		orders[i].CustomerPhone = orders[i].PickupPhone
 	}
 
 	// 对图片 URL 签名
@@ -118,11 +100,8 @@ func (h *Handler) RiderOrderDetail(c *gin.Context) {
 		return
 	}
 
-	// 附加客户联系方式（仅对分配专员可见）
-	if user, uerr := h.Svc.Repo.User.FindByID(c.Request.Context(), order.UserID); uerr == nil && user != nil {
-		order.CustomerName = user.Nickname
-		order.CustomerPhone = user.Phone
-	}
+	// 附加客户联系方式（直接读订单 pickupPhone，不依赖用户表）
+	order.CustomerPhone = order.PickupPhone
 
 	h.signSingleOrderImages(order)
 	response.Success(c, order)

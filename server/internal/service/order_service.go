@@ -33,6 +33,7 @@ type CreateOrderParams struct {
 	PhotoKeys    []string
 	EstimatedAt  time.Time
 	PickupAddr   string
+	PickupPhone  string
 	PickupLat    float64
 	PickupLng    float64
 	Remark       string
@@ -50,6 +51,7 @@ func (s *OrderService) Create(ctx context.Context, p CreateOrderParams) (*model.
 		Status:       model.OrderStatusPending,
 		EstimatedAt:  &p.EstimatedAt,
 		PickupAddr:   p.PickupAddr,
+		PickupPhone:  p.PickupPhone,
 		PickupLat:    p.PickupLat,
 		PickupLng:    p.PickupLng,
 		Remark:       p.Remark,
@@ -76,9 +78,9 @@ func (s *OrderService) Create(ctx context.Context, p CreateOrderParams) (*model.
 			}
 		}
 		timeline := &model.OrderTimeline{
-			OrderID: order.ID,
-			Status:  model.OrderStatusPending,
-			Content: "订单已提交，等待回收员上门",
+			OrderID:  order.ID,
+			Status:   model.OrderStatusPending,
+			Content:  "订单已提交，等待回收员上门",
 			Operator: "系统",
 		}
 		return tx.Create(timeline).Error
@@ -105,6 +107,7 @@ func (s *OrderService) notifyGroupNewOrder(order *model.Order) {
 **物品：** %s
 **地址：** %s
 **预约时间：** %s
+**联系电话：** %s
 
 请尽快安排回收员上门评估`,
 		order.OrderNo,
@@ -112,6 +115,7 @@ func (s *OrderService) notifyGroupNewOrder(order *model.Order) {
 		order.ItemName,
 		order.PickupAddr,
 		order.EstimatedAt.Format("2006-01-02 15:04"),
+		order.PickupPhone,
 	)
 
 	if err := wecom.SendMarkdown(msg); err != nil {
@@ -507,11 +511,11 @@ func (s *OrderService) notifyOrderCompleted(order *model.Order, points int, open
 		TemplateID: tplID,
 		Page:       fmt.Sprintf("pages/order-detail/order-detail?id=%d", order.ID),
 		Data: map[string]interface{}{
-			"character_string14": map[string]string{"value": order.OrderNo},                          // 订单号
-			"thing13":            map[string]string{"value": order.CategoryCode},                      // 回收品类
+			"character_string14": map[string]string{"value": order.OrderNo},                         // 订单号
+			"thing13":            map[string]string{"value": order.CategoryCode},                    // 回收品类
 			"thing5":             map[string]string{"value": "已完成"},                                 // 订单状态
-			"thing11":            map[string]string{"value": fmt.Sprintf("%d积分", points)},            // 金额（用积分代替）
-			"time7":              map[string]string{"value": time.Now().Format("2006-01-02 15:04")},  // 时间
+			"thing11":            map[string]string{"value": fmt.Sprintf("%d积分", points)},           // 金额（用积分代替）
+			"time7":              map[string]string{"value": time.Now().Format("2006-01-02 15:04")}, // 时间
 		},
 	}
 

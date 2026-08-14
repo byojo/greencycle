@@ -45,6 +45,25 @@
     <view class="address-arrow">›</view>
   </view>
 
+  <!-- 联系电话（必填，与地址同等必填） -->
+  <view class="form-group">
+    <view class="form-row">
+      <view class="form-icon" style="background:#DBEAFE;color:#2563EB">📞</view>
+      <view class="form-body">
+        <view class="form-label">联系电话<text class="required">*</text></view>
+        <input
+          class="form-input"
+          type="number"
+          maxlength="20"
+          placeholder="请填写回收联系手机号"
+          placeholder-class="form-input-ph"
+          value="{{pickupPhone}}"
+          bindinput="onPhoneInput"
+        />
+      </view>
+    </view>
+  </view>
+
   <!-- 物品信息卡 -->
   <view class="card">
     <view class="card-title">📦 回收物品</view>

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"regexp"
 	"strconv"
 	"time"
 
@@ -21,6 +22,7 @@ type CreateOrderRequest struct {
 	PhotoKeys    []string `json:"photoKeys" binding:"required,min=1"`
 	EstimatedAt  string   `json:"estimatedAt" binding:"required"`
 	PickupAddr   string   `json:"pickupAddr" binding:"required"`
+	PickupPhone  string   `json:"pickupPhone" binding:"required"`
 	PickupLat    float64  `json:"pickupLat"`
 	PickupLng    float64  `json:"pickupLng"`
 	Remark       string   `json:"remark"`
@@ -46,6 +48,12 @@ func (h *Handler) CreateOrder(c *gin.Context) {
 		return
 	}
 
+	// 联系电话校验：必填，仅允许数字、空格、+、-，长度 7~20
+	if matched, _ := regexp.MatchString(`^[\d\s+\-]{7,20}$`, req.PickupPhone); !matched {
+		response.BadRequest(c, "请填写正确的联系电话")
+		return
+	}
+
 	order, err := h.Svc.Order.Create(c.Request.Context(), service.CreateOrderParams{
 		UserID:       userID,
 		CategoryCode: req.CategoryCode,
@@ -55,6 +63,7 @@ func (h *Handler) CreateOrder(c *gin.Context) {
 		PhotoKeys:    req.PhotoKeys,
 		EstimatedAt:  estimatedAt,
 		PickupAddr:   req.PickupAddr,
+		PickupPhone:  req.PickupPhone,
 		PickupLat:    req.PickupLat,
 		PickupLng:    req.PickupLng,
 		Remark:       req.Remark,

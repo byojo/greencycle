@@ -30,6 +30,7 @@ type Order struct {
 	RiderName    string         `gorm:"size:32" json:"riderName"`
 	RiderPhone   string         `gorm:"size:20" json:"riderPhone"`
 	PickupAddr   string         `gorm:"size:255;not null" json:"pickupAddr"`
+	PickupPhone  string         `gorm:"size:20" json:"pickupPhone"` // 下单时填写的联系电话（必填）
 	PickupLat    float64        `json:"pickupLat"`
 	PickupLng    float64        `json:"pickupLng"`
 	FinalAmount  int            `gorm:"default:0" json:"finalAmount"` // 分

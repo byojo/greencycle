@@ -297,6 +297,24 @@
   color: #D1D5DB;
   font-size: 32rpx;
 }
+/* 必填星号 */
+.required {
+  color: #EF4444;
+  margin-left: 4rpx;
+  font-weight: 700;
+}
+/* 联系电话输入框 */
+.form-input {
+  font-size: 28rpx;
+  color: #1F2937;
+  font-weight: 500;
+  line-height: 1.4;
+  height: 40rpx;
+}
+.form-input-ph {
+  color: #C4C9D1;
+  font-weight: 400;
+}
 
 /* ============ 备注 textarea（100 字限制） ============ */
 .form-textarea {
