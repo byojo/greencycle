@@ -3,12 +3,23 @@ const app = getApp();
 const api = require('../../services/api.js');
 const { formatDate, categoryName } = require('../../utils/format.js');
 
+// 时段定义（含开始分钟数，用于过滤今日过期时段）
 const TIME_SLOTS = [
-  { start: '10:00', end: '12:00', label: '上午' },
-  { start: '14:00', end: '16:00', label: '下午' },
-  { start: '16:00', end: '18:00', label: '傍晚' },
-  { start: '18:00', end: '20:00', label: '晚上' }
+  { start: '10:00', end: '12:00', label: '上午', startMinutes: 10 * 60 },
+  { start: '14:00', end: '16:00', label: '下午', startMinutes: 14 * 60 },
+  { start: '16:00', end: '18:00', label: '傍晚', startMinutes: 16 * 60 },
+  { start: '18:00', end: '20:00', label: '晚上', startMinutes: 18 * 60 }
 ];
+
+// 可选日期范围：今天 + 后两天 = 未来三天
+const DATE_OPTIONS = [
+  { offset: 0, key: 'today',    name: '今天' },
+  { offset: 1, key: 'tomorrow', name: '明天' },
+  { offset: 2, key: 'dayAfter', name: '后天' }
+];
+
+// 选时段时的最少缓冲分钟数（防止用户选"马上"的、给回收员准备时间）
+const BOOKING_BUFFER_MINUTES = 30;
 
 const CATEGORY_INFO = {
   phone: {
@@ -68,10 +79,12 @@ Page({
     info: null,
     photos: [],
     address: null,
+    // 预约时间相关（新结构：由 dateOffset/slotIndex 计算）
+    dateOffset: 0,
     dateLabel: '',
+    slotIndex: 1,
+    slotLabel: '',
     timeLabel: '',
-    selectedDate: '',
-    selectedTime: '',
     remark: '',
     quantity: '1 件',
     submitting: false
@@ -118,16 +131,62 @@ Page({
     return cdn ? `${cdn}/${key}` : key;
   },
 
+  // 构造 3 天的日期项（含 "今天（08-14）" 形式的展示标签）
+  buildDateOptions() {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    return DATE_OPTIONS.map((opt) => {
+      const d = new Date(now);
+      d.setDate(d.getDate() + opt.offset);
+      return {
+        ...opt,
+        label: `${opt.name}（${formatDate(d, 'MM-DD')}）`,
+        dateObj: d
+      };
+    });
+  },
+
+  // 构造某一天的可用时段列表（今日会过滤掉当前时间之前的时段）
+  buildSlotOptions(offset) {
+    const isToday = offset === 0;
+    const now = new Date();
+    const minStart = now.getHours() * 60 + now.getMinutes() + BOOKING_BUFFER_MINUTES;
+    return TIME_SLOTS
+      .map((s, i) => ({ ...s, index: i }))
+      .filter((s) => !isToday || s.startMinutes >= minStart);
+  },
+
   initDateTime() {
-    const today = new Date();
-    const todayLabel = `今天（${formatDate(today, 'MM-DD')}）`;
-    const defaultTime = TIME_SLOTS[1];  // 默认下午
+    const dateOpts = this.buildDateOptions();
+    const now = new Date();
+    const nowMin = now.getHours() * 60 + now.getMinutes();
+
+    // 默认选今天；若今日已无可用时段，自动跳到明天
+    let pickDate = 0;
+    const todaySlots = TIME_SLOTS
+      .map((s, i) => ({ ...s, index: i }))
+      .filter((s) => s.startMinutes >= nowMin + BOOKING_BUFFER_MINUTES);
+
+    if (todaySlots.length === 0) {
+      pickDate = 1;
+    }
+
+    // 选时段：今日选最近可用时段（>= now+30min）；非今日默认下午
+    let pickSlot = 1;
+    if (pickDate === 0) {
+      const firstAvail = todaySlots.find((s) => s.startMinutes >= nowMin + BOOKING_BUFFER_MINUTES);
+      if (firstAvail) pickSlot = firstAvail.index;
+    }
+
+    const dateOpt = dateOpts[pickDate];
+    const slotOpt = TIME_SLOTS[pickSlot];
 
     this.setData({
-      selectedDate: todayLabel,
-      dateLabel: todayLabel,
-      selectedTime: defaultTime.label,
-      timeLabel: `${defaultTime.start}-${defaultTime.end}`
+      dateOffset: pickDate,
+      dateLabel: dateOpt.label,
+      slotIndex: pickSlot,
+      slotLabel: slotOpt.label,
+      timeLabel: `${slotOpt.start}-${slotOpt.end}`
     });
   },
 
@@ -152,16 +211,40 @@ Page({
     this.showTimePicker();
   },
 
+  // 两步选：先选日期（今天/明天/后天），再选时段（今日已过期时段自动过滤）
   showTimePicker() {
-    const items = TIME_SLOTS.map((t, i) => `${i + 1}. ${t.label}（${t.start}-${t.end}）`);
+    const dateOpts = this.buildDateOptions();
+    const dateItems = dateOpts.map((d) => d.label);
+
     wx.showActionSheet({
-      itemList: items,
-      success: (res) => {
-        const t = TIME_SLOTS[res.tapIndex];
-        this.setData({
-          selectedTime: t.label,
-          timeLabel: `${t.start}-${t.end}`
+      itemList: dateItems,
+      success: (dRes) => {
+        const pickedDate = dateOpts[dRes.tapIndex];
+        const slotOpts = this.buildSlotOptions(pickedDate.offset);
+        if (slotOpts.length === 0) {
+          wx.showToast({ title: '该日已无可预约时段，请选其他日期', icon: 'none' });
+          return;
+        }
+        const slotItems = slotOpts.map((s) => `${s.label}（${s.start}-${s.end}）`);
+        wx.showActionSheet({
+          itemList: slotItems,
+          success: (sRes) => {
+            const pickedSlot = slotOpts[sRes.tapIndex];
+            this.setData({
+              dateOffset: pickedDate.offset,
+              dateLabel: pickedDate.label,
+              slotIndex: pickedSlot.index,
+              slotLabel: pickedSlot.label,
+              timeLabel: `${pickedSlot.start}-${pickedSlot.end}`
+            });
+          },
+          fail: () => {
+            // 用户在时段选择这步取消选点，不动数据
+          }
         });
+      },
+      fail: () => {
+        // 用户在日期选择这步取消选点，不动数据
       }
     });
   },
@@ -232,18 +315,14 @@ Page({
   },
 
   buildEstimateTime() {
-    const now = new Date();
-    if (this.data.selectedDate.includes('今天')) {
-      const t = this.data.timeLabel.split('-')[0];
-      const parts = t.split(':');
-      now.setHours(Number(parts[0]), Number(parts[1]), 0, 0);
-    } else {
-      now.setDate(now.getDate() + 1);
-      const t = this.data.timeLabel.split('-')[0];
-      const parts = t.split(':');
-      now.setHours(Number(parts[0]), Number(parts[1]), 0, 0);
-    }
-    return formatDate(now, 'YYYY-MM-DD HH:mm:ss');
+    // 用 dateOffset（0=今天/1=明天/2=后天）+ slotIndex 精确还原预约时间
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() + this.data.dateOffset);
+    const slot = TIME_SLOTS[this.data.slotIndex];
+    const [h, m] = slot.start.split(':').map(Number);
+    d.setHours(h, m, 0, 0);
+    return formatDate(d, 'YYYY-MM-DD HH:mm:ss');
   },
 
   onBack() {
