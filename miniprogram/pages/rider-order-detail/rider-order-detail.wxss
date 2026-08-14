@@ -134,6 +134,13 @@
   font-size: 32rpx;
   font-weight: 600;
   border: none;
+  /* 显式覆盖 WeChat <button> 默认 display / padding，保证占满卡片宽度成为主 CTA */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 .btn-primary::after { border: none; }
 .done-tip {
