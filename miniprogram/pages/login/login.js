@@ -30,6 +30,21 @@ Page({
       wx.hideLoading();
       wx.showToast({ title: '登录成功', icon: 'success' });
 
+      // 登录后若未绑定手机号，引导去绑定（回收专员需此联系用户）
+      const justUser = app.globalData.userInfo || {};
+      if (!justUser.phone) {
+        const pages = getCurrentPages();
+        if (pages.length > 1) {
+          wx.navigateBack();
+        } else {
+          wx.switchTab({ url: '/pages/home/home' });
+        }
+        setTimeout(() => {
+          wx.navigateTo({ url: '/pages/bind-phone/bind-phone' });
+        }, 400);
+        return;
+      }
+
       const pages = getCurrentPages();
       if (pages.length > 1) {
         wx.navigateBack();
