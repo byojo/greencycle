@@ -256,6 +256,27 @@
   color: #07C160;
 }
 
+/* ============ 回收位置地图 ============ */
+.order-map {
+  width: 100%;
+  height: 320rpx;
+  border-radius: 16rpx;
+  margin-bottom: 16rpx;
+  background: #E5E7EB;
+}
+.map-addr {
+  font-size: 26rpx;
+  color: #1F2937;
+  line-height: 1.5;
+  padding: 4rpx 0;
+}
+.info-row-tap {
+  cursor: pointer;
+}
+.info-row-tap .info-val {
+  color: #07C160;
+}
+
 /* ============ 订单信息 ============ */
 .info-row {
   display: flex;

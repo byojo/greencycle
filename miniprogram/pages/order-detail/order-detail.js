@@ -81,6 +81,10 @@ Page({
     completedAt: '',
     estimatedAtText: '',
     pickupAddr: '',
+    pickupLat: 0,
+    pickupLng: 0,
+    hasLocation: false,
+    markers: [],
     cancelReason: '',
     riderName: '',
     riderPhone: '',
@@ -138,6 +142,12 @@ Page({
       pickupAt: order.pickupAt ? formatDate(order.pickupAt, 'YYYY-MM-DD HH:mm') : '',
       estimatedAtText: order.estimatedAt ? formatDate(order.estimatedAt, 'YYYY-MM-DD HH:mm') : '',
       pickupAddr: order.pickupAddr || '',
+      pickupLat: order.pickupLat || 0,
+      pickupLng: order.pickupLng || 0,
+      hasLocation: !!(order.pickupLat && order.pickupLng),
+      markers: (order.pickupLat && order.pickupLng)
+        ? [{ id: 1, latitude: order.pickupLat, longitude: order.pickupLng, title: '回收地址', width: 28, height: 28 }]
+        : [],
       cancelReason: order.cancelReason || '',
       riderName: order.riderName || '',
       riderPhone: order.riderPhone || '',
@@ -242,6 +252,24 @@ Page({
 
   onTrack() {
     wx.navigateTo({ url: `/pages/order-track/order-track?id=${this.data.orderId}` });
+  },
+
+  // 点击地图/地址：唤起系统地图查看位置并导航
+  onOpenLocation() {
+    if (!this.data.hasLocation) {
+      wx.showToast({ title: '该订单暂无定位信息', icon: 'none' });
+      return;
+    }
+    wx.openLocation({
+      latitude: this.data.pickupLat,
+      longitude: this.data.pickupLng,
+      name: '回收地址',
+      address: this.data.pickupAddr,
+      scale: 16,
+      fail: () => {
+        wx.showToast({ title: '打开地图失败', icon: 'none' });
+      }
+    });
   },
 
   onBack() {

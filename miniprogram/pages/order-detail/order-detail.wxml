@@ -84,6 +84,22 @@
     </view>
   </view>
 
+  <!-- 回收位置地图 -->
+  <view class="card" wx:if="{{hasLocation}}">
+    <view class="card-title">📍 回收位置</view>
+    <map
+      class="order-map"
+      latitude="{{pickupLat}}"
+      longitude="{{pickupLng}}"
+      markers="{{markers}}"
+      scale="16"
+      show-location
+      enable-rotate="{{false}}"
+      bindtap="onOpenLocation"
+    ></map>
+    <view class="map-addr" bindtap="onOpenLocation">{{pickupAddr}} ›</view>
+  </view>
+
   <!-- 订单信息 -->
   <view class="card">
     <view class="card-title">📋 订单信息</view>
@@ -99,9 +115,9 @@
       <text class="info-key">下单时间</text>
       <text class="info-val">{{createdAt}}</text>
     </view>
-    <view class="info-row">
+    <view class="info-row {{hasLocation ? 'info-row-tap' : ''}}" bindtap="onOpenLocation" wx:if="{{hasLocation}}">
       <text class="info-key">回收地址</text>
-      <text class="info-val">{{pickupAddr}}</text>
+      <text class="info-val">{{pickupAddr}} ›</text>
     </view>
     <view class="info-row" wx:if="{{status >= 2 && status <= 4 && riderName}}">
       <text class="info-key">回收员</text>
