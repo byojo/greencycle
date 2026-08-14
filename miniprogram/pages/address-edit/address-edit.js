@@ -1,6 +1,8 @@
 // pages/address-edit/address-edit.js
 const app = getApp();
 const api = require('../../services/api.js');
+const { reverseGeocode } = require('../../utils/geocoder.js');
+const { requirePrivacy } = require('../../utils/privacy.js');
 
 Page({
   data: {
@@ -110,23 +112,50 @@ Page({
     this.setData({ 'form.tag': tag });
   },
 
-  onChooseLocation() {
-    wx.chooseLocation({
-      success: (res) => {
-        this.setData({
-          lat: res.latitude,
-          lng: res.longitude,
-          locationText: res.address || res.name || '已定位'
-        });
-        // 如果详细地址为空，自动填充
-        if (!this.data.form.detail && res.address) {
-          this.setData({ 'form.detail': res.address });
+  async onChooseLocation() {
+    // 隐私合规：chooseLocation 前必须先征得用户同意隐私协议
+    try {
+      await requirePrivacy();
+    } catch (e) {
+      wx.showToast({ title: '需要位置授权', icon: 'none' });
+      return;
+    }
+    try {
+      const res = await new Promise((resolve, reject) => {
+        wx.chooseLocation({ success: resolve, fail: reject });
+      });
+      // 先把经纬度、地图显示文本写回（即使后续逆编码失败也不影响用户保存当前位置）
+      this.setData({
+        lat: res.latitude,
+        lng: res.longitude,
+        locationText: res.address || res.name || '已定位'
+      });
+      // 用经纬度反查省市区，自动写入 picker 显示（"省 / 市 / 区"）
+      const geo = await reverseGeocode(res.latitude, res.longitude);
+      if (geo && (geo.province || geo.city || geo.district)) {
+        const regionValue = [];
+        const regionParts = [];
+        if (geo.province) { regionValue.push(geo.province); regionParts.push(geo.province); }
+        if (geo.city) { regionValue.push(geo.city); regionParts.push(geo.city); }
+        if (geo.district) { regionValue.push(geo.district); regionParts.push(geo.district); }
+        const fill = {};
+        fill['form.region'] = regionParts.join(' ');
+        fill.regionValue = regionValue;
+        // 把详细的"街道 + 门牌号"（如"街门口上街20号"）覆盖到 form.detail（地址编辑页只关心门牌号部分）
+        if (geo.street) {
+          fill['form.detail'] = geo.street;
         }
-      },
-      fail: () => {
-        wx.showToast({ title: '未选择位置', icon: 'none' });
+        this.setData(fill);
+      } else {
+        // 逆地理编码失败时不再覆盖 detail（保留用户已输入/已填的）
+        wx.showToast({ title: '未能识别省市区，请手动补填', icon: 'none' });
       }
-    });
+    } catch (err) {
+      const msg = (err && (err.errMsg || err.message)) || '';
+      // 用户取消选点
+      if (msg.indexOf('cancel') >= 0) return;
+      wx.showToast({ title: '未选择位置', icon: 'none' });
+    }
   },
 
   validate() {

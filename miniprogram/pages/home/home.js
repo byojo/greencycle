@@ -3,6 +3,7 @@ const app = getApp();
 const api = require('../../services/api.js');
 const { formatNumber, formatDate } = require('../../utils/format.js');
 const { requirePrivacy } = require('../../utils/privacy.js');
+const { reverseGeocode: reverseGeocodeUtil } = require('../../utils/geocoder.js');
 
 Page({
   data: {
@@ -61,30 +62,16 @@ Page({
   },
 
   // 逆地理编码：经纬度 -> 城市/地址名（用于展示当前位置）
-  reverseGeocode(lat, lng, fallbackName, fallbackAddr) {
-    return new Promise((resolve) => {
-      wx.request({
-        url: 'https://apis.map.qq.com/ws/geocoder/v1/',
-        data: {
-          location: `${lat},${lng}`,
-          key: 'SVSBZ-RGUCB-ZQTUS-NZRUU-4U6WZ-CQFQD'
-        },
-        success: (res) => {
-          const r = res.data && res.data.result;
-          const city = (r && r.ad_info && r.ad_info.city) ||
-            (r && r.address_component && r.address_component.city);
-          const address = (r && r.address) || fallbackAddr || fallbackName;
-          const label = city || address || '当前位置';
-          this.setData({ location: label });
-          resolve(label);
-        },
-        fail: () => {
-          const label = fallbackName || fallbackAddr || '当前位置';
-          this.setData({ location: label });
-          resolve(label);
-        }
-      });
-    });
+  async reverseGeocode(lat, lng, fallbackName, fallbackAddr) {
+    const geo = await reverseGeocodeUtil(lat, lng);
+    let label;
+    if (geo) {
+      label = (geo.city || geo.district || geo.address || '当前位置');
+    } else {
+      label = fallbackName || fallbackAddr || '当前位置';
+    }
+    this.setData({ location: label });
+    return label;
   },
 
   // 进入页面自动定位（已授权则静默获取城市，未授权则显示“点击定位”）
