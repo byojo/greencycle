@@ -20,6 +20,7 @@ Page({
     statusText: '',
     statusBarBg: '',
     estimatedAtText: '',
+    assignedAtText: '',
     showComplete: false,
     finalAmount: ''
   },
@@ -52,7 +53,8 @@ Page({
       status: order.status,
       statusText: cfg.text,
       statusBarBg: cfg.bg,
-      estimatedAtText: order.estimatedAt ? formatDate(order.estimatedAt, 'YYYY-MM-DD HH:mm') : ''
+      estimatedAtText: order.estimatedAt ? formatDate(order.estimatedAt, 'YYYY-MM-DD HH:mm') : '',
+      assignedAtText: order.createdAt ? formatDate(order.createdAt, 'YYYY-MM-DD HH:mm') : ''
     });
   },
 

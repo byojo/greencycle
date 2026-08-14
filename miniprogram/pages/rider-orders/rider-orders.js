@@ -112,7 +112,9 @@ Page({
       const res = await api.riderGetOrders({ month });
       const list = (res.data.list || []).map(o => ({
         ...o,
-        estimatedAtText: o.estimatedAt ? formatDate(o.estimatedAt, 'YYYY-MM-DD HH:mm') : ''
+        estimatedAtText: o.estimatedAt ? formatDate(o.estimatedAt, 'YYYY-MM-DD HH:mm') : '',
+        // 分配时间 = 订单首次创建/被派给专员的时间
+        assignedAtText: o.createdAt ? formatDate(o.createdAt, 'YYYY-MM-DD HH:mm') : ''
       }));
 
       let orders;

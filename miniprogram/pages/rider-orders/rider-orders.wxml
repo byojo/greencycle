@@ -15,7 +15,7 @@
     <view class="order-list" wx:if="{{filteredOrders.length > 0}}">
       <view class="order-card" wx:for="{{filteredOrders}}" wx:key="id" data-id="{{item.id}}" bindtap="onViewDetail">
         <view class="card-head">
-          <text class="card-no">单号 {{item.orderNo}}</text>
+          <text class="card-meta">分配时间 {{item.assignedAtText}}</text>
           <view class="status-badge status-{{item.status}}">{{statusMap[item.status]}}</view>
         </view>
         <view class="card-body">
@@ -31,9 +31,9 @@
           <image wx:for="{{item.images}}" wx:for-item="img" wx:key="id" src="{{img.url}}" mode="aspectFill" class="photo-thumb" catchtap="onPreviewPhoto" data-urls="{{item.images}}" data-current="{{img.url}}"></image>
         </view>
         <view class="card-actions" catchtap="stopPropagation">
-          <button class="action-btn action-nav" data-lat="{{item.pickupLat}}" data-lng="{{item.pickupLng}}" data-addr="{{item.pickupAddr}}" bindtap="onNavigate">🧭 导航</button>
-          <button wx:if="{{item.status === 2}}" class="action-btn action-blue" data-id="{{item.id}}" bindtap="onPick">已取件</button>
-          <button wx:if="{{item.status === 3}}" class="action-btn action-green" data-id="{{item.id}}" bindtap="onShowComplete">完成回收</button>
+          <button class="action-btn-sm action-nav" data-lat="{{item.pickupLat}}" data-lng="{{item.pickupLng}}" data-addr="{{item.pickupAddr}}" bindtap="onNavigate">🧭 导航</button>
+          <button wx:if="{{item.status === 2}}" class="action-btn-sm action-blue" data-id="{{item.id}}" bindtap="onPick">已取件</button>
+          <button wx:if="{{item.status === 3}}" class="action-btn-sm action-green" data-id="{{item.id}}" bindtap="onShowComplete">完成回收</button>
           <view class="detail-link" data-id="{{item.id}}" bindtap="onViewDetail">详情 ›</view>
         </view>
       </view>

@@ -6,7 +6,19 @@
     <!-- 状态条 -->
     <view class="status-bar" style="background:{{statusBarBg}}">
       <view class="status-text">{{statusText}}</view>
-      <view class="status-no">工单号 {{order.orderNo}}</view>
+    </view>
+
+    <!-- 工单信息：醒目展示工单号 + 分配时间 -->
+    <view class="card card-orderno">
+      <view class="card-title">📋 工单信息</view>
+      <view class="info-row">
+        <text class="info-key">工单号</text>
+        <text class="info-val orderno-text">{{order.orderNo}}</text>
+      </view>
+      <view class="info-row" wx:if="{{assignedAtText}}">
+        <text class="info-key">分配时间</text>
+        <text class="info-val">{{assignedAtText}}</text>
+      </view>
     </view>
 
     <!-- 回收物品 -->

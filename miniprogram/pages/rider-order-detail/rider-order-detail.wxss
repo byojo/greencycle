@@ -14,11 +14,6 @@
   font-size: 40rpx;
   font-weight: 700;
 }
-.status-no {
-  margin-top: 8rpx;
-  font-size: 24rpx;
-  opacity: 0.85;
-}
 
 /* 卡片 */
 .card {
@@ -86,6 +81,15 @@
 }
 .info-row-tap .info-val {
   color: #07C160;
+}
+
+/* 工单号醒目展示 */
+.orderno-text {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 28rpx;
+  color: #1F2937;
+  font-weight: 600;
+  letter-spacing: 0;
 }
 
 /* 地图 */
