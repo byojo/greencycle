@@ -32,7 +32,7 @@
     <view class="card">
       <view class="card-title">📍 取件信息</view>
       <view class="info-row">
-        <text class="info-key">预约时间</text>
+        <text class="info-key">预约上门时间</text>
         <text class="info-val">{{estimatedAtText || '尽快上门'}}</text>
       </view>
       <view class="info-row">
@@ -56,9 +56,13 @@
         <text class="info-key">称呼</text>
         <text class="info-val">{{order.customerName || '—'}}</text>
       </view>
-      <view class="info-row">
+      <view class="info-row info-row-tap" wx:if="{{order.customerPhone}}" bindtap="onCallCustomer">
         <text class="info-key">电话</text>
-        <text class="info-val">{{order.customerPhone || '—'}}</text>
+        <text class="info-val">📞 {{order.customerPhone}}</text>
+      </view>
+      <view class="info-row" wx:else>
+        <text class="info-key">电话</text>
+        <text class="info-val">—</text>
       </view>
     </view>
 

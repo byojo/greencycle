@@ -272,6 +272,19 @@ Page({
     });
   },
 
+  // 点击联系电话：调起系统拨号盘
+  onCallRider() {
+    const phone = this.data.riderPhone;
+    if (!phone) {
+      wx.showToast({ title: '暂无联系电话', icon: 'none' });
+      return;
+    }
+    wx.makePhoneCall({
+      phoneNumber: String(phone),
+      fail: () => {}
+    });
+  },
+
   onBack() {
     wx.navigateBack();
   }

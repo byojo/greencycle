@@ -121,11 +121,15 @@
     </view>
     <view class="info-row" wx:if="{{status >= 2 && status <= 4 && riderName}}">
       <text class="info-key">回收员</text>
-      <text class="info-val">{{riderName}} {{riderPhone}}</text>
+      <text class="info-val">{{riderName}}</text>
     </view>
-    <view class="info-row" wx:if="{{estimatedAt}}">
-      <text class="info-key">预约时间</text>
-      <text class="info-val">{{estimatedAtText}}</text>
+    <view class="info-row info-row-tap" wx:if="{{status >= 2 && riderPhone}}" bindtap="onCallRider">
+      <text class="info-key">联系电话</text>
+      <text class="info-val">📞 {{riderPhone}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-key">预约上门时间</text>
+      <text class="info-val">{{estimatedAtText || '尽快上门'}}</text>
     </view>
     <view class="info-row">
       <text class="info-key">支付方式</text>
