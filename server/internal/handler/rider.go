@@ -59,9 +59,10 @@ func (h *Handler) RiderOrders(c *gin.Context) {
 		}
 	}
 
-	// 填充客户联系方式（直接读订单 pickupPhone，不依赖用户表）
+	// 填充客户联系方式（直接读订单 pickupPhone/pickupName，不依赖用户表）
 	for i := range orders {
 		orders[i].CustomerPhone = orders[i].PickupPhone
+		orders[i].CustomerName = orders[i].PickupName
 	}
 
 	// 对图片 URL 签名
@@ -100,8 +101,9 @@ func (h *Handler) RiderOrderDetail(c *gin.Context) {
 		return
 	}
 
-	// 附加客户联系方式（直接读订单 pickupPhone，不依赖用户表）
+	// 附加客户联系方式（直接读订单 pickupPhone/pickupName，不依赖用户表）
 	order.CustomerPhone = order.PickupPhone
+	order.CustomerName = order.PickupName
 
 	h.signSingleOrderImages(order)
 	response.Success(c, order)

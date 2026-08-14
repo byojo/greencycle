@@ -33,6 +33,7 @@ type CreateOrderParams struct {
 	PhotoKeys    []string
 	EstimatedAt  time.Time
 	PickupAddr   string
+	PickupName   string
 	PickupPhone  string
 	PickupLat    float64
 	PickupLng    float64
@@ -51,6 +52,7 @@ func (s *OrderService) Create(ctx context.Context, p CreateOrderParams) (*model.
 		Status:       model.OrderStatusPending,
 		EstimatedAt:  &p.EstimatedAt,
 		PickupAddr:   p.PickupAddr,
+		PickupName:   p.PickupName,
 		PickupPhone:  p.PickupPhone,
 		PickupLat:    p.PickupLat,
 		PickupLng:    p.PickupLng,

@@ -75,14 +75,6 @@
   text-align: right;
 }
 
-/* 可点击拨号的信息行 */
-.info-row-tap {
-  cursor: pointer;
-}
-.info-row-tap .info-val {
-  color: #07C160;
-}
-
 /* 工单号醒目展示 */
 .orderno-text {
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;

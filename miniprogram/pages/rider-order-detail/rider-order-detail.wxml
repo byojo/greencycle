@@ -34,6 +34,10 @@
     <!-- 取件信息 -->
     <view class="card">
       <view class="card-title">📍 取件信息</view>
+      <view class="info-row" wx:if="{{order.customerName}}">
+        <text class="info-key">称呼</text>
+        <text class="info-val">{{order.customerName}}</text>
+      </view>
       <view class="info-row">
         <text class="info-key">预约上门时间</text>
         <text class="info-val">{{estimatedAtText || '尽快上门'}}</text>
@@ -57,23 +61,6 @@
         <button wx:if="{{status === 3}}" class="btn-primary" bindtap="onShowComplete">完成回收</button>
         <view wx:if="{{status === 4}}" class="done-tip">✓ 已完成回收</view>
         <view wx:if="{{status === 5}}" class="done-tip">订单已取消</view>
-      </view>
-    </view>
-
-    <!-- 客户信息 -->
-    <view class="card" wx:if="{{order.customerName || order.customerPhone}}">
-      <view class="card-title">👤 客户信息</view>
-      <view class="info-row">
-        <text class="info-key">称呼</text>
-        <text class="info-val">{{order.customerName || '—'}}</text>
-      </view>
-      <view class="info-row info-row-tap" wx:if="{{order.customerPhone}}" bindtap="onCallCustomer">
-        <text class="info-key">电话</text>
-        <text class="info-val">📞 {{order.customerPhone}}</text>
-      </view>
-      <view class="info-row" wx:else>
-        <text class="info-key">电话</text>
-        <text class="info-val">—</text>
       </view>
     </view>
   </block>

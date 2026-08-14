@@ -307,6 +307,7 @@ Page({
         formData: JSON.stringify(pending.formData || {}),
         estimatedAt: this.buildEstimateTime(),
         pickupAddr: fullAddr || addr.detail,
+        pickupName: (addr.name || '').trim(),
         pickupPhone: phone,
         pickupLat: addr.lat,
         pickupLng: addr.lng,

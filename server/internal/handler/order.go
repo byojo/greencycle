@@ -22,6 +22,7 @@ type CreateOrderRequest struct {
 	PhotoKeys    []string `json:"photoKeys" binding:"required,min=1"`
 	EstimatedAt  string   `json:"estimatedAt" binding:"required"`
 	PickupAddr   string   `json:"pickupAddr" binding:"required"`
+	PickupName   string   `json:"pickupName"`
 	PickupPhone  string   `json:"pickupPhone" binding:"required"`
 	PickupLat    float64  `json:"pickupLat"`
 	PickupLng    float64  `json:"pickupLng"`
@@ -63,6 +64,7 @@ func (h *Handler) CreateOrder(c *gin.Context) {
 		PhotoKeys:    req.PhotoKeys,
 		EstimatedAt:  estimatedAt,
 		PickupAddr:   req.PickupAddr,
+		PickupName:   req.PickupName,
 		PickupPhone:  req.PickupPhone,
 		PickupLat:    req.PickupLat,
 		PickupLng:    req.PickupLng,
