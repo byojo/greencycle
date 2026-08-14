@@ -128,6 +128,8 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 			DeliveryName:  addr.Name,
 			DeliveryPhone: addr.Phone,
 			DeliveryAddr:  fullAddr,
+			DeliveryLat:   addr.Lat,
+			DeliveryLng:   addr.Lng,
 		}
 		record.AddressID = &addrID
 		return s.repo.Exchange.CreateRecord(ctx, tx, record)

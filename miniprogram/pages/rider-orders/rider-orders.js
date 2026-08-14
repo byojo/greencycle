@@ -145,6 +145,23 @@ Page({
     wx.navigateTo({ url: `/pages/order-detail/order-detail?id=${id}` });
   },
 
+  // 点击导航：唤起系统地图前往取件/收货点
+  onNavigate(e) {
+    const { lat, lng, addr } = e.currentTarget.dataset;
+    if (!lat || !lng) {
+      wx.showToast({ title: '该订单暂无定位信息', icon: 'none' });
+      return;
+    }
+    wx.openLocation({
+      latitude: Number(lat),
+      longitude: Number(lng),
+      name: '回收地址',
+      address: addr || '',
+      scale: 16,
+      fail: () => wx.showToast({ title: '打开地图失败', icon: 'none' })
+    });
+  },
+
   onAmountInput(e) { this.setData({ finalAmount: e.detail.value }); },
 
   async confirmComplete() {

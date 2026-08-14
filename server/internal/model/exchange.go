@@ -35,6 +35,8 @@ type ExchangeRecord struct {
 	DeliveryName  string `gorm:"size:64" json:"deliveryName"`
 	DeliveryPhone string `gorm:"size:20" json:"deliveryPhone"`
 	DeliveryAddr  string `gorm:"size:500" json:"deliveryAddr"`
+	DeliveryLat   float64 `json:"deliveryLat"`
+	DeliveryLng   float64 `json:"deliveryLng"`
 	// 配送专员
 	RiderID    *uint  `gorm:"index" json:"riderId"`
 	RiderName  string `gorm:"size:64" json:"riderName"`

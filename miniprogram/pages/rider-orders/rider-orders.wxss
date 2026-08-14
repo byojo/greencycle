@@ -34,6 +34,7 @@
 .action-btn::after { border: none; }
 .action-green { background: #07C160; }
 .action-blue { background: #2563EB; }
+.action-nav { background: #F97316; }
 
 /* 配送任务 */
 .delivery-list { padding: 24rpx; }

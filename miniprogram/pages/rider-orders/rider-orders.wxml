@@ -26,6 +26,7 @@
           <image wx:for="{{item.images}}" wx:for-item="img" wx:key="id" src="{{img.url}}" mode="aspectFill" class="photo-thumb" catchtap="onPreviewPhoto" data-urls="{{item.images}}" data-current="{{img.url}}"></image>
         </view>
         <view class="order-actions" catchtap="stopPropagation">
+          <button class="action-btn action-nav" data-lat="{{item.pickupLat}}" data-lng="{{item.pickupLng}}" data-addr="{{item.pickupAddr}}" bindtap="onNavigate">🧭 导航</button>
           <button wx:if="{{item.status === 2}}" class="action-btn action-blue" data-id="{{item.id}}" bindtap="onPick">已取件</button>
           <button wx:if="{{item.status === 3}}" class="action-btn action-green" data-id="{{item.id}}" bindtap="onShowComplete">完成回收</button>
           <view class="detail-link">查看详情 ›</view>
@@ -56,6 +57,7 @@
           <text class="contact-value">{{item.deliveryName}} {{item.deliveryPhone}}</text>
         </view>
         <view class="delivery-actions" catchtap="stopPropagation">
+          <button class="action-btn action-nav" data-lat="{{item.deliveryLat}}" data-lng="{{item.deliveryLng}}" data-addr="{{item.deliveryAddr}}" bindtap="onNavigate">🧭 导航</button>
           <button wx:if="{{item.status === 2}}" class="action-btn action-green" data-id="{{item.id}}" bindtap="onCompleteDelivery">确认送达</button>
           <view class="detail-link" wx:if="{{item.status === 3}}">已于 {{item.completedAtText}} 送达 ✓</view>
         </view>
