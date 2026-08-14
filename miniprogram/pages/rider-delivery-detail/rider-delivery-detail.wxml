@@ -1,14 +1,5 @@
 <!--pages/rider-delivery-detail/rider-delivery-detail.wxml-->
 <view class="page">
-  <!-- 顶部导航 -->
-  <view class="nav">
-    <view class="nav-inner">
-      <view class="nav-back" bindtap="onBack">‹</view>
-      <view class="nav-title">配送详情</view>
-      <view class="nav-action"></view>
-    </view>
-  </view>
-
   <view class="loading" wx:if="{{loading}}">加载中...</view>
 
   <block wx:if="{{record}}">
@@ -78,7 +69,7 @@
     </view>
 
     <!-- 操作按钮 -->
-    <view class="actions safe-area-bottom">
+    <view class="action-card safe-area-bottom">
       <button wx:if="{{status === 2}}" class="btn-primary" bindtap="onComplete">确认送达</button>
       <view wx:if="{{status === 3}}" class="done-tip">✓ 已送达</view>
       <view wx:if="{{status === 4}}" class="done-tip">配送已取消</view>
