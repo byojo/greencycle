@@ -34,7 +34,7 @@
           <view class="action-btn-sm action-nav" hover-class="action-hover" data-lat="{{item.pickupLat}}" data-lng="{{item.pickupLng}}" data-addr="{{item.pickupAddr}}" bindtap="onNavigate">🧭 导航</view>
           <view wx:if="{{item.status === 2}}" class="action-btn-sm action-blue" hover-class="action-hover" data-id="{{item.id}}" bindtap="onPick">已取件</view>
           <view wx:if="{{item.status === 3}}" class="action-btn-sm action-green" hover-class="action-hover" data-id="{{item.id}}" bindtap="onShowComplete">完成回收</view>
-          <view wx:if="{{item.status === 4}}" class="action-btn-sm action-green" hover-class="action-hover" data-id="{{item.id}}" bindtap="onShowComplete">查看详情</view>
+          <view wx:if="{{item.status === 4}}" class="action-btn-sm action-green" hover-class="action-hover" data-id="{{item.id}}" bindtap="onViewDetail">查看详情</view>
           <view class="detail-link" data-id="{{item.id}}" bindtap="onViewDetail">详情 ›</view>
         </view>
       </view>
