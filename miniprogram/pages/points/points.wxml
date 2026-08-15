@@ -36,12 +36,8 @@
     </view>
   </view>
 
-  <!-- 功能入口 2 个横排：签到 / 兑换 -->
+  <!-- 功能入口：兑换好礼 -->
   <view class="actions">
-    <view class="action-item" bindtap="onSignIn">
-      <view class="action-icon" style="background:#FEF3C7;color:#D97706">📅</view>
-      <view class="action-label">每日签到</view>
-    </view>
     <view class="action-item" bindtap="onExchange">
       <view class="action-icon" style="background:#E8F8EE;color:#07C160">🎁</view>
       <view class="action-label">兑换好礼</view>

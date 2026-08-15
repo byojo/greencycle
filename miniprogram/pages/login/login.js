@@ -61,7 +61,7 @@ Page({
   onUserAgreement() {
     wx.showModal({
       title: '用户协议',
-      content: '叮当回收用户协议：本协议是您与叮当回收之间关于使用叮当回收小程序服务所订立的协议。请仔细阅读。',
+      content: '《叮当回收用户协议》规定了您使用本服务时的权利与义务。完整条款见：https://sxyrgy.cn/privacy',
       showCancel: false
     });
   },
@@ -69,7 +69,7 @@ Page({
   onPrivacyPolicy() {
     wx.showModal({
       title: '隐私政策',
-      content: '叮当回收隐私政策：我们重视您的隐私，保护您的个人信息安全。',
+      content: '我们依据《隐私保护指引》收集并使用你的信息（位置、手机号、订单与图片等）。完整条款见：https://sxyrgy.cn/privacy',
       showCancel: false
     });
   }

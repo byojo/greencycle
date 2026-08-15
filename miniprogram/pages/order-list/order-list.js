@@ -204,10 +204,6 @@ Page({
     }
   },
 
-  onFilter() {
-    wx.showToast({ title: '筛选功能开发中', icon: 'none' });
-  },
-
   onMore() {
     if (this.data.loadingMore || !this.data.hasMore) return;
     this.setData({ loadingMore: true });

@@ -161,14 +161,12 @@ Page({
 
   showSetting() {
     wx.showActionSheet({
-      itemList: ['账户与安全', '消息通知', '清除缓存', '退出登录'],
+      itemList: ['清除缓存', '退出登录'],
       success: (res) => {
-        if (res.tapIndex === 3) {
+        if (res.tapIndex === 1) {
           this.onLogout();
-        } else if (res.tapIndex === 2) {
+        } else if (res.tapIndex === 0) {
           wx.showToast({ title: '清理完成', icon: 'success' });
-        } else {
-          wx.showToast({ title: '功能开发中', icon: 'none' });
         }
       }
     });

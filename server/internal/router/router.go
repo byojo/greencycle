@@ -15,10 +15,12 @@ func Register(h *handler.Handler) *gin.Engine {
 	r.Use(middleware.Logger())
 	r.Use(middleware.Recovery())
 	r.Use(cors.New(cors.Config{
-		AllowAllOrigins: true,
-		AllowMethods:    []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:    []string{"Origin", "Content-Type", "Authorization"},
-		ExposeHeaders:   []string{"Content-Length"},
+		// 仅允许已知来源，避免任意站点调用接口
+		AllowOrigins:     []string{"https://sxyrgy.cn", "https://golang-ox8i-275614-7-1448098353.sh.run.tcloudbase.com", "http://localhost", "http://127.0.0.1"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: false,
 	}))
 
 	// 健康检查
@@ -28,6 +30,9 @@ func Register(h *handler.Handler) *gin.Engine {
 
 	// 管理后台页面
 	r.StaticFile("/admin", "./admin/index.html")
+
+	// 隐私政策页（微信小程序发布需在 MP 后台登记该 URL：https://sxyrgy.cn/privacy）
+	r.StaticFile("/privacy", "./privacy/index.html")
 
 	api := r.Group("/api/v1")
 

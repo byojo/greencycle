@@ -135,10 +135,6 @@ Page({
     this.setData({ tabs, currentTab: key });
   },
 
-  onPublish() {
-    wx.showToast({ title: '发布功能开发中', icon: 'none' });
-  },
-
   onItemTap(e) {
     const id = e.currentTarget.dataset.id;
     wx.showToast({ title: '打开故事详情', icon: 'none' });

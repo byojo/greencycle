@@ -1,6 +1,7 @@
 // pages/order-track/order-track.js
 const app = getApp();
 const api = require('../../services/api.js');
+const config = require('../../config.js');
 const { formatDate, categoryName } = require('../../utils/format.js');
 
 const CATEGORY_INFO = {
@@ -188,22 +189,14 @@ Page({
   },
 
   onCall() {
-    wx.makePhoneCall({ phoneNumber: '4000000000' });
+    wx.makePhoneCall({ phoneNumber: config.customerService.phone });
   },
   onCallPhone() {
-    wx.makePhoneCall({ phoneNumber: '13800138000' });
+    const phone = (this.data.rider && this.data.rider.phone) || config.customerService.phone;
+    wx.makePhoneCall({ phoneNumber: phone });
   },
   onChat() {
-    if (typeof wx.openCustomerServiceChat === 'function') {
-      wx.openCustomerServiceChat({
-        extInfo: { corpId: '' },
-        fail: () => {
-          wx.showToast({ title: '客服功能开发中', icon: 'none' });
-        }
-      });
-    } else {
-      wx.showToast({ title: '客服功能开发中', icon: 'none' });
-    }
+    wx.makePhoneCall({ phoneNumber: config.customerService.phone });
   },
   onShareLocation() {
     wx.showToast({ title: '已发送位置', icon: 'success' });

@@ -1,6 +1,7 @@
 // pages/settings/settings.js
 const app = getApp();
 const api = require('../../services/api.js');
+const config = require('../../config.js');
 
 Page({
   data: {
@@ -68,15 +69,6 @@ Page({
     wx.navigateBack();
   },
 
-  onPhone() {
-    wx.showModal({
-      title: '修改手机号',
-      content: '更换手机号功能开发中\n请联系客服协助',
-      showCancel: false,
-      confirmText: '我知道了'
-    });
-  },
-
   onWechat() {
     wx.showModal({
       title: '微信账号',
@@ -99,7 +91,7 @@ Page({
         confirmText: '去认证',
         success: (res) => {
           if (res.confirm) {
-            wx.showToast({ title: '功能开发中', icon: 'none' });
+            wx.makePhoneCall({ phoneNumber: config.customerService.phone });
           }
         }
       });

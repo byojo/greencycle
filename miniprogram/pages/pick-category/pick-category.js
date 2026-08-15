@@ -25,8 +25,7 @@ Page({
       { code: 'home',    name: '家电',   icon: '🔌', tagline: '上门拆',   bgLight: '#FEE2E2' },
       { code: 'book',    name: '书籍',   icon: '📚', tagline: '公益',     bgLight: '#D1FAE5' },
       { code: 'metal',   name: '废品',   icon: '🥫', tagline: '环保',     bgLight: '#FCE7F3' },
-      { code: 'luxury',  name: '闲置包', icon: '👜', tagline: '鉴定',     bgLight: '#F3E8FF' },
-      { code: 'more',    name: '全部',   icon: '···', tagline: '敬请期待', bgLight: '#E5E7EB' }
+      { code: 'luxury',  name: '闲置包', icon: '👜', tagline: '鉴定',     bgLight: '#F3E8FF' }
     ];
 
     try {
@@ -71,11 +70,6 @@ Page({
 
   onCategoryTap(e) {
     const code = e.currentTarget.dataset.code;
-
-    if (code === 'more') {
-      wx.showToast({ title: '更多品类开发中', icon: 'none' });
-      return;
-    }
 
     app.globalData.currentCategory = code;
 

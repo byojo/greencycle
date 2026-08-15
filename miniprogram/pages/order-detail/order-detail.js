@@ -1,6 +1,7 @@
 // pages/order-detail/order-detail.js
 const app = getApp();
 const api = require('../../services/api.js');
+const config = require('../../config.js');
 const { formatDate, formatMoney, categoryName, orderStatusText } = require('../../utils/format.js');
 
 // 8 大品类详情
@@ -205,17 +206,15 @@ Page({
     if (typeof wx.openCustomerServiceChat === 'function') {
       wx.openCustomerServiceChat({
         extInfo: { corpId: '' },
-        fail: () => {
-          wx.showToast({ title: '联系客服开发中', icon: 'none' });
-        }
+        fail: () => wx.makePhoneCall({ phoneNumber: config.customerService.phone })
       });
     } else {
-      wx.showToast({ title: '联系客服开发中', icon: 'none' });
+      wx.makePhoneCall({ phoneNumber: config.customerService.phone });
     }
   },
 
   onApplyAfterSale() {
-    wx.showToast({ title: '售后功能开发中', icon: 'none' });
+    wx.makePhoneCall({ phoneNumber: config.customerService.phone });
   },
 
   onCancelOrder() {

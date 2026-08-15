@@ -93,10 +93,6 @@ Page({
     this.setData({ tabs, currentTab: key });
   },
 
-  onSignIn() {
-    wx.showToast({ title: '签到功能开发中', icon: 'none' });
-  },
-
   onExchange() {
     wx.navigateTo({ url: '/pages/exchange/exchange' });
   },

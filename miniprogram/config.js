@@ -16,10 +16,10 @@ module.exports = {
   appName: '叮当回收',
   appVersion: '1.0.0',
 
-  // 上传 COS 桶配置
+  // 上传 COS 桶配置（真实桶由后端环境变量配置并直传，前端仅透传 cdnDomain）
   cos: {
-    bucket: 'greencycle-1258888888',
-    region: 'ap-shanghai',
+    bucket: 'greencycle-image-1255464850',
+    region: 'ap-guangzhou',
     prefix: 'orders/',
     cdnDomain: ''
   },

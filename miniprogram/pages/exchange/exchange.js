@@ -227,6 +227,17 @@ Page({
       success: async (res) => {
         if (res.confirm) {
           try {
+            // 请求订阅消息授权（用户同意后才能收到配送/订单通知）
+            try {
+              await wx.requestSubscribeMessage({
+                tmplIds: [
+                  'j4dcmYkCBav2QZ8OZQZZjK69Xu4IhUbd-iYt5UG1N-M',
+                  'C78o2a0-IRT5hDU520LrS7E29_CXyPLR3YdRa4PI6yI'
+                ]
+              });
+            } catch (e) {
+              // 用户拒绝订阅不影响兑换流程
+            }
             await api.exchangeItem({
               itemId: selectedItem.id,
               addressId: selectedAddress.id,
