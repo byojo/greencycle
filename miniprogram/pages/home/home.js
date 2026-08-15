@@ -39,10 +39,31 @@ Page({
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 0 });
     }
+    // 若从地址页选了收货地址，则展示该地址并锁定（不再被 GPS 自动定位覆盖）
+    if (app.globalData.selectedAddress) {
+      const addr = app.globalData.selectedAddress;
+      app.globalData.selectedAddress = null;
+      this.setData({
+        location: this.formatAddressLabel(addr),
+        locationLocked: true
+      });
+    }
     this.loadUserInfo();
     this.loadPoints();
     this.loadStories();
   },
+
+  // 将收货地址拼成首页位置栏展示用的简短文案
+  // 例如：家·上海市浦东新区 / 上海市徐汇区
+  formatAddressLabel(addr) {
+    if (!addr) return '当前位置';
+    const tag = addr.tag ? addr.tag + '·' : '';
+    const area = [addr.city, addr.district].filter(Boolean).join('');
+    if (area) return tag + area;
+    // 兜底：只有详细地址时展示姓名
+    return tag + (addr.name || '当前位置');
+  },
+
 
   onPullDownRefresh() {
     Promise.all([
@@ -92,43 +113,9 @@ Page({
     }
   },
 
-  // 点击位置：调起微信地图，触发授权确认 + 位置定位
-  async onLocationTap() {
-    try {
-      // 隐私合规：调 chooseLocation 前必须先获用户同意隐私协议
-      await requirePrivacy();
-    } catch (e) {
-      // 用户拒绝隐私协议 -> 引导去设置开启
-      wx.showModal({
-        title: '需要位置权限',
-        content: '用于展示您所在城市并就近匹配回收专员，请在设置中开启位置权限',
-        confirmText: '去设置',
-        cancelText: '取消',
-        success: (m) => { if (m.confirm) wx.openSetting(); }
-      });
-      return;
-    }
-    wx.chooseLocation({
-      success: async (res) => {
-        // res: { name, address, latitude, longitude } —— 用选点结果更新位置
-        this.setData({ locationLocked: true });
-        await this.reverseGeocode(res.latitude, res.longitude, res.name, res.address);
-      },
-      fail: (err) => {
-        const msg = (err && err.errMsg) || '';
-        // 用户拒绝授权 -> 引导去设置开启
-        if (msg.indexOf('auth') >= 0 && msg.indexOf('deny') >= 0) {
-          wx.showModal({
-            title: '需要位置权限',
-            content: '用于展示您所在城市并就近匹配回收专员，请在设置中开启位置权限',
-            confirmText: '去设置',
-            cancelText: '取消',
-            success: (m) => { if (m.confirm) wx.openSetting(); }
-          });
-        }
-        // 用户主动取消选择，不做处理
-      }
-    });
+  // 点击位置：打开地址簿选择收货地址（选中后首页展示该地址并锁定）
+  onLocationTap() {
+    wx.navigateTo({ url: '/pages/address/address?select=1' });
   },
 
   async loadUserInfo() {
