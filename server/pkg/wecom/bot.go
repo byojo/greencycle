@@ -25,7 +25,7 @@ func BotURL() string {
 func SendText(content string) error {
 	url := BotURL()
 	if url == "" {
-		return nil // 未配置则跳过
+		return fmt.Errorf("企业微信机器人未配置 WECOM_BOT_KEY，未发送消息")
 	}
 
 	body, _ := json.Marshal(map[string]interface{}{
@@ -56,7 +56,7 @@ func SendText(content string) error {
 func SendMarkdown(content string) error {
 	url := BotURL()
 	if url == "" {
-		return nil
+		return fmt.Errorf("企业微信机器人未配置 WECOM_BOT_KEY，未发送消息")
 	}
 
 	body, _ := json.Marshal(map[string]interface{}{
