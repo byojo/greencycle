@@ -10,10 +10,14 @@ Page({
     inviteList: [],
     posterVisible: false,
     posterPath: '',
-    drawing: false
+    drawing: false,
+    statusBarHeight: 20
   },
 
   onLoad() {
+    // 自定义导航栏需为系统状态栏留白，否则返回按钮会落在状态栏区域无法点击
+    const sbh = (app.globalData.systemInfo && app.globalData.systemInfo.statusBarHeight) || 20;
+    this.setData({ statusBarHeight: sbh });
     this.loadInviteInfo();
   },
 

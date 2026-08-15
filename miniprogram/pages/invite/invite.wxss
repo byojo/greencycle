@@ -7,7 +7,6 @@
 
 /* ============ 顶部导航 ============ */
 .nav {
-  height: 88rpx;
   background: #FFFFFF;
   display: flex;
   align-items: center;
@@ -15,6 +14,13 @@
   top: 0;
   z-index: 10;
   border-bottom: 1rpx solid #F3F4F6;
+}
+.nav-inner {
+  position: relative;
+  height: 88rpx;
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 .nav-back {
   width: 80rpx;
@@ -30,8 +36,10 @@
   line-height: 1;
 }
 .nav-title {
-  flex: 1;
-  text-align: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
   font-size: 34rpx;
   font-weight: 600;
   color: #1F2937;

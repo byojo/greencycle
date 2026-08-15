@@ -1,11 +1,13 @@
 <!--pages/invite/invite.wxml-->
 <view class="page">
   <!-- 顶部导航 -->
-  <view class="nav">
-    <view class="nav-back" bindtap="onBack">
-      <text class="back-icon">‹</text>
+  <view class="nav" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-inner">
+      <view class="nav-back" bindtap="onBack">
+        <text class="back-icon">‹</text>
+      </view>
+      <view class="nav-title">邀请好友</view>
     </view>
-    <view class="nav-title">邀请好友</view>
   </view>
 
   <!-- 渐变 hero -->
