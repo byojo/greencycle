@@ -29,7 +29,8 @@
       </view>
 
       <view class="card-body">
-        <image class="card-img" src="{{item.itemImage || ''}}" mode="aspectFill" />
+        <image class="card-img" wx:if="{{item.itemImage}}" src="{{item.itemImage}}" mode="aspectFill" />
+        <view class="card-img-placeholder" wx:else>🎁</view>
         <view class="card-info">
           <view class="card-name">{{item.itemName}}</view>
           <view class="card-points">-{{item.points}} 积分</view>
