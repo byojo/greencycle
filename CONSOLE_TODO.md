@@ -6,20 +6,18 @@
 
 ## 🔴 P0 — 上线前必须完成（否则小程序无法正常使用或被拒审）
 
-### 1. 生产域名 SSL 证书生效
-- 平台：微信云托管控制台 → 服务 `golang-ox8i` → 「自定义域名」
-- 操作：
-  1. 登记自定义域名 `sxyrgy.cn`（已 CNAME 到云托管 `golang-ox8i`）。
-  2. 在控制台「一键申请 / 上传」SSL 证书，等待签发完成。
-- 验证：`curl -I https://sxyrgy.cn/health` 返回 `{"status":"ok"}` 且为 HTTPS。
-- 现状：DNS 已指向云托管，但 SSL 尚未在控制台登记签发 → **当前生产域名仍不可用**。
+> **📌 实测结论（2026-08-15 13:42）**：生产域名 `sxyrgy.cn` 的 SSL 证书**已生效**（TrustAsia DV，8/2 签发，10/31 到期），`https://sxyrgy.cn/health` 已返回 200。自定义域名 + SSL 这一项**不用再加了**。当前真正的阻塞是：**代码 push 后自动部署未刷新，线上仍是旧容器**（表现为 `/privacy` 404、CORS 仍 `AllowAllOrigins`）。请先按下方"部署"节手动触发重新部署，再回头登记隐私协议网址。
 
-### 2. 小程序 request 合法域名
+### 1. ✅ 生产域名 SSL 证书（已生效，无需操作）
+- 平台：微信云托管控制台 → 服务 `golang-ox8i` → 「自定义域名」
+- 现状：自定义域名 `sxyrgy.cn` 已登记且证书已签发（8/2），HTTPS 访问正常。
+- 验证：`curl -I https://sxyrgy.cn/health` → `HTTP 200`，证书校验通过。
+
+### 2. 小程序 request 合法域名（疑似已配置，请确认）
 - 平台：微信公众平台 → 开发管理 → 开发设置 → 服务器域名 → request 合法域名
-- 添加：
-  - `https://sxyrgy.cn`
-  - `https://golang-ox8i-275614-7-1448098353.sh.run.tcloudbase.com`（测试环境，可选保留）
-- 说明：前端 `config.js` 的 `PROD_API` 为 `https://sxyrgy.cn/api/v1`，未加入白名单会导致真机请求被拦截。
+- 确认列表中含：`https://sxyrgy.cn`（可选保留测试域名 `https://golang-ox8i-275614-7-1448098353.sh.run.tcloudbase.com`）。
+- 说明：前端 `config.js` 的 `PROD_API` 为 `https://sxyrgy.cn/api/v1`，若该域名已在白名单则真机请求不会报错（你看到的"已经有了"应指此项）。
+- 补充：若前端 `wxml` 直接 `<image src="https://...cos...">` 展示 COS 图片，还需在「downloadFile 合法域名」加 COS/CDN 域名。
 
 ### 3. 隐私协议登记（合规硬性要求）
 - 平台：微信公众平台 → 设置 → 服务内容 → 用户隐私保护指引 / 小程序隐私协议
@@ -78,11 +76,12 @@
 
 ---
 
-## 操作顺序建议
-1. 先完成 P0 的 1–4（域名 SSL、合法域名、隐私协议、类目资质）—— 这是审核与真机可用的前提。
-2. 完成 P1 的 5–7（订阅模板、环境变量、重启生效）。
-3. 代码已 push 到 `main` 触发云托管自动部署（约 2–3 分钟），部署后回到第 1 步验证 `https://sxyrgy.cn/health`。
-4. P2 事项上线后持续跟进。
+## 操作顺序建议（实测后修订）
+1. **【首要】手动触发云托管重新部署**：控制台 → 服务 `golang-ox8i` → 查看「构建/部署」记录，确认最新一次是否成功；若失败查日志，或直接点「重新部署」让 `main` 的 `cc0e1a8` 上线。部署后验证：`https://sxyrgy.cn/privacy` 返回 200、`/health` 的 CORS 不再回显任意 Origin。
+2. 确认 P0 的 2（request 合法域名含 sxyrgy.cn）、4（类目资质）。第 1 项 SSL 已生效，无需操作。
+3. 部署成功后，登记 P0 的 3（隐私协议网址 `https://sxyrgy.cn/privacy`，此时页面已 200）。
+4. 完成 P1 的 5–7（订阅模板、环境变量、WECOM_BOT_KEY 更新后重启生效）。
+5. P2 事项上线后持续跟进。
 
 ---
 *本清单配合 `LAUNCH_CHECKLIST.md`（代码侧体检与修复记录）使用。代码改动清单见本次 git 提交。*
