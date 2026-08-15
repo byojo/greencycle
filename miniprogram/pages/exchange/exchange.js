@@ -118,7 +118,9 @@ Page({
   },
 
   onItemTap(e) {
-    const item = e.currentTarget.dataset.item;
+    const id = e.currentTarget.dataset.id;
+    const item = this.data.items.find(i => Number(i.id) === Number(id));
+    if (!item) return;
     if (item.stock <= 0) {
       wx.showToast({ title: '库存不足', icon: 'none' });
       return;

@@ -19,7 +19,7 @@
       class="item-card"
       wx:for="{{items}}"
       wx:key="id"
-      data-item="{{item}}"
+      data-id="{{item.id}}"
       bindtap="onItemTap"
     >
       <view class="item-image-wrap">
