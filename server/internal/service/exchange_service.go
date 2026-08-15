@@ -3,12 +3,14 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
 	"github.com/greencycle/server/internal/model"
 	"github.com/greencycle/server/internal/repository"
+	"github.com/greencycle/server/pkg/wecom"
 )
 
 type ExchangeService struct {
@@ -134,6 +136,39 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 		record.AddressID = &addrID
 		return s.repo.Exchange.CreateRecord(ctx, tx, record)
 	})
+	if err != nil {
+		return err
+	}
+
+	// 推送新兑换工单通知到企业微信群
+	go s.notifyGroupNewExchange(record)
+
+	return nil
+}
+
+// notifyGroupNewExchange 推送新兑换工单到企业微信群
+func (s *ExchangeService) notifyGroupNewExchange(record *model.ExchangeRecord) {
+	msg := fmt.Sprintf(`## 🎁 新兑换工单
+
+**工单号：** #%d
+**商品：** %s
+**消耗积分：** %d
+**收货人：** %s
+**联系电话：** %s
+**收货地址：** %s
+
+请尽快安排发货/配送`,
+		record.ID,
+		record.ItemName,
+		record.Points,
+		record.DeliveryName,
+		record.DeliveryPhone,
+		record.DeliveryAddr,
+	)
+
+	if err := wecom.SendMarkdown(msg); err != nil {
+		fmt.Printf("⚠️ 企业微信群推送失败: %v\n", err)
+	}
 }
 
 // ExchangeHistory 用户兑换记录
