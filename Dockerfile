@@ -20,6 +20,7 @@ WORKDIR /app
 
 COPY --from=builder /build/server /app/server
 COPY admin/index.html /app/admin/index.html
+COPY privacy/index.html /app/privacy/index.html
 
 ENV PORT=80
 EXPOSE 80
