@@ -28,6 +28,10 @@
     <!-- 时间节点（移到头部，兑换商品之后立刻显示） -->
     <view class="card">
       <view class="card-title">⏱ 时间节点</view>
+      <view class="info-row" wx:if="{{record.expectedTime}}">
+        <text class="info-key">期望配送时间</text>
+        <text class="info-val">{{record.expectedTime}}</text>
+      </view>
       <view class="info-row">
         <text class="info-key">下单时间</text>
         <text class="info-val">{{createdAtText || '—'}}</text>

@@ -12,7 +12,26 @@ Page({
     addresses: [],
     selectedAddress: null,
     quantity: 1, // 当前兑换数量
-    maxQuantity: 1 // 当前商品最大可兑换数量
+    maxQuantity: 1, // 当前商品最大可兑换数量
+    // 期望配送时间
+    slotOptions: ['上午 09:00-12:00', '下午 13:00-18:00', '晚上 18:00-21:00'],
+    expectedDate: '', // 期望配送日期 yyyy-MM-dd
+    expectedSlot: 0, // 时段索引
+    expectedTimeLabel: '' // 组合展示文本，如 "2026-08-16 上午 09:00-12:00"
+  },
+
+  // 计算明天的日期字符串（默认期望配送日为明天）
+  getTomorrow() {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return formatDate(d, 'YYYY-MM-DD');
+  },
+
+  // 组合期望配送时间展示文本
+  computeExpectedLabel() {
+    const { expectedDate, expectedSlot, slotOptions } = this.data;
+    if (!expectedDate) return '';
+    return `${expectedDate} ${slotOptions[expectedSlot] || ''}`;
   },
 
   onLoad() {
@@ -109,16 +128,45 @@ Page({
     const pointsBudget = Math.floor(this.data.myPoints / (item.points || 1));
     const stockCap = item.stock;
     const maxQty = Math.max(1, Math.min(stockCap, pointsBudget || stockCap));
+    const tomorrow = this.getTomorrow();
     this.setData({
       selectedItem: item,
       showConfirm: true,
       quantity: 1,
-      maxQuantity: maxQty
+      maxQuantity: maxQty,
+      expectedDate: tomorrow,
+      expectedSlot: 0,
+      expectedTimeLabel: `${tomorrow} ${this.data.slotOptions[0]}`
     });
   },
 
   onCloseConfirm() {
-    this.setData({ showConfirm: false, selectedItem: null, quantity: 1 });
+    this.setData({
+      showConfirm: false,
+      selectedItem: null,
+      quantity: 1,
+      expectedDate: '',
+      expectedSlot: 0,
+      expectedTimeLabel: ''
+    });
+  },
+
+  // 选择期望配送日期
+  onChooseDate(e) {
+    const expectedDate = e.detail.value;
+    this.setData({
+      expectedDate,
+      expectedTimeLabel: this.computeExpectedLabel()
+    });
+  },
+
+  // 选择期望配送时段
+  onChooseSlot(e) {
+    const expectedSlot = Number(e.detail.value);
+    this.setData({
+      expectedSlot,
+      expectedTimeLabel: this.computeExpectedLabel()
+    });
   },
 
   // 数量加减
@@ -160,7 +208,7 @@ Page({
   },
 
   onExchange() {
-    const { selectedItem, selectedAddress, myPoints, quantity } = this.data;
+    const { selectedItem, selectedAddress, myPoints, quantity, expectedTimeLabel } = this.data;
     if (!selectedAddress) {
       wx.showToast({ title: '请先选择收货地址', icon: 'none' });
       return;
@@ -180,7 +228,8 @@ Page({
             await api.exchangeItem({
               itemId: selectedItem.id,
               addressId: selectedAddress.id,
-              quantity
+              quantity,
+              expectedTime: expectedTimeLabel
             });
             this.onCloseConfirm();
             this.loadData();

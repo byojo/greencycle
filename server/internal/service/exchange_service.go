@@ -29,9 +29,10 @@ func (s *ExchangeService) ListItems(ctx context.Context) ([]model.ExchangeItem, 
 
 // ExchangeReq 兑换请求
 type ExchangeReq struct {
-	ItemID    uint   `json:"itemId" binding:"required"`
-	AddressID uint64 `json:"addressId" binding:"required"`
-	Quantity  int    `json:"quantity"` // 兑换数量（默认 1，前端可选）
+	ItemID       uint   `json:"itemId" binding:"required"`
+	AddressID    uint64 `json:"addressId" binding:"required"`
+	Quantity     int    `json:"quantity"`     // 兑换数量（默认 1，前端可选）
+	ExpectedTime string `json:"expectedTime"` // 期望配送时间（前端可选，如 "2026-08-16 上午 09:00-12:00"）
 }
 
 // Exchange 兑换商品
@@ -148,6 +149,7 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 			DeliveryAddr:  fullAddr,
 			DeliveryLat:   addr.Lat,
 			DeliveryLng:   addr.Lng,
+			ExpectedTime:  req.ExpectedTime,
 		}
 		record.AddressID = &addrID
 		return s.repo.Exchange.CreateRecord(ctx, tx, record)
@@ -164,12 +166,17 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 
 // notifyGroupNewExchange 推送新兑换工单到企业微信群
 func (s *ExchangeService) notifyGroupNewExchange(record *model.ExchangeRecord) {
+	expectedTime := record.ExpectedTime
+	if expectedTime == "" {
+		expectedTime = "未指定"
+	}
 	msg := fmt.Sprintf(`## 🎁 新兑换工单
 
 **订单类型：** 兑换工单
 **工单号：** #%d
 **商品：** %s × %d
 **消耗积分：** %d
+**期望配送时间：** %s
 **收货人：** %s
 **联系电话：** %s
 **收货地址：** %s
@@ -179,6 +186,7 @@ func (s *ExchangeService) notifyGroupNewExchange(record *model.ExchangeRecord) {
 		record.ItemName,
 		record.Quantity,
 		record.Points,
+		expectedTime,
 		record.DeliveryName,
 		record.DeliveryPhone,
 		record.DeliveryAddr,

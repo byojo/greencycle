@@ -87,6 +87,23 @@
         </view>
       </view>
 
+      <!-- 期望配送时间 -->
+      <view class="time-section" wx:if="{{selectedItem}}">
+        <view class="time-label">期望配送时间</view>
+        <picker class="time-picker" mode="date" value="{{expectedDate}}" start="{{expectedDate}}" bindchange="onChooseDate">
+          <view class="time-picker-inner">
+            <text class="time-val">{{expectedDate || '请选择日期'}}</text>
+            <text class="arrow">›</text>
+          </view>
+        </picker>
+        <picker class="time-picker" mode="selector" range="{{slotOptions}}" value="{{expectedSlot}}" bindchange="onChooseSlot">
+          <view class="time-picker-inner">
+            <text class="time-val">{{slotOptions[expectedSlot]}}</text>
+            <text class="arrow">›</text>
+          </view>
+        </picker>
+      </view>
+
       <!-- 收货地址 -->
       <view class="address-section" bindtap="onSelectAddress">
         <view class="address-label">收货地址</view>

@@ -42,6 +42,8 @@ type ExchangeRecord struct {
 	RiderID    *uint  `gorm:"index" json:"riderId"`
 	RiderName  string `gorm:"size:64" json:"riderName"`
 	RiderPhone string `gorm:"size:20" json:"riderPhone"`
+	// 期望配送时间（用户在下单时选择，如 "2026-08-16 上午 09:00-12:00"）
+	ExpectedTime string `gorm:"size:64" json:"expectedTime"`
 	// 时间节点
 	ShippedAt   *time.Time `json:"shippedAt"`
 	CompletedAt *time.Time `json:"completedAt"`
