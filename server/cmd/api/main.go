@@ -103,11 +103,11 @@ func seedExchangeItems(db *gorm.DB) {
 		return
 	}
 	items := []model.ExchangeItem{
-		{Name: "环保帆布袋", Desc: "可循环使用的棉布购物袋，减少一次性塑料袋使用", Image: "", Points: 200, Stock: 100, LimitPerUser: 1, Sort: 1, Enabled: true},
-		{Name: "碳中和徽章", Desc: "绿循环官方认证碳中和徽章，佩戴即环保", Image: "", Points: 500, Stock: 200, LimitPerUser: 1, Sort: 2, Enabled: true},
-		{Name: "绿植种子套装", Desc: "包含 3 种适合家养的绿植种子，共建绿色家园", Image: "", Points: 800, Stock: 50, LimitPerUser: 2, Sort: 3, Enabled: true},
-		{Name: "保温杯", Desc: "不锈钢真空保温杯，随手环保从一杯热水开始", Image: "", Points: 1500, Stock: 30, LimitPerUser: 1, Sort: 4, Enabled: true},
-		{Name: "电动牙刷", Desc: "声波震动牙刷，环保从每一次刷牙开始", Image: "", Points: 3000, Stock: 20, LimitPerUser: 1, Sort: 5, Enabled: true},
+		{Name: "环保帆布袋", Desc: "可循环使用的棉布购物袋，减少一次性塑料袋使用", Image: "/assets/exchange/bag.png", Points: 200, Stock: 100, LimitPerUser: 1, Sort: 1, Enabled: true},
+		{Name: "碳中和徽章", Desc: "绿循环官方认证碳中和徽章，佩戴即环保", Image: "/assets/exchange/badge.png", Points: 500, Stock: 200, LimitPerUser: 1, Sort: 2, Enabled: true},
+		{Name: "绿植种子套装", Desc: "包含 3 种适合家养的绿植种子，共建绿色家园", Image: "/assets/exchange/seeds.png", Points: 800, Stock: 50, LimitPerUser: 2, Sort: 3, Enabled: true},
+		{Name: "保温杯", Desc: "不锈钢真空保温杯，随手环保从一杯热水开始", Image: "/assets/exchange/cup.png", Points: 1500, Stock: 30, LimitPerUser: 1, Sort: 4, Enabled: true},
+		{Name: "电动牙刷", Desc: "声波震动牙刷，环保从每一次刷牙开始", Image: "/assets/exchange/toothbrush.png", Points: 3000, Stock: 20, LimitPerUser: 1, Sort: 5, Enabled: true},
 	}
 	if err := db.Create(&items).Error; err != nil {
 		log.Printf("⚠️ 兑换商品种子数据插入失败: %v", err)
