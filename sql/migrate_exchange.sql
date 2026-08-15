@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `exchange_items` (
   `id`           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name`         VARCHAR(128)    NOT NULL                       COMMENT '商品名称',
   `desc`         VARCHAR(500)    DEFAULT NULL                   COMMENT '商品描述',
-  `image`        VARCHAR(255)    NOT NULL                       COMMENT '商品图片 URL',
+  `image`        VARCHAR(255)    NOT NULL                       COMMENT '商品图片 URL（服务端静态托管：https://sxyrgy.cn/assets/exchange/xxx.png）',
   `points`       INT             NOT NULL                       COMMENT '所需积分',
   `stock`        INT             NOT NULL DEFAULT 0             COMMENT '库存数量',
   `limit_per_user` INT            NOT NULL DEFAULT 0             COMMENT '每人限兑次数，0=不限',
@@ -36,8 +36,8 @@ CREATE TABLE IF NOT EXISTS `exchange_records` (
 
 -- 初始化兑换商品数据（已有数据时跳过）
 INSERT IGNORE INTO `exchange_items` (`name`, `desc`, `image`, `points`, `stock`, `limit_per_user`, `sort`, `enabled`) VALUES
-('环保帆布袋', '可循环使用的棉布购物袋，减少一次性塑料袋使用', '/assets/exchange/bag.png', 200, 100, 5, 1, 1),
-('碳中和徽章', '绿循环官方认证碳中和徽章，佩戴即环保', '/assets/exchange/badge.png', 500, 200, 5, 2, 1),
-('绿植种子套装', '包含 3 种适合家养的绿植种子，共建绿色家园', '/assets/exchange/seeds.png', 800, 50, 5, 3, 1),
-('保温杯', '不锈钢真空保温杯，随手环保从一杯热水开始', '/assets/exchange/cup.png', 1500, 30, 5, 4, 1),
-('电动牙刷', '声波震动牙刷，环保从每一次刷牙开始', '/assets/exchange/toothbrush.png', 3000, 20, 5, 5, 1);
+('环保帆布袋', '可循环使用的棉布购物袋，减少一次性塑料袋使用', 'https://sxyrgy.cn/assets/exchange/bag.png', 200, 100, 5, 1, 1),
+('碳中和徽章', '绿循环官方认证碳中和徽章，佩戴即环保', 'https://sxyrgy.cn/assets/exchange/badge.png', 500, 200, 5, 2, 1),
+('绿植种子套装', '包含 3 种适合家养的绿植种子，共建绿色家园', 'https://sxyrgy.cn/assets/exchange/seeds.png', 800, 50, 5, 3, 1),
+('保温杯', '不锈钢真空保温杯，随手环保从一杯热水开始', 'https://sxyrgy.cn/assets/exchange/cup.png', 1500, 30, 5, 4, 1),
+('电动牙刷', '声波震动牙刷，环保从每一次刷牙开始', 'https://sxyrgy.cn/assets/exchange/toothbrush.png', 3000, 20, 5, 5, 1);
