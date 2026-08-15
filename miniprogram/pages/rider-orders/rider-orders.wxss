@@ -25,7 +25,6 @@
 .status-3 { background: #E0E7FF; color: #4F46E5; }
 .status-4 { background: #D1FAE5; color: #059669; }
 .status-5 { background: #FEE2E2; color: #DC2626; }
-.delivery-status { font-size: 26rpx; font-weight: 600; }
 
 .card-body { margin-bottom: 16rpx; }
 .type-row { display: flex; align-items: center; margin-bottom: 14rpx; }
@@ -34,14 +33,10 @@
 .info-line { display: flex; align-items: flex-start; font-size: 26rpx; color: #6B7280; margin-top: 8rpx; line-height: 1.4; }
 .line-key { flex-shrink: 0; width: 120rpx; color: #9CA3AF; }
 .line-val { flex: 1; color: #1F2937; }
-.card-item { display: block; font-size: 32rpx; font-weight: 600; color: #1F2937; margin-bottom: 10rpx; }
 .card-qty { font-size: 26rpx; color: #FF8C42; font-weight: 600; }
-.card-line { display: block; font-size: 26rpx; color: #6B7280; margin-top: 6rpx; line-height: 1.4; }
 
 .card-photos { display: flex; gap: 12rpx; margin-bottom: 16rpx; flex-wrap: wrap; }
 .photo-thumb { width: 120rpx; height: 120rpx; border-radius: 12rpx; background: #F3F4F6; }
-
-.card-thumb { width: 120rpx; height: 120rpx; border-radius: 12rpx; margin-bottom: 16rpx; background: #F3F4F6; }
 
 .card-actions { display: flex; gap: 12rpx; align-items: center; border-top: 1rpx solid #F3F4F6; padding-top: 20rpx; }
 .detail-link { font-size: 24rpx; color: #07C160; padding: 6rpx 0; margin-left: auto; flex: 0 0 auto; flex-shrink: 0; }

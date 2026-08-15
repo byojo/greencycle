@@ -53,20 +53,26 @@
   <!-- ========== 配送任务 ========== -->
   <block wx:if="{{currentTab === 1}}">
     <view class="delivery-list" wx:if="{{deliveries.length > 0}}">
-      <view class="order-card" wx:for="{{deliveries}}" wx:key="id">
+      <view class="order-card" wx:for="{{deliveries}}" wx:key="id" data-id="{{item.id}}" bindtap="onViewDelivery">
         <view class="card-head">
-          <text class="card-no">配送 #{{item.id}}</text>
-          <view class="delivery-status" style="color:{{item.status === 2 ? '#3B82F6' : '#10B981'}}">{{item.status === 2 ? '配送中' : '已送达'}}</view>
+          <text class="card-meta">配送 #{{item.id}}</text>
+          <view class="status-badge {{item.status === 2 ? 'status-2' : 'status-4'}}">{{item.status === 2 ? '配送中' : '已送达'}}</view>
         </view>
         <view class="card-body">
-          <view class="card-item">{{item.itemName}}<text wx:if="{{item.quantity && item.quantity > 1}}" class="card-qty"> ×{{item.quantity}}</text></view>
-          <view class="card-line">📍 {{item.deliveryAddr}}</view>
-          <view class="card-line" wx:if="{{item.deliveryName}}">👤 {{item.deliveryName}}</view>
+          <view class="type-row">
+            <view class="type-tag">兑换</view>
+            <text class="item-name">{{item.itemName}}<text wx:if="{{item.quantity && item.quantity > 1}}" class="card-qty"> ×{{item.quantity}}</text></text>
+          </view>
+          <view class="info-line"><text class="line-key">期望时间</text><text class="line-val">{{item.expectedTime || '未指定'}}</text></view>
+          <view class="info-line"><text class="line-key">收货地址</text><text class="line-val">{{item.deliveryAddr}}</text></view>
+          <view class="info-line" wx:if="{{item.deliveryName}}"><text class="line-key">收货人</text><text class="line-val">{{item.deliveryName}}</text></view>
         </view>
-        <image class="card-thumb" wx:if="{{item.itemImage}}" src="{{item.itemImage}}" mode="aspectFill" />
+        <view class="card-photos" wx:if="{{item.itemImage}}">
+          <image src="{{item.itemImage}}" mode="aspectFill" class="photo-thumb"></image>
+        </view>
         <view class="card-actions" catchtap="stopPropagation">
-          <view class="action-btn action-nav" hover-class="action-hover" data-lat="{{item.deliveryLat}}" data-lng="{{item.deliveryLng}}" data-addr="{{item.deliveryAddr}}" bindtap="onNavigate">🧭 导航</view>
-          <view wx:if="{{item.status === 2}}" class="action-btn action-green" hover-class="action-hover" data-id="{{item.id}}" bindtap="onCompleteDelivery">确认送达</view>
+          <view class="action-btn-sm action-nav" hover-class="action-hover" data-lat="{{item.deliveryLat}}" data-lng="{{item.deliveryLng}}" data-addr="{{item.deliveryAddr}}" bindtap="onNavigate">🧭 导航</view>
+          <view wx:if="{{item.status === 2}}" class="action-btn-sm action-green" hover-class="action-hover" data-id="{{item.id}}" bindtap="onCompleteDelivery">确认送达</view>
           <view class="detail-link" data-id="{{item.id}}" bindtap="onViewDelivery">详情 ›</view>
         </view>
       </view>
