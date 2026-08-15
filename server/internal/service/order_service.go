@@ -374,7 +374,7 @@ func (s *OrderService) Cancel(ctx context.Context, orderID uint64, userID uint, 
 	if order.Status != model.OrderStatusPending && order.Status != model.OrderStatusAssigned {
 		return errors.New("订单当前状态无法取消")
 	}
-	return s.repo.Order.Transaction(ctx, func(tx *gorm.DB) error {
+	err = s.repo.Order.Transaction(ctx, func(tx *gorm.DB) error {
 		if err := tx.Model(&model.Order{}).Where("id = ?", orderID).
 			Updates(map[string]interface{}{
 				"status":        model.OrderStatusCancelled,
@@ -390,6 +390,14 @@ func (s *OrderService) Cancel(ctx context.Context, orderID uint64, userID uint, 
 		}
 		return tx.Create(timeline).Error
 	})
+	if err != nil {
+		return err
+	}
+
+	// 推送取消通知到企业微信群
+	go s.notifyGroupCancelled(order, reason)
+
+	return nil
 }
 
 // Complete 完成订单（事务：更新订单 + 奖励积分 + 减碳记录）
@@ -503,7 +511,23 @@ func (s *OrderService) notifyGroupCompleted(order *model.Order, points int) {
 	}
 }
 
-// notifyOrderCompleted 通知用户订单已完成
+// notifyGroupCancelled 推送订单取消通知到企业微信群
+func (s *OrderService) notifyGroupCancelled(order *model.Order, reason string) {
+	msg := fmt.Sprintf(`## ❌ 回收工单已取消
+
+**订单类型：** 回收工单
+**订单号：** %s
+**物品：** %s
+**取消原因：** %s`,
+		order.OrderNo,
+		order.ItemName,
+		reason,
+	)
+
+	if err := wecom.SendMarkdown(msg); err != nil {
+		fmt.Printf("⚠️ 企业微信群推送失败: %v\n", err)
+	}
+}
 func (s *OrderService) notifyOrderCompleted(order *model.Order, points int, openID string) {
 	if openID == "" {
 		return

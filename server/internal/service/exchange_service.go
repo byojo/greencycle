@@ -220,6 +220,22 @@ func (s *ExchangeService) notifyGroupCompletedExchange(record *model.ExchangeRec
 	}
 }
 
+// notifyGroupCancelledExchange 推送兑换工单取消通知到企业微信群
+func (s *ExchangeService) notifyGroupCancelledExchange(record *model.ExchangeRecord) {
+	msg := fmt.Sprintf(`## ❌ 兑换工单已取消
+
+**订单类型：** 兑换工单
+**工单号：** #%d
+**商品：** %s`,
+		record.ID,
+		record.ItemName,
+	)
+
+	if err := wecom.SendMarkdown(msg); err != nil {
+		fmt.Printf("⚠️ 企业微信群推送失败: %v\n", err)
+	}
+}
+
 // ExchangeHistory 用户兑换记录
 func (s *ExchangeService) ExchangeHistory(ctx context.Context, userID uint, page, size int) ([]model.ExchangeRecord, int64, error) {
 	if page < 1 {
@@ -288,7 +304,20 @@ func (s *ExchangeService) CompleteDelivery(ctx context.Context, recordID uint, r
 
 // CancelRecord 取消兑换工单
 func (s *ExchangeService) CancelRecord(ctx context.Context, recordID uint) error {
-	return s.repo.Exchange.CancelRecord(ctx, recordID)
+	// 获取兑换记录用于通知
+	record, err := s.repo.Exchange.GetRecordByID(ctx, recordID)
+	if err != nil {
+		return errors.New("兑换记录不存在")
+	}
+
+	if err := s.repo.Exchange.CancelRecord(ctx, recordID); err != nil {
+		return errors.New("取消失败")
+	}
+
+	// 推送取消通知到企业微信群
+	go s.notifyGroupCancelledExchange(record)
+
+	return nil
 }
 
 // RiderDeliveries 获取专员的配送任务
