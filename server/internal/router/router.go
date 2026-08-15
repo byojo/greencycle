@@ -34,9 +34,6 @@ func Register(h *handler.Handler) *gin.Engine {
 	// 隐私政策页（微信小程序发布需在 MP 后台登记该 URL：https://sxyrgy.cn/privacy）
 	r.StaticFile("/privacy", "./privacy/index.html")
 
-	// 静态资源（兑换商品图等）：随容器镜像提供，访问地址如 https://sxyrgy.cn/assets/exchange/bag.png
-	r.Static("/assets", "./assets")
-
 	api := r.Group("/api/v1")
 
 	// ========== 不需要鉴权 ==========

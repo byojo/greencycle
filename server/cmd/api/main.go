@@ -96,8 +96,9 @@ func main() {
 }
 
 // seedExchangeItems 兑换商品种子数据（仅表为空时插入）
-// 商品图由服务端静态托管（随容器镜像提供，见 Dockerfile 的 COPY server/assets 与 router 的 /assets 路由）
-const assetBaseURL = "https://sxyrgy.cn"
+// 商品图由腾讯云 COS 公有读桶托管（桶：greencycle-image-1255464850，地域 ap-guangzhou）
+// 前端 <image> 直接加载；若配置了 COS_CDN，可改用 CDN 域名
+const cosBaseURL = "https://greencycle-image-1255464850.cos.ap-guangzhou.myqcloud.com"
 
 func seedExchangeItems(db *gorm.DB) {
 	var count int64
@@ -106,11 +107,11 @@ func seedExchangeItems(db *gorm.DB) {
 		return
 	}
 	items := []model.ExchangeItem{
-		{Name: "环保帆布袋", Desc: "可循环使用的棉布购物袋，减少一次性塑料袋使用", Image: assetBaseURL + "/assets/exchange/bag.png", Points: 200, Stock: 100, LimitPerUser: 5, Sort: 1, Enabled: true},
-		{Name: "碳中和徽章", Desc: "绿循环官方认证碳中和徽章，佩戴即环保", Image: assetBaseURL + "/assets/exchange/badge.png", Points: 500, Stock: 200, LimitPerUser: 5, Sort: 2, Enabled: true},
-		{Name: "绿植种子套装", Desc: "包含 3 种适合家养的绿植种子，共建绿色家园", Image: assetBaseURL + "/assets/exchange/seeds.png", Points: 800, Stock: 50, LimitPerUser: 5, Sort: 3, Enabled: true},
-		{Name: "保温杯", Desc: "不锈钢真空保温杯，随手环保从一杯热水开始", Image: assetBaseURL + "/assets/exchange/cup.png", Points: 1500, Stock: 30, LimitPerUser: 5, Sort: 4, Enabled: true},
-		{Name: "电动牙刷", Desc: "声波震动牙刷，环保从每一次刷牙开始", Image: assetBaseURL + "/assets/exchange/toothbrush.png", Points: 3000, Stock: 20, LimitPerUser: 5, Sort: 5, Enabled: true},
+		{Name: "环保帆布袋", Desc: "可循环使用的棉布购物袋，减少一次性塑料袋使用", Image: cosBaseURL + "/exchange/bag.png", Points: 200, Stock: 100, LimitPerUser: 5, Sort: 1, Enabled: true},
+		{Name: "碳中和徽章", Desc: "绿循环官方认证碳中和徽章，佩戴即环保", Image: cosBaseURL + "/exchange/badge.png", Points: 500, Stock: 200, LimitPerUser: 5, Sort: 2, Enabled: true},
+		{Name: "绿植种子套装", Desc: "包含 3 种适合家养的绿植种子，共建绿色家园", Image: cosBaseURL + "/exchange/seeds.png", Points: 800, Stock: 50, LimitPerUser: 5, Sort: 3, Enabled: true},
+		{Name: "保温杯", Desc: "不锈钢真空保温杯，随手环保从一杯热水开始", Image: cosBaseURL + "/exchange/cup.png", Points: 1500, Stock: 30, LimitPerUser: 5, Sort: 4, Enabled: true},
+		{Name: "电动牙刷", Desc: "声波震动牙刷，环保从每一次刷牙开始", Image: cosBaseURL + "/exchange/toothbrush.png", Points: 3000, Stock: 20, LimitPerUser: 5, Sort: 5, Enabled: true},
 	}
 	if err := db.Create(&items).Error; err != nil {
 		log.Printf("⚠️ 兑换商品种子数据插入失败: %v", err)
