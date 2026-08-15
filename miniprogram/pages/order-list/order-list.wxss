@@ -88,6 +88,10 @@
   font-weight: 600;
   flex-shrink: 0;
 }
+.hint-disabled {
+  color: #BBBBBB;
+  font-weight: 400;
+}
 
 /* ============ 月份标题 ============ */
 .month-title {

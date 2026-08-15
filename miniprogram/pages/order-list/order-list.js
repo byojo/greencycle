@@ -27,7 +27,11 @@ Page({
     status: 0,            // 0:全部 1:进行中 4:已完成 5:已取消
     orders: [],
     groupedOrders: [],
-    loading: true
+    loading: true,
+    page: 1,              // 当前页
+    total: 0,             // 订单总数（用于判断是否还有更多）
+    hasMore: false,       // 是否还有更早订单
+    loadingMore: false    // 加载更多中
   },
 
   onLoad() {
@@ -45,26 +49,40 @@ Page({
     this.loadOrders().finally(() => wx.stopPullDownRefresh());
   },
 
-  async loadOrders() {
+  async loadOrders(options = {}) {
+    const refresh = options && options.refresh !== false; // 默认刷新（重置到第 1 页）
+    const page = refresh ? 1 : this.data.page + 1;
     try {
-      const params = { page: 1, size: 50 };
+      const params = { page, size: 50 };
       if (this.data.status > 0) params.status = this.data.status;
       const res = await api.getOrders(params);
 
       const list = (res.data.list || []);
+      const total = res.data.total || 0;
       const enriched = list.map(o => this.enrichOrder(o));
 
-      const grouped = this.groupByMonth(enriched);
+      // 刷新时替换全部；加载更早时追加到现有订单后，再统一按月分组
+      const all = refresh ? enriched : this.data.orders.concat(enriched);
+      const grouped = this.groupByMonth(all);
+      const hasMore = all.length < total;
 
       this.setData({
-        orders: enriched,
+        orders: all,
         groupedOrders: grouped,
-        loading: false
+        page,
+        total,
+        hasMore,
+        loading: false,
+        loadingMore: false
       });
     } catch (err) {
       console.warn('加载订单失败', err);
-      this.setData({ loading: false });
-      wx.showToast({ title: '加载失败，请下拉刷新', icon: 'none' });
+      this.setData({ loading: false, loadingMore: false });
+      if (refresh) {
+        wx.showToast({ title: '加载失败，请下拉刷新', icon: 'none' });
+      } else {
+        wx.showToast({ title: '加载更多失败', icon: 'none' });
+      }
     }
   },
 
@@ -191,7 +209,9 @@ Page({
   },
 
   onMore() {
-    wx.showToast({ title: '更早订单开发中', icon: 'none' });
+    if (this.data.loadingMore || !this.data.hasMore) return;
+    this.setData({ loadingMore: true });
+    this.loadOrders({ refresh: false });
   },
 
   // 阻止卡片底部操作区冒泡到整卡（点击"详情›"不会重复触发卡片导航）
