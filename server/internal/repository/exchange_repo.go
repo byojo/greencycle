@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"gorm.io/gorm"
@@ -46,6 +47,18 @@ func (r *ExchangeRepository) DeductStock(ctx context.Context, tx *gorm.DB, id ui
 		Model(&model.ExchangeItem{}).
 		Where("id = ? AND stock > 0", id).
 		UpdateColumn("stock", gorm.Expr("stock - 1"))
+	return result.RowsAffected, result.Error
+}
+
+// DeductStockBy 按数量扣减库存（在事务中调用），返回受影响行数
+func (r *ExchangeRepository) DeductStockBy(ctx context.Context, tx *gorm.DB, id uint, qty int) (int64, error) {
+	if qty <= 0 {
+		return 0, errors.New("数量必须大于 0")
+	}
+	result := tx.WithContext(ctx).
+		Model(&model.ExchangeItem{}).
+		Where("id = ? AND stock >= ?", id, qty).
+		UpdateColumn("stock", gorm.Expr("stock - ?", qty))
 	return result.RowsAffected, result.Error
 }
 

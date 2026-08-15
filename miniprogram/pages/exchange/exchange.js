@@ -10,7 +10,9 @@ Page({
     selectedItem: null,
     showConfirm: false,
     addresses: [],
-    selectedAddress: null
+    selectedAddress: null,
+    quantity: 1, // 当前兑换数量
+    maxQuantity: 1 // 当前商品最大可兑换数量
   },
 
   onLoad() {
@@ -102,11 +104,54 @@ Page({
       wx.showToast({ title: '库存不足', icon: 'none' });
       return;
     }
-    this.setData({ selectedItem: item, showConfirm: true });
+    // 计算最大可兑换数量：min(剩余库存, 我的积分/单价, 限购-已兑次数)
+    // 已兑次数前端不直接持锁，按 后端库存 + 积分上限 给一个乐观的本地最大值
+    const pointsBudget = Math.floor(this.data.myPoints / (item.points || 1));
+    const stockCap = item.stock;
+    const maxQty = Math.max(1, Math.min(stockCap, pointsBudget || stockCap));
+    this.setData({
+      selectedItem: item,
+      showConfirm: true,
+      quantity: 1,
+      maxQuantity: maxQty
+    });
   },
 
   onCloseConfirm() {
-    this.setData({ showConfirm: false, selectedItem: null });
+    this.setData({ showConfirm: false, selectedItem: null, quantity: 1 });
+  },
+
+  // 数量加减
+  onMinusQty() {
+    const q = this.data.quantity;
+    if (q > 1) {
+      this.setData({ quantity: q - 1 });
+    }
+  },
+
+  onPlusQty() {
+    const q = this.data.quantity;
+    const max = this.data.maxQuantity;
+    if (q < max) {
+      this.setData({ quantity: q + 1 });
+    } else {
+      wx.showToast({ title: `最多可兑换 ${max} 件`, icon: 'none' });
+    }
+  },
+
+  onQtyInput(e) {
+    const raw = parseInt(e.detail.value, 10);
+    if (isNaN(raw) || raw < 1) {
+      this.setData({ quantity: 1 });
+      return;
+    }
+    const max = this.data.maxQuantity;
+    if (raw > max) {
+      wx.showToast({ title: `最多可兑换 ${max} 件`, icon: 'none' });
+      this.setData({ quantity: max });
+      return;
+    }
+    this.setData({ quantity: raw });
   },
 
   onSelectAddress() {
@@ -115,32 +160,34 @@ Page({
   },
 
   onExchange() {
-    const { selectedItem, selectedAddress, myPoints } = this.data;
+    const { selectedItem, selectedAddress, myPoints, quantity } = this.data;
     if (!selectedAddress) {
       wx.showToast({ title: '请先选择收货地址', icon: 'none' });
       return;
     }
-    if (myPoints < selectedItem.points) {
+    const totalCost = selectedItem.points * quantity;
+    if (myPoints < totalCost) {
       wx.showToast({ title: '积分不足', icon: 'none' });
       return;
     }
 
     wx.showModal({
       title: '确认兑换',
-      content: `确定用 ${selectedItem.points} 积分兑换「${selectedItem.name}」吗？`,
+      content: `确定用 ${totalCost} 积分兑换「${selectedItem.name}」× ${quantity} 件吗？`,
       success: async (res) => {
         if (res.confirm) {
           try {
             await api.exchangeItem({
               itemId: selectedItem.id,
-              addressId: selectedAddress.id
+              addressId: selectedAddress.id,
+              quantity
             });
             this.onCloseConfirm();
             this.loadData();
             // 兑换成功提示
             wx.showModal({
               title: '🎉 兑换成功',
-              content: `「${selectedItem.name}」将在 7 个工作日内为您配送送达，请保持电话畅通，注意查收。`,
+              content: `「${selectedItem.name}」× ${quantity} 件将在 7 个工作日内为您配送送达，请保持电话畅通，注意查收。`,
               showCancel: false,
               confirmText: '我知道了'
             });

@@ -35,6 +35,7 @@
 .line-key { flex-shrink: 0; width: 120rpx; color: #9CA3AF; }
 .line-val { flex: 1; color: #1F2937; }
 .card-item { display: block; font-size: 32rpx; font-weight: 600; color: #1F2937; margin-bottom: 10rpx; }
+.card-qty { font-size: 26rpx; color: #FF8C42; font-weight: 600; }
 .card-line { display: block; font-size: 26rpx; color: #6B7280; margin-top: 6rpx; line-height: 1.4; }
 
 .card-photos { display: flex; gap: 12rpx; margin-bottom: 16rpx; flex-wrap: wrap; }

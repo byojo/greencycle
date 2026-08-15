@@ -31,10 +31,17 @@ func (s *ExchangeService) ListItems(ctx context.Context) ([]model.ExchangeItem, 
 type ExchangeReq struct {
 	ItemID    uint   `json:"itemId" binding:"required"`
 	AddressID uint64 `json:"addressId" binding:"required"`
+	Quantity  int    `json:"quantity"` // 兑换数量（默认 1，前端可选）
 }
 
 // Exchange 兑换商品
 func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *ExchangeReq) error {
+	// 数量归一化
+	qty := req.Quantity
+	if qty <= 0 {
+		qty = 1
+	}
+
 	// 获取商品（仅上架商品）
 	item, err := s.repo.Exchange.GetByID(ctx, req.ItemID)
 	if err != nil {
@@ -42,6 +49,9 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 	}
 	if item.Stock <= 0 {
 		return errors.New("商品库存不足")
+	}
+	if qty > item.Stock {
+		return errors.New("兑换数量超过库存")
 	}
 
 	// 验证收货地址属于当前用户
@@ -52,6 +62,9 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 	if addr == nil {
 		return errors.New("收货地址不存在")
 	}
+
+	// 消耗积分 = 单价 × 数量
+	totalPoints := item.Points * qty
 
 	// 事务：锁用户行 → 限兑检查 → 扣积分 → 扣库存 → 创建记录
 	// 锁用户行串行化同一用户的并发请求，防止限兑次数 TOCTOU
@@ -71,19 +84,20 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 				Count(&count).Error; err != nil {
 				return errors.New("限兑检查失败")
 			}
-			if int(count) >= item.LimitPerUser {
-				return errors.New("该商品每人限兑一次，您已达上限")
+			// 限兑次数按件数累计（已含 quantity）
+			if int(count)+qty > item.LimitPerUser {
+				return errors.New("该商品每人限兑 " + fmt.Sprintf("%d", item.LimitPerUser) + " 件，您已达上限")
 			}
 		}
 
 		// 3. 检查积分余额
-		if user.Points < item.Points {
+		if user.Points < totalPoints {
 			return errors.New("积分不足，无法兑换")
 		}
 
 		// 4. 扣减用户积分（条件更新 + RowsAffected 双保险）
-		result := tx.Model(&model.User{}).Where("id = ? AND points >= ?", userID, item.Points).
-			UpdateColumn("points", gorm.Expr("points - ?", item.Points))
+		result := tx.Model(&model.User{}).Where("id = ? AND points >= ?", userID, totalPoints).
+			UpdateColumn("points", gorm.Expr("points - ?", totalPoints))
 		if result.Error != nil {
 			return errors.New("积分扣减失败")
 		}
@@ -91,8 +105,8 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 			return errors.New("积分不足，兑换失败")
 		}
 
-		// 5. 扣减库存（条件更新 + RowsAffected 防超卖）
-		stockResult, err := s.repo.Exchange.DeductStock(ctx, tx, req.ItemID)
+		// 5. 扣减库存（条件更新 + RowsAffected 防超卖，按 qty 扣减）
+		stockResult, err := s.repo.Exchange.DeductStockBy(ctx, tx, req.ItemID, qty)
 		if err != nil {
 			return errors.New("库存扣减失败")
 		}
@@ -110,9 +124,9 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 		pointLog := &model.CarbonPointLog{
 			UserID:  userID,
 			Type:    3, // 兑换
-			Amount:  -item.Points,
+			Amount:  -totalPoints,
 			Balance: updatedUser.Points,
-			Remark:  "兑换：" + item.Name,
+			Remark:  "兑换：" + item.Name + " × " + fmt.Sprintf("%d", qty),
 		}
 		if err := s.repo.Point.CreateLog(ctx, tx, pointLog); err != nil {
 			return errors.New("积分记录创建失败")
@@ -126,7 +140,8 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 			ItemID:        item.ID,
 			ItemName:      item.Name,
 			ItemImage:     item.Image,
-			Points:        item.Points,
+			Quantity:      qty,
+			Points:        totalPoints,
 			Status:        1, // 待发货
 			DeliveryName:  addr.Name,
 			DeliveryPhone: addr.Phone,
@@ -153,7 +168,7 @@ func (s *ExchangeService) notifyGroupNewExchange(record *model.ExchangeRecord) {
 
 **订单类型：** 兑换工单
 **工单号：** #%d
-**商品：** %s
+**商品：** %s × %d
 **消耗积分：** %d
 **收货人：** %s
 **联系电话：** %s
@@ -162,6 +177,7 @@ func (s *ExchangeService) notifyGroupNewExchange(record *model.ExchangeRecord) {
 请尽快安排发货/配送`,
 		record.ID,
 		record.ItemName,
+		record.Quantity,
 		record.Points,
 		record.DeliveryName,
 		record.DeliveryPhone,

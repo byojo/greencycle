@@ -9,49 +9,23 @@
       <view class="status-no">配送单 #{{record.id}}</view>
     </view>
 
-    <!-- 兑换商品 -->
+    <!-- 兑换商品（显示数量 × 单价 = 总积分） -->
     <view class="card">
       <view class="card-title">🎁 兑换商品</view>
       <view class="goods">
         <image wx:if="{{record.itemImage}}" class="goods-img" src="{{record.itemImage}}" mode="aspectFill" bindtap="onPreviewPhoto" data-url="{{record.itemImage}}"></image>
         <view class="goods-info">
           <view class="goods-name">{{record.itemName}}</view>
+          <view class="goods-attr">
+            <text class="attr-key">数量</text>
+            <text class="attr-val">{{record.quantity || 1}} 件</text>
+          </view>
           <view class="goods-points">消耗积分 {{record.points}}</view>
         </view>
       </view>
     </view>
 
-    <!-- 收货信息 -->
-    <view class="card">
-      <view class="card-title">📍 收货信息</view>
-      <view class="info-row">
-        <text class="info-key">收货地址</text>
-        <text class="info-val">{{record.deliveryAddr}}</text>
-      </view>
-      <map wx:if="{{record.deliveryLat && record.deliveryLng}}" class="order-map"
-        latitude="{{record.deliveryLat}}" longitude="{{record.deliveryLng}}"
-        markers="{{[{id:1, latitude: record.deliveryLat, longitude: record.deliveryLng, title:'收货地址'}]}}"
-        scale="16" show-location bindtap="onNavigate"></map>
-      <view class="row-btns">
-        <button class="btn-nav" bindtap="onNavigate">🧭 导航</button>
-        <button class="btn-call" wx:if="{{record.deliveryPhone}}" bindtap="onCallCustomer">📞 联系收货人</button>
-      </view>
-    </view>
-
-    <!-- 收货人信息 -->
-    <view class="card" wx:if="{{record.deliveryName || record.deliveryPhone}}">
-      <view class="card-title">👤 收货人信息</view>
-      <view class="info-row">
-        <text class="info-key">称呼</text>
-        <text class="info-val">{{record.deliveryName || '—'}}</text>
-      </view>
-      <view class="info-row">
-        <text class="info-key">电话</text>
-        <text class="info-val">{{record.deliveryPhone || '—'}}</text>
-      </view>
-    </view>
-
-    <!-- 时间节点 -->
+    <!-- 时间节点（移到头部，兑换商品之后立刻显示） -->
     <view class="card">
       <view class="card-title">⏱ 时间节点</view>
       <view class="info-row">
@@ -68,9 +42,33 @@
       </view>
     </view>
 
+    <!-- 收货信息（合并收货人：称呼 + 地址；不展示电话号码） -->
+    <view class="card">
+      <view class="card-title">📍 收货信息</view>
+      <view class="info-row" wx:if="{{record.deliveryName}}">
+        <text class="info-key">收货人</text>
+        <text class="info-val">{{record.deliveryName}}</text>
+      </view>
+      <view class="info-row address-row">
+        <text class="info-key">收货地址</text>
+        <text class="info-val address-val">{{record.deliveryAddr}}</text>
+      </view>
+      <map wx:if="{{record.deliveryLat && record.deliveryLng}}" class="order-map"
+        latitude="{{record.deliveryLat}}" longitude="{{record.deliveryLng}}"
+        markers="{{[{id:1, latitude: record.deliveryLat, longitude: record.deliveryLng, title:'收货地址'}]}}"
+        scale="16" show-location bindtap="onNavigate"></map>
+      <view class="row-btns">
+        <view class="action-btn action-nav" hover-class="action-hover" bindtap="onNavigate">🧭 导航</view>
+        <!-- 拨号按钮仅在有电话时显示，但电话号码本身不在页面展示 -->
+        <view wx:if="{{record.deliveryPhone}}" class="action-btn action-call" hover-class="action-hover" bindtap="onCallCustomer">📞 联系收货人</view>
+      </view>
+    </view>
+
     <!-- 操作按钮 -->
     <view class="action-card safe-area-bottom">
-      <button wx:if="{{status === 2}}" class="btn-primary" bindtap="onComplete">确认送达</button>
+      <view wx:if="{{status === 2}}" class="action-btn-wrap">
+        <view class="action-btn-primary" hover-class="action-hover" bindtap="onComplete">确认送达</view>
+      </view>
       <view wx:if="{{status === 3}}" class="done-tip">✓ 已送达</view>
       <view wx:if="{{status === 4}}" class="done-tip">配送已取消</view>
     </view>

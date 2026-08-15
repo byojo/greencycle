@@ -72,8 +72,18 @@
           <view class="modal-item-name">{{selectedItem.name}}</view>
           <view class="modal-item-desc">{{selectedItem.desc}}</view>
           <view class="modal-item-points">
-            <text>🌱 {{selectedItem.points}} 积分</text>
+            <text>🌱 {{selectedItem.points}} 积分 / 件</text>
           </view>
+        </view>
+      </view>
+
+      <!-- 兑换数量 -->
+      <view class="qty-row" wx:if="{{selectedItem}}">
+        <text class="qty-label">兑换数量</text>
+        <view class="qty-stepper">
+          <view class="qty-btn" hover-class="qty-btn-hover" bindtap="onMinusQty">−</view>
+          <input class="qty-input" type="number" value="{{quantity}}" bindblur="onQtyInput" min="1" max="{{maxQuantity}}" />
+          <view class="qty-btn" hover-class="qty-btn-hover" bindtap="onPlusQty">+</view>
         </view>
       </view>
 
@@ -91,7 +101,7 @@
       </view>
 
       <view class="modal-tip">
-        <text>扣除 {{selectedItem.points}} 积分，商品将在 7 个工作日内配送送达</text>
+        <text>本次兑换 {{quantity}} 件，共扣除 {{selectedItem.points * quantity}} 积分，将在 7 个工作日内配送送达</text>
       </view>
 
       <button class="btn-exchange" bindtap="onExchange">确认兑换</button>

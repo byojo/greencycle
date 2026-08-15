@@ -49,11 +49,30 @@
 }
 .goods-info {
   flex: 1;
+  min-width: 0;
 }
 .goods-name {
   font-size: 30rpx;
   font-weight: 600;
   color: #1F2937;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.goods-attr {
+  margin-top: 8rpx;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+.attr-key {
+  font-size: 24rpx;
+  color: #9CA3AF;
+}
+.attr-val {
+  font-size: 24rpx;
+  color: #374151;
+  font-weight: 500;
 }
 .goods-points {
   margin-top: 10rpx;
@@ -82,6 +101,14 @@
   color: #1F2937;
   font-weight: 500;
   text-align: right;
+  word-break: break-all;
+}
+/* 收货地址：长文本左对齐换行 */
+.address-row { align-items: flex-start; }
+.address-val {
+  text-align: left;
+  flex: 1;
+  line-height: 1.5;
 }
 
 /* 地图 */
@@ -92,32 +119,50 @@
   margin: 16rpx 0;
   background: #E5E7EB;
 }
+
+/* 按钮行：导航 / 联系收货人，按内容收缩成药丸 */
 .row-btns {
   display: flex;
   gap: 16rpx;
   margin-top: 8rpx;
+  flex-wrap: wrap;
 }
-.btn-nav, .btn-call {
-  flex: 1;
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
   font-size: 28rpx;
+  padding: 0 36rpx;
   height: 76rpx;
   line-height: 76rpx;
   border-radius: 38rpx;
-  border: none;
   color: #fff;
+  margin: 0;
+  min-width: 0;
+  box-sizing: border-box;
 }
-.btn-nav { background: #F97316; }
-.btn-call { background: #2563EB; }
+.action-nav { background: #F97316; }
+.action-call { background: #2563EB; }
+.action-hover { opacity: 0.75; }
 
-/* 操作按钮（卡片内，不再吸底遮挡导航/联系按钮） */
+/* 操作按钮（卡片内） */
 .action-card {
   background: #fff;
   margin: 20rpx 24rpx;
   border-radius: 20rpx;
   padding: 24rpx;
 }
-.btn-primary {
-  width: 100%;
+.action-btn-wrap {
+  display: flex;
+  justify-content: center;
+}
+.action-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  padding: 0 56rpx;
   height: 88rpx;
   line-height: 88rpx;
   border-radius: 44rpx;
@@ -125,10 +170,9 @@
   color: #fff;
   font-size: 32rpx;
   font-weight: 600;
-  border: none;
-}
-.btn-primary::after {
-  border: none;
+  margin: 0;
+  min-width: 0;
+  box-sizing: border-box;
 }
 .done-tip {
   text-align: center;

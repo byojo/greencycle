@@ -28,13 +28,14 @@ type ExchangeRecord struct {
 	ItemID    uint    `gorm:"index:idx_user_item;not null" json:"itemId"`
 	ItemName  string  `gorm:"size:128;not null" json:"itemName"`
 	ItemImage string  `gorm:"size:255;not null" json:"itemImage"`
-	Points    int     `gorm:"not null" json:"points"`
-	Status    int     `gorm:"not null;default:1" json:"status"` // 1待发货 2配送中 3已完成 4已取消
+	Quantity  int     `gorm:"not null;default:1" json:"quantity"` // 兑换数量（默认 1）
+	Points    int     `gorm:"not null" json:"points"`             // 消耗积分（= 单价 × 数量，已完成扣减后写入作为冗余快照）
+	Status    int     `gorm:"not null;default:1" json:"status"`   // 1待发货 2配送中 3已完成 4已取消
 	AddressID *uint64 `json:"addressId"`
 	// 收货地址快照
-	DeliveryName  string `gorm:"size:64" json:"deliveryName"`
-	DeliveryPhone string `gorm:"size:20" json:"deliveryPhone"`
-	DeliveryAddr  string `gorm:"size:500" json:"deliveryAddr"`
+	DeliveryName  string  `gorm:"size:64" json:"deliveryName"`
+	DeliveryPhone string  `gorm:"size:20" json:"deliveryPhone"`
+	DeliveryAddr  string  `gorm:"size:500" json:"deliveryAddr"`
 	DeliveryLat   float64 `json:"deliveryLat"`
 	DeliveryLng   float64 `json:"deliveryLng"`
 	// 配送专员

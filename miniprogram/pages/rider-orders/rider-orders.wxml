@@ -59,9 +59,9 @@
           <view class="delivery-status" style="color:{{item.status === 2 ? '#3B82F6' : '#10B981'}}">{{item.status === 2 ? '配送中' : '已送达'}}</view>
         </view>
         <view class="card-body">
-          <view class="card-item">{{item.itemName}}</view>
+          <view class="card-item">{{item.itemName}}<text wx:if="{{item.quantity && item.quantity > 1}}" class="card-qty"> ×{{item.quantity}}</text></view>
           <view class="card-line">📍 {{item.deliveryAddr}}</view>
-          <view class="card-line">👤 {{item.deliveryName}} {{item.deliveryPhone}}</view>
+          <view class="card-line" wx:if="{{item.deliveryName}}">👤 {{item.deliveryName}}</view>
         </view>
         <image class="card-thumb" wx:if="{{item.itemImage}}" src="{{item.itemImage}}" mode="aspectFill" />
         <view class="card-actions" catchtap="stopPropagation">
