@@ -104,6 +104,7 @@ func (s *OrderService) Create(ctx context.Context, p CreateOrderParams) (*model.
 func (s *OrderService) notifyGroupNewOrder(order *model.Order) {
 	msg := fmt.Sprintf(`## 📦 新回收订单
 
+**订单类型：** 回收工单
 **订单号：** %s
 **品类：** %s
 **物品：** %s
@@ -248,6 +249,7 @@ func (s *OrderService) AssignRider(ctx context.Context, orderID uint64, riderID 
 func (s *OrderService) notifyGroupAssigned(order *model.Order, rider *model.Rider) {
 	msg := fmt.Sprintf(`## 📋 订单已派单
 
+**订单类型：** 回收工单
 **订单号：** %s
 **物品：** %s
 **地址：** %s
@@ -485,6 +487,7 @@ func (s *OrderService) Complete(ctx context.Context, orderID uint64, finalAmount
 func (s *OrderService) notifyGroupCompleted(order *model.Order, points int) {
 	msg := fmt.Sprintf(`## ✅ 订单已完成
 
+**订单类型：** 回收工单
 **订单号：** %s
 **物品：** %s
 **获得积分：** %d

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -150,6 +151,7 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 func (s *ExchangeService) notifyGroupNewExchange(record *model.ExchangeRecord) {
 	msg := fmt.Sprintf(`## 🎁 新兑换工单
 
+**订单类型：** 兑换工单
 **工单号：** #%d
 **商品：** %s
 **消耗积分：** %d
@@ -164,6 +166,53 @@ func (s *ExchangeService) notifyGroupNewExchange(record *model.ExchangeRecord) {
 		record.DeliveryName,
 		record.DeliveryPhone,
 		record.DeliveryAddr,
+	)
+
+	if err := wecom.SendMarkdown(msg); err != nil {
+		fmt.Printf("⚠️ 企业微信群推送失败: %v\n", err)
+	}
+}
+
+// notifyGroupAssignedExchange 推送兑换工单派单通知到企业微信群
+func (s *ExchangeService) notifyGroupAssignedExchange(record *model.ExchangeRecord, rider *model.Rider) {
+	msg := fmt.Sprintf(`## 📋 兑换工单已派单
+
+**订单类型：** 兑换工单
+**工单号：** #%d
+**商品：** %s
+**收货地址：** %s
+**配送员：** %s
+**联系电话：** %s
+
+@%s 请及时上门配送`,
+		record.ID,
+		record.ItemName,
+		record.DeliveryAddr,
+		rider.Name,
+		rider.Phone,
+		rider.Name,
+	)
+
+	if err := wecom.SendMarkdown(msg); err != nil {
+		fmt.Printf("⚠️ 企业微信群推送失败: %v\n", err)
+	}
+}
+
+// notifyGroupCompletedExchange 推送兑换工单送达完成通知到企业微信群
+func (s *ExchangeService) notifyGroupCompletedExchange(record *model.ExchangeRecord) {
+	completedAt := time.Now().Format("2006-01-02 15:04")
+	if record.CompletedAt != nil {
+		completedAt = record.CompletedAt.Format("2006-01-02 15:04")
+	}
+	msg := fmt.Sprintf(`## ✅ 兑换工单已完成
+
+**订单类型：** 兑换工单
+**工单号：** #%d
+**商品：** %s
+**完成时间：** %s`,
+		record.ID,
+		record.ItemName,
+		completedAt,
 	)
 
 	if err := wecom.SendMarkdown(msg); err != nil {
@@ -210,12 +259,31 @@ func (s *ExchangeService) AssignRider(ctx context.Context, recordID uint, riderI
 		return errors.New("该工单当前状态不允许分配")
 	}
 
-	return s.repo.Exchange.AssignRider(ctx, recordID, riderID, rider.Name, rider.Phone)
+	if err := s.repo.Exchange.AssignRider(ctx, recordID, riderID, rider.Name, rider.Phone); err != nil {
+		return errors.New("分配失败")
+	}
+
+	// 推送派单通知到企业微信群
+	go s.notifyGroupAssignedExchange(record, rider)
+
+	return nil
 }
 
 // CompleteDelivery 标记配送完成
 func (s *ExchangeService) CompleteDelivery(ctx context.Context, recordID uint, riderID uint) error {
-	return s.repo.Exchange.CompleteDelivery(ctx, recordID, riderID)
+	// 获取兑换记录用于通知
+	record, _ := s.repo.Exchange.GetRecordByID(ctx, recordID)
+
+	if err := s.repo.Exchange.CompleteDelivery(ctx, recordID, riderID); err != nil {
+		return err
+	}
+
+	// 推送送达完成通知到企业微信群
+	if record != nil {
+		go s.notifyGroupCompletedExchange(record)
+	}
+
+	return nil
 }
 
 // CancelRecord 取消兑换工单
