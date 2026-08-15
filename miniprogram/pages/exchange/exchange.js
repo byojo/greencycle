@@ -1,6 +1,7 @@
 // pages/exchange/exchange.js
 const app = getApp();
 const api = require('../../services/api.js');
+const { formatDate } = require('../../utils/format.js');
 
 Page({
   data: {
