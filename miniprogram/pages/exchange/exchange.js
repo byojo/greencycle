@@ -126,11 +126,12 @@ Page({
       wx.showToast({ title: '库存不足', icon: 'none' });
       return;
     }
-    // 计算最大可兑换数量：min(剩余库存, 我的积分/单价, 限购-已兑次数)
-    // 已兑次数前端不直接持锁，按 后端库存 + 积分上限 给一个乐观的本地最大值
+    // 计算最大可兑换数量：min(剩余库存, 我的积分/单价, 每人限购)
+    // 已兑次数由后端在事务内持锁校验（防超兑），前端此处仅按"每人限购上限"给出乐观最大值
     const pointsBudget = Math.floor(this.data.myPoints / (item.points || 1));
     const stockCap = item.stock;
-    const maxQty = Math.max(1, Math.min(stockCap, pointsBudget || stockCap));
+    const limitCap = item.limitPerUser > 0 ? item.limitPerUser : stockCap;
+    const maxQty = Math.max(1, Math.min(stockCap, pointsBudget || stockCap, limitCap));
     const tomorrow = this.getTomorrow();
     this.setData({
       selectedItem: item,
