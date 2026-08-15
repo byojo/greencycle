@@ -51,14 +51,14 @@
         markers="{{[{id:1, latitude: order.pickupLat, longitude: order.pickupLng, title:'回收地址'}]}}"
         scale="16" show-location bindtap="onNavigate"></map>
       <view class="row-btns">
-        <button class="btn-nav" bindtap="onNavigate">🧭 导航</button>
-        <button class="btn-call" wx:if="{{order.customerPhone}}" bindtap="onCallCustomer">📞 联系客户</button>
+        <view class="btn-nav" hover-class="action-hover" bindtap="onNavigate">🧭 导航</view>
+        <view class="btn-call" wx:if="{{order.customerPhone}}" hover-class="action-hover" bindtap="onCallCustomer">📞 联系客户</view>
       </view>
 
       <!-- 主操作区：用分割线与上方辅助按钮分组 -->
       <view class="row-action">
-        <button wx:if="{{status === 2}}" class="btn-primary" bindtap="onPick">已取件</button>
-        <button wx:if="{{status === 3}}" class="btn-primary" bindtap="onShowComplete">完成回收</button>
+        <view wx:if="{{status === 2}}" class="btn-primary" hover-class="action-hover" bindtap="onPick">已取件</view>
+        <view wx:if="{{status === 3}}" class="btn-primary" hover-class="action-hover" bindtap="onShowComplete">完成回收</view>
         <view wx:if="{{status === 4}}" class="done-tip">✓ 已完成回收</view>
         <view wx:if="{{status === 5}}" class="done-tip">订单已取消</view>
       </view>

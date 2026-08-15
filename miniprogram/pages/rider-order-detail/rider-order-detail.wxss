@@ -97,44 +97,51 @@
   gap: 16rpx;
   margin-top: 8rpx;
 }
+/* 用 <view> 模拟按钮，避 WeChat <button> 默认 display/padding/width 撑宽问题 */
 .btn-nav, .btn-call {
-  flex: 1;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 28rpx;
   height: 76rpx;
   line-height: 76rpx;
+  padding: 0 36rpx;
   border-radius: 38rpx;
   border: none;
   color: #fff;
+  box-sizing: border-box;
+  min-width: 0;
 }
-.btn-nav::after, .btn-call::after { border: none; }
+.action-hover { opacity: 0.7; }
 .btn-nav { background: #F97316; }
 .btn-call { background: #2563EB; }
 
-/* 主操作区：与上方按钮用分割线分组 */
+/* 主操作区：与上方按钮用分割线分组；flex 居中让内容宽药丸居中显示 */
 .row-action {
+  display: flex;
+  justify-content: center;
   margin-top: 24rpx;
   padding-top: 24rpx;
   border-top: 1rpx solid #F3F4F6;
 }
 .btn-primary {
-  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   height: 88rpx;
   line-height: 88rpx;
+  padding: 0 56rpx;
   border-radius: 44rpx;
   background: #07C160;
   color: #fff;
   font-size: 32rpx;
   font-weight: 600;
   border: none;
-  /* 显式覆盖 WeChat <button> 默认 display / padding，保证占满卡片宽度成为主 CTA */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
+  min-width: 0;
+  margin: 0;
 }
-.btn-primary::after { border: none; }
 .done-tip {
   text-align: center;
   color: #10B981;
