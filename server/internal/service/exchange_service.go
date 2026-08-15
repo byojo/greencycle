@@ -67,6 +67,26 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 	// 消耗积分 = 单价 × 数量
 	totalPoints := item.Points * qty
 
+	// 构建兑换记录（含收货地址快照），供事务内创建 & 事务后群通知复用
+	addrID := req.AddressID
+	fullAddr := addr.Province + addr.City + addr.District + addr.Detail
+	record := &model.ExchangeRecord{
+		UserID:        userID,
+		ItemID:        item.ID,
+		ItemName:      item.Name,
+		ItemImage:     item.Image,
+		Quantity:      qty,
+		Points:        totalPoints,
+		Status:        1, // 待发货
+		DeliveryName:  addr.Name,
+		DeliveryPhone: addr.Phone,
+		DeliveryAddr:  fullAddr,
+		DeliveryLat:   addr.Lat,
+		DeliveryLng:   addr.Lng,
+		ExpectedTime:  req.ExpectedTime,
+	}
+	record.AddressID = &addrID
+
 	// 事务：锁用户行 → 限兑检查 → 扣积分 → 扣库存 → 创建记录
 	// 锁用户行串行化同一用户的并发请求，防止限兑次数 TOCTOU
 	return s.repo.WithTx(ctx, func(tx *gorm.DB) error {
@@ -133,25 +153,7 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 			return errors.New("积分记录创建失败")
 		}
 
-		// 8. 创建兑换记录（含收货地址快照）
-		addrID := req.AddressID
-		fullAddr := addr.Province + addr.City + addr.District + addr.Detail
-		record := &model.ExchangeRecord{
-			UserID:        userID,
-			ItemID:        item.ID,
-			ItemName:      item.Name,
-			ItemImage:     item.Image,
-			Quantity:      qty,
-			Points:        totalPoints,
-			Status:        1, // 待发货
-			DeliveryName:  addr.Name,
-			DeliveryPhone: addr.Phone,
-			DeliveryAddr:  fullAddr,
-			DeliveryLat:   addr.Lat,
-			DeliveryLng:   addr.Lng,
-			ExpectedTime:  req.ExpectedTime,
-		}
-		record.AddressID = &addrID
+		// 8. 创建兑换记录（record 已在事务外构建，含收货地址快照）
 		return s.repo.Exchange.CreateRecord(ctx, tx, record)
 	})
 	if err != nil {
