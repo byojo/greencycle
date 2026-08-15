@@ -19,6 +19,46 @@ func (h *Handler) AdminTestNotify(c *gin.Context) {
 	response.Success(c, gin.H{"message": "测试消息已发送"})
 }
 
+// AdminFixExchangeImages 一次性迁移：将兑换商品图与历史工单快照改为 COS 公有读地址。
+// 仅用于从本地打包图切换到 COS 托管的迁移；数据修正完成后应在 router.go 与此处删除本接口。
+func (h *Handler) AdminFixExchangeImages(c *gin.Context) {
+	db := h.Svc.Repo.DB()
+
+	itemsSQL := `UPDATE exchange_items SET image = CASE name
+		WHEN '环保帆布袋'   THEN 'https://greencycle-image-1255464850.cos.ap-guangzhou.myqcloud.com/exchange/bag.png'
+		WHEN '碳中和徽章'   THEN 'https://greencycle-image-1255464850.cos.ap-guangzhou.myqcloud.com/exchange/badge.png'
+		WHEN '绿植种子套装' THEN 'https://greencycle-image-1255464850.cos.ap-guangzhou.myqcloud.com/exchange/seeds.png'
+		WHEN '保温杯'       THEN 'https://greencycle-image-1255464850.cos.ap-guangzhou.myqcloud.com/exchange/cup.png'
+		WHEN '电动牙刷'     THEN 'https://greencycle-image-1255464850.cos.ap-guangzhou.myqcloud.com/exchange/toothbrush.png'
+		ELSE image END
+		WHERE name IN ('环保帆布袋','碳中和徽章','绿植种子套装','保温杯','电动牙刷')`
+	r1 := db.Exec(itemsSQL)
+	if r1.Error != nil {
+		response.ServerError(c, "更新 exchange_items 失败: "+r1.Error.Error())
+		return
+	}
+
+	recordsSQL := `UPDATE exchange_records SET item_image = CASE item_name
+		WHEN '环保帆布袋'   THEN 'https://greencycle-image-1255464850.cos.ap-guangzhou.myqcloud.com/exchange/bag.png'
+		WHEN '碳中和徽章'   THEN 'https://greencycle-image-1255464850.cos.ap-guangzhou.myqcloud.com/exchange/badge.png'
+		WHEN '绿植种子套装' THEN 'https://greencycle-image-1255464850.cos.ap-guangzhou.myqcloud.com/exchange/seeds.png'
+		WHEN '保温杯'       THEN 'https://greencycle-image-1255464850.cos.ap-guangzhou.myqcloud.com/exchange/cup.png'
+		WHEN '电动牙刷'     THEN 'https://greencycle-image-1255464850.cos.ap-guangzhou.myqcloud.com/exchange/toothbrush.png'
+		ELSE item_image END
+		WHERE item_name IN ('环保帆布袋','碳中和徽章','绿植种子套装','保温杯','电动牙刷')`
+	r2 := db.Exec(recordsSQL)
+	if r2.Error != nil {
+		response.ServerError(c, "更新 exchange_records 失败: "+r2.Error.Error())
+		return
+	}
+
+	response.Success(c, gin.H{
+		"message":          "兑换商品图已切换为 COS 托管地址",
+		"items_affected":   r1.RowsAffected,
+		"records_affected": r2.RowsAffected,
+	})
+}
+
 // ========== 加盟申请管理 ==========
 
 // AdminApplicationList 加盟申请列表

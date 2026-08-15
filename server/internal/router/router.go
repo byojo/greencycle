@@ -115,6 +115,9 @@ func Register(h *handler.Handler) *gin.Engine {
 
 		// 测试
 		admin.POST("/test-notify", h.AdminTestNotify)
+
+		// 一次性数据迁移：兑换商品图切换为 COS 托管（数据修正后应删除本接口）
+		admin.POST("/fix-exchange-images", h.AdminFixExchangeImages)
 	}
 
 	return r
