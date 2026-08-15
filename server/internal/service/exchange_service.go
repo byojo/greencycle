@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math/rand"
 	"time"
 
 	"gorm.io/gorm"
@@ -16,6 +17,11 @@ import (
 
 type ExchangeService struct {
 	repo *repository.Repository
+}
+
+// generateExchangeNo 生成兑换工单号：EX + 时间戳(秒) + 6 位随机数
+func generateExchangeNo() string {
+	return fmt.Sprintf("EX%s%06d", time.Now().Format("20060102150405"), rand.Intn(1000000))
 }
 
 func NewExchangeService(repo *repository.Repository) *ExchangeService {
@@ -72,6 +78,7 @@ func (s *ExchangeService) Exchange(ctx context.Context, userID uint, req *Exchan
 	fullAddr := addr.Province + addr.City + addr.District + addr.Detail
 	record := &model.ExchangeRecord{
 		UserID:        userID,
+		OrderNo:       generateExchangeNo(),
 		ItemID:        item.ID,
 		ItemName:      item.Name,
 		ItemImage:     item.Image,
@@ -175,7 +182,7 @@ func (s *ExchangeService) notifyGroupNewExchange(record *model.ExchangeRecord) {
 	msg := fmt.Sprintf(`## 🎁 新兑换工单
 
 **订单类型：** 兑换工单
-**工单号：** #%d
+**工单号：** %s
 **商品：** %s × %d
 **消耗积分：** %d
 **期望配送时间：** %s
@@ -184,7 +191,7 @@ func (s *ExchangeService) notifyGroupNewExchange(record *model.ExchangeRecord) {
 **收货地址：** %s
 
 请尽快安排发货/配送`,
-		record.ID,
+		record.OrderNo,
 		record.ItemName,
 		record.Quantity,
 		record.Points,
@@ -204,14 +211,14 @@ func (s *ExchangeService) notifyGroupAssignedExchange(record *model.ExchangeReco
 	msg := fmt.Sprintf(`## 📋 兑换工单已派单
 
 **订单类型：** 兑换工单
-**工单号：** #%d
+**工单号：** %s
 **商品：** %s
 **收货地址：** %s
 **配送员：** %s
 **联系电话：** %s
 
 @%s 请及时上门配送`,
-		record.ID,
+		record.OrderNo,
 		record.ItemName,
 		record.DeliveryAddr,
 		rider.Name,
@@ -233,10 +240,10 @@ func (s *ExchangeService) notifyGroupCompletedExchange(record *model.ExchangeRec
 	msg := fmt.Sprintf(`## ✅ 兑换工单已完成
 
 **订单类型：** 兑换工单
-**工单号：** #%d
+**工单号：** %s
 **商品：** %s
 **完成时间：** %s`,
-		record.ID,
+		record.OrderNo,
 		record.ItemName,
 		completedAt,
 	)
@@ -251,9 +258,9 @@ func (s *ExchangeService) notifyGroupCancelledExchange(record *model.ExchangeRec
 	msg := fmt.Sprintf(`## ❌ 兑换工单已取消
 
 **订单类型：** 兑换工单
-**工单号：** #%d
+**工单号：** %s
 **商品：** %s`,
-		record.ID,
+		record.OrderNo,
 		record.ItemName,
 	)
 

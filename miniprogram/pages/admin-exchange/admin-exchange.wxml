@@ -24,7 +24,7 @@
   <view class="list" wx:if="{{!loading && records.length > 0}}">
     <view class="card" wx:for="{{records}}" wx:key="id">
       <view class="card-header">
-        <view class="card-no">工单 #{{item.id}}</view>
+        <view class="card-no">工单 {{item.orderNo || ('#'+item.id)}}</view>
         <view class="card-status" style="color:{{statusColor[item.status]}}">{{statusMap[item.status]}}</view>
       </view>
 

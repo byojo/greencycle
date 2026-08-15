@@ -13,6 +13,7 @@
         <view class="card-img-placeholder" wx:else>🎁</view>
         <view class="card-body">
           <view class="card-name">{{item.itemName}}</view>
+          <view class="card-no-text">工单号：{{item.orderNo || ('#'+item.id)}}</view>
           <view class="card-points">-{{item.points}} 积分</view>
           <view class="card-status" style="color:{{statusColor[item.status]}}">{{statusMap[item.status]}}</view>
         </view>

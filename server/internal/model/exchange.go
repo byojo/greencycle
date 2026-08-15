@@ -24,6 +24,7 @@ func (ExchangeItem) TableName() string {
 // ExchangeRecord 用户兑换记录（兑换工单）
 type ExchangeRecord struct {
 	ID        uint    `gorm:"primaryKey" json:"id"`
+	OrderNo   string  `gorm:"size:32" json:"orderNo"` // 兑换工单号（EX + 时间戳 + 随机）
 	UserID    uint    `gorm:"index:idx_user_item,priority:1;not null" json:"userId"`
 	ItemID    uint    `gorm:"index:idx_user_item;not null" json:"itemId"`
 	ItemName  string  `gorm:"size:128;not null" json:"itemName"`
