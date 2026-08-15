@@ -31,9 +31,10 @@
           <image wx:for="{{item.images}}" wx:for-item="img" wx:key="id" src="{{img.url}}" mode="aspectFill" class="photo-thumb" catchtap="onPreviewPhoto" data-urls="{{item.images}}" data-current="{{img.url}}"></image>
         </view>
         <view class="card-actions" catchtap="stopPropagation">
-          <button class="action-btn-sm action-nav" data-lat="{{item.pickupLat}}" data-lng="{{item.pickupLng}}" data-addr="{{item.pickupAddr}}" bindtap="onNavigate">🧭 导航</button>
-          <button wx:if="{{item.status === 2}}" class="action-btn-sm action-blue" data-id="{{item.id}}" bindtap="onPick">已取件</button>
-          <button wx:if="{{item.status === 3}}" class="action-btn-sm action-green" data-id="{{item.id}}" bindtap="onShowComplete">完成回收</button>
+          <view class="action-btn-sm action-nav" hover-class="action-hover" data-lat="{{item.pickupLat}}" data-lng="{{item.pickupLng}}" data-addr="{{item.pickupAddr}}" bindtap="onNavigate">🧭 导航</view>
+          <view wx:if="{{item.status === 2}}" class="action-btn-sm action-blue" hover-class="action-hover" data-id="{{item.id}}" bindtap="onPick">已取件</view>
+          <view wx:if="{{item.status === 3}}" class="action-btn-sm action-green" hover-class="action-hover" data-id="{{item.id}}" bindtap="onShowComplete">完成回收</view>
+          <view wx:if="{{item.status === 4}}" class="action-btn-sm action-green" hover-class="action-hover" data-id="{{item.id}}" bindtap="onShowComplete">查看详情</view>
           <view class="detail-link" data-id="{{item.id}}" bindtap="onViewDetail">详情 ›</view>
         </view>
       </view>
@@ -64,8 +65,8 @@
         </view>
         <image class="card-thumb" wx:if="{{item.itemImage}}" src="{{item.itemImage}}" mode="aspectFill" />
         <view class="card-actions" catchtap="stopPropagation">
-          <button class="action-btn action-nav" data-lat="{{item.deliveryLat}}" data-lng="{{item.deliveryLng}}" data-addr="{{item.deliveryAddr}}" bindtap="onNavigate">🧭 导航</button>
-          <button wx:if="{{item.status === 2}}" class="action-btn action-green" data-id="{{item.id}}" bindtap="onCompleteDelivery">确认送达</button>
+          <view class="action-btn action-nav" hover-class="action-hover" data-lat="{{item.deliveryLat}}" data-lng="{{item.deliveryLng}}" data-addr="{{item.deliveryAddr}}" bindtap="onNavigate">🧭 导航</view>
+          <view wx:if="{{item.status === 2}}" class="action-btn action-green" hover-class="action-hover" data-id="{{item.id}}" bindtap="onCompleteDelivery">确认送达</view>
           <view class="detail-link" data-id="{{item.id}}" bindtap="onViewDelivery">详情 ›</view>
         </view>
       </view>

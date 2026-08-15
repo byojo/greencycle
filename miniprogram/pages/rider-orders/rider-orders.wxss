@@ -43,27 +43,33 @@
 .card-thumb { width: 120rpx; height: 120rpx; border-radius: 12rpx; margin-bottom: 16rpx; background: #F3F4F6; }
 
 .card-actions { display: flex; gap: 12rpx; align-items: center; border-top: 1rpx solid #F3F4F6; padding-top: 20rpx; }
-.detail-link { font-size: 24rpx; color: #07C160; padding: 6rpx 0; margin-left: auto; flex-shrink: 0; }
+.detail-link { font-size: 24rpx; color: #07C160; padding: 6rpx 0; margin-left: auto; flex: 0 0 auto; flex-shrink: 0; }
 
-/* 显式覆盖 WeChat <button> 默认 display:block 导致的"撑成半宽"问题 */
+/* 列表卡片底部操作按钮：用 view 模拟，避开 WeChat <button> 默认 display/padding/::after 边框造成的"撑半宽"问题 */
 .action-btn,
 .action-btn-sm {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   margin: 0;
-  width: auto;
+  padding: 0 20rpx;
+  height: 56rpx;
+  line-height: 56rpx;
+  border-radius: 28rpx;
+  text-align: center;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 24rpx;
+  box-sizing: border-box;
+  flex: 0 0 auto;
   min-width: 0;
 }
-.action-btn { font-size: 26rpx; padding: 0 32rpx; height: 68rpx; line-height: 68rpx; border-radius: 34rpx; text-align: center; border: none; color: #fff; }
-.action-btn::after { border: none; }
+.action-btn { font-size: 26rpx; padding: 0 32rpx; height: 68rpx; line-height: 68rpx; border-radius: 34rpx; }
 .action-green { background: #07C160; }
 .action-blue { background: #2563EB; }
 .action-nav { background: #F97316; }
-
-/* 缩小版按钮：用于列表卡片底部，保证详情与按钮在同一行 */
-.action-btn-sm { font-size: 24rpx; padding: 0 20rpx; height: 56rpx; line-height: 56rpx; border-radius: 28rpx; text-align: center; border: none; color: #fff; flex-shrink: 0; }
-.action-btn-sm::after { border: none; }
+.action-hover { opacity: 0.75; }
 
 /* 通用 */
 .empty, .loading { text-align: center; padding: 120rpx 0; color: #9CA3AF; font-size: 28rpx; }
