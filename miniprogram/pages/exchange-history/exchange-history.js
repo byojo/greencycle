@@ -44,7 +44,8 @@ Page({
       const res = await api.getExchangeHistory({ page: this.data.page, size: 20 });
       const records = (res.data.list || []).map(r => ({
         ...r,
-        createdAtText: this.formatDate(r.createdAt)
+        createdAtText: this.formatDate(r.createdAt),
+        completedAtText: this.formatDate(r.completedAt)
       }));
       const total = res.data.total || 0;
       const allRecords = this.data.page === 1 ? records : [...this.data.records, ...records];
@@ -67,6 +68,6 @@ Page({
     const d = new Date(dateStr);
     if (isNaN(d.getTime())) return dateStr;
     const pad = n => String(n).padStart(2, '0');
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
   }
 });

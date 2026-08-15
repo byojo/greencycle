@@ -41,7 +41,7 @@
           <text class="delivery-hint" style="color:#3B82F6">配送员正在为您送达，请保持电话畅通</text>
         </view>
         <view class="delivery-row" wx:if="{{item.status === 3 && item.completedAt}}">
-          <text class="delivery-hint" style="color:#10B981">已于 {{item.completedAt}} 送达</text>
+          <text class="delivery-hint" style="color:#10B981">已于 {{item.completedAtText}} 送达</text>
         </view>
       </view>
     </view>
